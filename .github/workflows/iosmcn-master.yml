@@ -2,39 +2,40 @@
 # Copyright 2023 Canonical Ltd.
 # Copyright 2024 Intel Corporation
 
-name: Master workflow
+name: IOSMCN Master workflow
 
 on:
   pull_request:
     branches:
-      - master
+      - iosmcnmaster
   push:
     branches:
-      - master
+      - iosmcnmaster
 
 jobs:
-  build:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+  #build:
+    #if: github.event_name == 'pull_request'
+    #runs-on: ubuntu-latest
+    #steps:
+      #- uses: actions/checkout@v4
 
-      - uses: actions/setup-go@v5
-        with:
-          go-version-file: 'go.mod'
+      #- uses: actions/setup-go@v5
+       # with:
+         # go-version-file: 'go.mod'
 
-      - name: Generate protobuf
-        run: make pb
+     # - name: Generate protobuf
+       # run: make pb
 
-      - name: Build the BESS-UPF Docker image
-        run: DOCKER_TARGETS=bess make docker-build
+     # - name: Build the BESS-UPF Docker image
+     #   run: DOCKER_TARGETS=bess make docker-build
 
-      - name: Build the PFCP Agent Docker image
-        run: DOCKER_TARGETS=pfcpiface make docker-build
+     #- name: Build the PFCP Agent Docker image
+      #  run: DOCKER_TARGETS=pfcpiface make docker-build
 
   lint:
     name: lint
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'ios-mcn-core'
     steps:
       - uses: actions/checkout@v4
 
@@ -46,12 +47,12 @@ jobs:
         uses: golangci/golangci-lint-action@v5.0.0
         with:
           version: latest
-          args: -v --config ./.golangci.yml
+          args: -v --config ./.golangci.yml --timeout=10m
 
   hadolint:
     name: hadolint
     runs-on: ubuntu-latest
-
+    if: github.repository_owner == 'ios-mcn-core'
     steps:
       - uses: actions/checkout@v4
 
@@ -68,6 +69,7 @@ jobs:
   check-spelling:
     name: Markdown spellcheck
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'ios-mcn-core'
     steps:
       - uses: actions/checkout@v4
 
@@ -79,7 +81,7 @@ jobs:
 
   route-control-tests:
     runs-on: ubuntu-latest
-
+    if: github.repository_owner == 'ios-mcn-core'
     steps:
     - uses: actions/checkout@v4
 
@@ -106,6 +108,7 @@ jobs:
 
   unit-tests-pfcp:
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'ios-mcn-core'
     steps:
       - uses: actions/checkout@v4
 
@@ -118,6 +121,7 @@ jobs:
 
   integration-tests-up4:
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'ios-mcn-core'
     steps:
       - uses: actions/checkout@v4
 
@@ -130,6 +134,7 @@ jobs:
 
   integration-tests-bess:
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'ios-mcn-core'
     steps:
       - uses: actions/checkout@v4
 
@@ -142,6 +147,7 @@ jobs:
 
   license-check:
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'ios-mcn-core'
     steps:
       - uses: actions/checkout@v4
 
@@ -150,6 +156,7 @@ jobs:
 
   fossa-check:
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'ios-mcn-core'
     steps:
       - uses: actions/checkout@v4
 
@@ -157,3 +164,43 @@ jobs:
         uses: fossa-contrib/fossa-action@v3
         with:
           fossa-api-key: 0c3bbcdf20e157bbd487dae173751b28
+          
+  docker-build-push-images:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'ios-mcn-core'
+    needs: [route-control-tests, unit-tests-pfcp, integration-tests-up4, integration-tests-bess]
+    
+    env:
+      REGISTRY: ghcr.io
+      DOCKER_REGISTRY: ghcr.io/
+      DOCKER_REPOSITORY: ios-mcn-core/
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+
+      - uses: docker/login-action@v3.1.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.GHCRUSER }}
+          password: ${{ secrets.GHCRPASS }}
+
+      - name: Build and push release Docker image
+        env:
+          DOCKER_TAG: rel-${{ needs.tag-github.outputs.version }}
+          CPU: haswell
+        run: |
+          CPU=$CPU make docker-build
+          make docker-push
+
+      - name: Build and push release Docker image for Ivybridge CPU
+        env:
+          DOCKER_TAG: rel-${{ needs.tag-github.outputs.version }}-ivybridge
+          CPU: ivybridge
+        run: |
+          CPU=$CPU make docker-build
+          make docker-push
+    
+   
