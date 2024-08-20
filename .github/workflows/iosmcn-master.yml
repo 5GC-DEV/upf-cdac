@@ -35,6 +35,7 @@ jobs:
   lint:
     name: lint
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'ios-mcn-core'
     steps:
       - uses: actions/checkout@v4
 
@@ -51,7 +52,7 @@ jobs:
   hadolint:
     name: hadolint
     runs-on: ubuntu-latest
-
+    if: github.repository_owner == 'ios-mcn-core'
     steps:
       - uses: actions/checkout@v4
 
@@ -68,6 +69,7 @@ jobs:
   check-spelling:
     name: Markdown spellcheck
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'ios-mcn-core'
     steps:
       - uses: actions/checkout@v4
 
@@ -79,7 +81,7 @@ jobs:
 
   route-control-tests:
     runs-on: ubuntu-latest
-
+    if: github.repository_owner == 'ios-mcn-core'
     steps:
     - uses: actions/checkout@v4
 
@@ -106,6 +108,7 @@ jobs:
 
   unit-tests-pfcp:
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'ios-mcn-core'
     steps:
       - uses: actions/checkout@v4
 
@@ -118,6 +121,7 @@ jobs:
 
   integration-tests-up4:
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'ios-mcn-core'
     steps:
       - uses: actions/checkout@v4
 
@@ -130,6 +134,7 @@ jobs:
 
   integration-tests-bess:
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'ios-mcn-core'
     steps:
       - uses: actions/checkout@v4
 
@@ -142,6 +147,7 @@ jobs:
 
   license-check:
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'ios-mcn-core'
     steps:
       - uses: actions/checkout@v4
 
@@ -150,6 +156,7 @@ jobs:
 
   fossa-check:
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'ios-mcn-core'
     steps:
       - uses: actions/checkout@v4
 
@@ -160,6 +167,7 @@ jobs:
           
   docker-build-push-images:
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'ios-mcn-core'
     needs: [route-control-tests, unit-tests-pfcp, integration-tests-up4, integration-tests-bess]
     
     env:
