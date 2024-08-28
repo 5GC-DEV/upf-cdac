@@ -40,7 +40,7 @@ jobs:
           DOCKER_TAG: release-haswell-${{ env.RELEASE_VERSION }}
           CPU: haswell
         run: |
-          CPU=$CPU make docker-build
+          CPU=$CPU make docker-build -f Makefile_CDAC
           make docker-push -f Makefile_CDAC
 
       - name: Build and push release Docker image for Ivybridge CPU
@@ -48,5 +48,5 @@ jobs:
           DOCKER_TAG: release-ivybridge-${{ env.RELEASE_VERSION }}
           CPU: ivybridge
         run: |
-          CPU=$CPU make docker-build
+          CPU=$CPU make docker-build -f Makefile_CDAC
           make docker-push -f Makefile_CDAC
