@@ -194,7 +194,7 @@ jobs:
           CPU: haswell
         run: |
           CPU=$CPU make docker-build
-          make docker-push
+          make docker-push -f Makefile_CDAC
 
       - name: Build and push release Docker image for Ivybridge CPU
         env:
@@ -202,6 +202,6 @@ jobs:
           CPU: ivybridge
         run: |
           CPU=$CPU make docker-build
-          make docker-push
+          make docker-push -f Makefile_CDAC
     
    
