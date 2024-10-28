@@ -3,7 +3,7 @@
 # Copyright 2019-present Intel Corporation
 
 # Stage bess-build: fetch BESS dependencies & pre-reqs
-FROM docker.io/cdac5gc/bess_build:latest:latest AS bess-build
+FROM docker.io/cdac5gc/bess_build:latest AS bess-build
 ARG CPU=native
 ARG BESS_COMMIT=cdacmaster
 ENV PLUGINS_DIR=plugins
