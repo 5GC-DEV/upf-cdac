@@ -15,7 +15,7 @@ jobs:
       REGISTRY: docker.io
       DOCKER_REGISTRY: docker.io/
       DOCKER_REPOSITORY: cdac5gc/
-      RELEASE_VERSION: 0.0.1
+      RELEASE_VERSION: 0.0.7
       
     steps:
       - uses: actions/checkout@v4
