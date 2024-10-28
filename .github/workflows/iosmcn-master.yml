@@ -193,6 +193,8 @@ jobs:
         with:
           go-version-file: 'go.mod'
 
+      - run: echo GIT_SHA_SHORT=$(git rev-parse --short HEAD) >> $GITHUB_ENV
+
       - uses: docker/login-action@v3.2.0
         with:
           registry: ${{ env.REGISTRY }}
@@ -201,7 +203,7 @@ jobs:
 
       - name: Build and push release Docker image
         env:
-          DOCKER_TAG: rel-${{ needs.tag-github.outputs.version }}
+          DOCKER_TAG: master-haswell-${{ env.GIT_SHA_SHORT }}
           CPU: haswell
         run: |
           CPU=$CPU make docker-build -f Makefile_IOSMCN
@@ -209,10 +211,8 @@ jobs:
 
       - name: Build and push release Docker image for Ivybridge CPU
         env:
-          DOCKER_TAG: rel-${{ needs.tag-github.outputs.version }}-ivybridge
+          DOCKER_TAG: mater-ivybridge-${{ env.GIT_SHA_SHORT }}
           CPU: ivybridge
         run: |
           CPU=$CPU make docker-build -f Makefile_IOSMCN
           make docker-push -f Makefile_IOSMCN
-    
-   
