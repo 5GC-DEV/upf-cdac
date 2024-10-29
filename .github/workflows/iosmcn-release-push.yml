@@ -15,7 +15,7 @@ jobs:
       REGISTRY: ghcr.io
       DOCKER_REGISTRY: ghcr.io/
       DOCKER_REPOSITORY: ios-mcn-core/
-      RELEASE_VERSION: 0.0.1
+      RELEASE_VERSION: 0.0.3
       
     steps:
       - uses: actions/checkout@v4
