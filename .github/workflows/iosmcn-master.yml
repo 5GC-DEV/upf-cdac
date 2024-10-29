@@ -211,7 +211,7 @@ jobs:
 
       - name: Build and push release Docker image for Ivybridge CPU
         env:
-          DOCKER_TAG: mater-ivybridge-${{ env.GIT_SHA_SHORT }}
+          DOCKER_TAG: master-ivybridge-${{ env.GIT_SHA_SHORT }}
           CPU: ivybridge
         run: |
           CPU=$CPU make docker-build -f Makefile_IOSMCN
