@@ -49,7 +49,9 @@ docker-build:
 		if [ $(DOCKER_BUILDKIT) = 1 ]; then \
 			DOCKER_CACHE_ARG="--cache-from ${DOCKER_REGISTRY}${DOCKER_REPOSITORY}upf-epc-$$target:${DOCKER_TAG}"; \
 		fi; \
-		DOCKER_BUILDKIT=$(DOCKER_BUILDKIT) docker build -f Dockerfile_CDAC $(DOCKER_PULL) $(DOCKER_BUILD_ARGS) \
+		DOCKER_BUILDKIT=$(DOCKER_BUILDKIT) docker build  -f Dockerfile_CDAC $(DOCKER_PULL) $(DOCKER_BUILD_ARGS) \
+			--build-arg GITHUB_USERNAME=${GITHUB_USERNAME} \
+        	--build-arg GITHUB_TOKEN=${GITHUB_TOKEN} \
 			--target $$target \
 			$$DOCKER_CACHE_ARG \
 			--tag ${DOCKER_REGISTRY}${DOCKER_REPOSITORY}upf-epc-$$target:${DOCKER_TAG} \
@@ -71,6 +73,8 @@ docker-push:
 # Change target to bess-build/pfcpiface to exctract src/obj/bins for performance analysis
 output:
 	DOCKER_BUILDKIT=$(DOCKER_BUILDKIT) docker build -f Dockerfile_CDAC $(DOCKER_PULL) $(DOCKER_BUILD_ARGS) \
+		--build-arg GITHUB_USERNAME=${GITHUB_USERNAME} \
+        --build-arg GITHUB_TOKEN=${GITHUB_TOKEN} \
 		--target artifacts \
 		--output type=tar,dest=output.tar \
 		.;
@@ -93,6 +97,8 @@ test-bess-integration-native:
 
 pb:
 	DOCKER_BUILDKIT=$(DOCKER_BUILDKIT) docker build -f Dockerfile_CDAC $(DOCKER_PULL) $(DOCKER_BUILD_ARGS) \
+		--build-arg GITHUB_USERNAME=${GITHUB_USERNAME} \
+        --build-arg GITHUB_TOKEN=${GITHUB_TOKEN} \
 		--target pb \
 		--output output \
 		.;
@@ -101,6 +107,8 @@ pb:
 # Python grpc/protobuf generation
 py-pb:
 	DOCKER_BUILDKIT=$(DOCKER_BUILDKIT) docker build -f Dockerfile_CDAC $(DOCKER_PULL) $(DOCKER_BUILD_ARGS) \
+		--build-arg GITHUB_USERNAME=${GITHUB_USERNAME} \
+        --build-arg GITHUB_TOKEN=${GITHUB_TOKEN} \
 		--target ptf-pb \
 		--output output \
 		.;

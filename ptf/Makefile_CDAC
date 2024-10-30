@@ -4,7 +4,10 @@
 # generates python protobuf files and builds ptf docker image
 build: 
 	cd .. && make py-pb -f Makefile_CDAC
-	docker build -f Dockerfile_CDAC -t bess-upf-ptf .
+	docker build -f Dockerfile_CDAC \
+	--build-arg GITHUB_USERNAME=${GITHUB_USERNAME} \
+    --build-arg GITHUB_TOKEN=${GITHUB_TOKEN} \
+	-t bess-upf-ptf .
 
 # removes generated python protobuf files
 clean:
