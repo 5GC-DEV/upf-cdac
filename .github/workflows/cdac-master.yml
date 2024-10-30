@@ -197,6 +197,8 @@ jobs:
       REGISTRY: docker.io
       DOCKER_REGISTRY: docker.io/
       DOCKER_REPOSITORY: cdac5gc/
+      GITHUB_USERNAME: ${{ secrets.DCKRUSER }}
+      GITHUB_TOKEN: ${{ secrets.DCKRPASS }}
     steps:
       - uses: actions/checkout@v4
 

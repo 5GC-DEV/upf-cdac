@@ -196,6 +196,8 @@ jobs:
       REGISTRY: ghcr.io
       DOCKER_REGISTRY: ghcr.io/
       DOCKER_REPOSITORY: ios-mcn-core/
+      GITHUB_USERNAME: ${{ secrets.GHCRUSER }}
+      GITHUB_TOKEN: ${{ secrets.GHCRPASS }}
     steps:
       - uses: actions/checkout@v4
 
