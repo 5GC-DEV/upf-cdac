@@ -214,7 +214,7 @@ jobs:
           username: ${{ secrets.DCKRUSER }}
           password: ${{ secrets.DCKRPASS }}
 
-      - name: Build and push release Docker image
+      - name: Build and push Docker image for Haswell CPU
         env:
           DOCKER_TAG: master-haswell-${{ env.GIT_SHA_SHORT }}
           CPU: haswell
@@ -222,7 +222,7 @@ jobs:
           CPU=$CPU make docker-build -f Makefile_CDAC
           make docker-push -f Makefile_CDAC
 
-      - name: Build and push release Docker image for Ivybridge CPU
+      - name: Build and push Docker image for Ivybridge CPU
         env:
           DOCKER_TAG: master-ivybridge-${{ env.GIT_SHA_SHORT }}
           CPU: ivybridge
