@@ -8,24 +8,24 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"os/exec"
 	"strings"
 	"time"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/api/types/mount"
 	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/client"
 	"github.com/docker/go-connections/nat"
-	"github.com/sirupsen/logrus"
+	"github.com/omec-project/upf-epc/logger"
 )
 
 // MustRunDockerCommandAttach attaches to a running Docker container and executes a cmd.
 // It should be used to spawn a new pfcpiface process inside and redirect its stdout/stderr to `docker logs`.
 // This is equivalent to `docker attach` CLI command.
-func MustRunDockerCommandAttach(container string, cmd string) {
+func MustRunDockerCommandAttach(containerName string, cmd string) {
 	ctx := context.Background()
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
@@ -33,21 +33,21 @@ func MustRunDockerCommandAttach(container string, cmd string) {
 	}
 	defer cli.Close()
 
-	waiter, err := cli.ContainerAttach(ctx, container, types.ContainerAttachOptions{
+	waiter, err := cli.ContainerAttach(ctx, containerName, container.AttachOptions{
 		Stderr: true,
 		Stdout: true,
 		Stdin:  true,
 		Stream: true,
 	})
 	if err != nil {
-		logrus.Fatalf("Failed to attach container: %v", err)
+		logger.DockerLog.Fatalf("failed to attach container: %v", err)
 	}
 	defer waiter.Close()
 	if err = waiter.Conn.SetWriteDeadline(time.Now().Add(time.Second * 1)); err != nil {
-		logrus.Fatalf("Failed to set deadline: %v", err)
+		logger.DockerLog.Fatalf("failed to set deadline: %v", err)
 	}
 	if _, err = waiter.Conn.Write(append([]byte(cmd), '\n')); err != nil {
-		logrus.Fatalf("Failed to write to container: %v", err)
+		logger.DockerLog.Fatalf("failed to write to container: %v", err)
 	}
 }
 
@@ -104,7 +104,7 @@ func MustCreateNetworkIfNotExists(name string) {
 
 	allNetworks, err := cli.NetworkList(ctx, types.NetworkListOptions{})
 	if err != nil {
-		log.Fatalf("Failed to check if network exists: %v", err)
+		logger.DockerLog.Fatalf("failed to check if network exists: %v", err)
 	}
 
 	for _, net := range allNetworks {
@@ -159,7 +159,7 @@ func WaitForContainerRunning(name string) error {
 // - exposedPorts specifies the list of L4 ports to expose. The format should be port_no/proto (e.g., 8080/tcp). It's optional.
 // - mnt defines the mount paths. The format should be `<local_path>:<target_path>`. It's optional.
 // - net defines a Docker network for a container (optional).
-func MustRunDockerContainer(name, image, cmd string, exposedPorts []string, mnt string, net string) {
+func MustRunDockerContainer(name, image, cmd string, hostIp string, exposedPorts []string, mnt string, net string) {
 	ctx := context.Background()
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
@@ -199,7 +199,7 @@ func MustRunDockerContainer(name, image, cmd string, exposedPorts []string, mnt 
 	for _, port := range exposedPorts {
 		baseCfg.ExposedPorts[nat.Port(port)] = struct{}{}
 		hostCfg.PortBindings[nat.Port(port)] = []nat.PortBinding{{
-			HostIP:   "127.0.0.1",
+			HostIP:   hostIp,
 			HostPort: port,
 		}}
 	}
@@ -217,7 +217,7 @@ func MustRunDockerContainer(name, image, cmd string, exposedPorts []string, mnt 
 		panic(err)
 	}
 
-	if err := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
+	if err := cli.ContainerStart(ctx, resp.ID, container.StartOptions{}); err != nil {
 		panic(err)
 	}
 
@@ -237,18 +237,18 @@ func MustStopDockerContainer(name string) {
 
 	err = cli.ContainerKill(ctx, name, "SIGKILL")
 	if err != nil {
-		logrus.Fatalf("Failed to stop Docker container %s: %v", name, err)
+		logger.DockerLog.Fatalf("failed to stop Docker container %s: %v", name, err)
 	}
 
-	err = cli.ContainerRemove(ctx, name, types.ContainerRemoveOptions{
+	err = cli.ContainerRemove(ctx, name, container.RemoveOptions{
 		Force: true,
 	})
 	if err != nil {
-		logrus.Fatalf("Failed to stop Docker container %s: %v", name, err)
+		logger.DockerLog.Fatalf("failed to stop Docker container %s: %v", name, err)
 	}
 }
 
-func MustPullDockerImage(image string) {
+func MustPullDockerImage(imageName string) {
 	ctx := context.Background()
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
@@ -256,7 +256,7 @@ func MustPullDockerImage(image string) {
 	}
 	defer cli.Close()
 
-	resp, err := cli.ImagePull(ctx, image, types.ImagePullOptions{})
+	resp, err := cli.ImagePull(ctx, imageName, image.PullOptions{})
 	if err != nil {
 		panic(err)
 	}

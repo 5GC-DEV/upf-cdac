@@ -26,7 +26,7 @@ jobs:
 
       - run: echo GIT_SHA_SHORT=$(git rev-parse --short HEAD) >> $GITHUB_ENV
 
-      - uses: docker/login-action@v3.2.0
+      - uses: docker/login-action@v3.3.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.AETHER_REGISTRY_USERNAME }}
@@ -135,7 +135,7 @@ jobs:
         with:
           go-version-file: 'go.mod'
 
-      - uses: docker/login-action@v3.2.0
+      - uses: docker/login-action@v3.3.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -174,13 +174,13 @@ jobs:
           echo "Updated version: $NEW_VERSION"
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GH_OMEC_PAT }}
           commit-message: Update version
           committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           author: ${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>
-          signoff: false
+          signoff: true
           branch: version-update
           delete-branch: true
           title: Update version
