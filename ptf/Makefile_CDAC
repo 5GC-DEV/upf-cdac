@@ -2,7 +2,7 @@
 # Copyright 2020-present Open Networking Foundation
 
 # generates python protobuf files and builds ptf docker image
-build: 
+build:
 	cd .. && make py-pb -f Makefile_CDAC
 	docker build -f Dockerfile_CDAC \
 	--build-arg GITHUB_USERNAME=${GITHUB_USERNAME} \
