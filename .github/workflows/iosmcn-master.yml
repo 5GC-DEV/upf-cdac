@@ -35,11 +35,21 @@ jobs:
   build-ptf:
     if: github.event_name == 'pull_request' && github.repository_owner == 'ios-mcn-core'
     runs-on: ubuntu-latest
+    env:
+      REGISTRY: ghcr.io
+      GITHUB_USERNAME: ${{ secrets.GHCRUSER }}
+      GITHUB_TOKEN: ${{ secrets.GHCRPASS }}
     defaults:
       run:
         working-directory: ./ptf
     steps:
       - uses: actions/checkout@v4
+
+      - uses: docker/login-action@v3.2.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.GHCRUSER }}
+          password: ${{ secrets.GHCRPASS }}
 
       - name: Build PTF image
         run: make build -f Makefile_IOSMCN
@@ -186,6 +196,8 @@ jobs:
       REGISTRY: ghcr.io
       DOCKER_REGISTRY: ghcr.io/
       DOCKER_REPOSITORY: ios-mcn-core/
+      GITHUB_USERNAME: ${{ secrets.GHCRUSER }}
+      GITHUB_TOKEN: ${{ secrets.GHCRPASS }}
     steps:
       - uses: actions/checkout@v4
 
@@ -201,7 +213,7 @@ jobs:
           username: ${{ secrets.GHCRUSER }}
           password: ${{ secrets.GHCRPASS }}
 
-      - name: Build and push release Docker image
+      - name: Build and push Docker image for Haswell CPU
         env:
           DOCKER_TAG: master-haswell-${{ env.GIT_SHA_SHORT }}
           CPU: haswell
@@ -209,7 +221,7 @@ jobs:
           CPU=$CPU make docker-build -f Makefile_IOSMCN
           make docker-push -f Makefile_IOSMCN
 
-      - name: Build and push release Docker image for Ivybridge CPU
+      - name: Build and push Docker image for Ivybridge CPU
         env:
           DOCKER_TAG: master-ivybridge-${{ env.GIT_SHA_SHORT }}
           CPU: ivybridge

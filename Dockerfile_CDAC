@@ -20,8 +20,10 @@ RUN apt-get update && apt-get install -y \
     rm -rf /var/lib/apt/lists/*
 
 # BESS pre-reqs
+ARG GITHUB_USERNAME
+ARG GITHUB_TOKEN
 WORKDIR /bess
-RUN git clone https://github.com/5GC-DEV/bess-cdac.git . && \
+RUN git clone https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/5GC-DEV/bess-cdac.git . && \
     git checkout ${BESS_COMMIT} && \
     cp -a protobuf /protobuf
 
