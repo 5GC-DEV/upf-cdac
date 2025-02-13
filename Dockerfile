@@ -5,7 +5,7 @@
 # Stage bess-build: fetch BESS dependencies & pre-reqs
 FROM registry.aetherproject.org/sdcore/bess_build:latest AS bess-build
 ARG CPU=native
-ARG BESS_COMMIT=master
+ARG BESS_COMMIT=main
 ENV PLUGINS_DIR=plugins
 ARG MAKEFLAGS
 ENV PKG_CONFIG_PATH=/usr/lib64/pkgconfig
@@ -102,7 +102,7 @@ WORKDIR /opt/bess/bessctl
 ENTRYPOINT ["bessd", "-f"]
 
 # Stage build bess golang pb
-FROM golang:1.23.1 AS protoc-gen
+FROM golang:1.23.3-bookworm AS protoc-gen
 RUN go install github.com/golang/protobuf/protoc-gen-go@latest
 
 FROM bess-build AS go-pb
@@ -120,7 +120,7 @@ RUN mkdir /bess_pb && \
     --python_out=plugins=grpc:/bess_pb \
     --grpc_python_out=/bess_pb
 
-FROM golang:1.23.1 AS pfcpiface-build
+FROM golang:1.23.3-bookworm AS pfcpiface-build
 ARG GOFLAGS
 WORKDIR /pfcpiface
 
