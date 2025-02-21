@@ -47,7 +47,7 @@ type upf struct {
 	nodeID            string
 	ippool            *IPPool
 	peers             []string
-	dnn               string
+	dnn               []string
 	reportNotifyChan  chan uint64
 	sliceInfo         *SliceInfo
 	readTimeout       time.Duration
@@ -123,13 +123,14 @@ func NewUPF(conf *Conf, fp datapath) *upf {
 		ippoolCidr:        conf.CPIface.UEIPPool,
 		nodeID:            nodeID,
 		datapath:          fp,
-		dnn:               conf.CPIface.Dnn,
-		peers:             conf.CPIface.Peers,
-		reportNotifyChan:  make(chan uint64, 1024),
-		maxReqRetries:     conf.MaxReqRetries,
-		enableHBTimer:     conf.EnableHBTimer,
-		readTimeout:       time.Second * time.Duration(conf.ReadTimeout),
-		n4addr:            conf.N4Addr,
+		// dnn:               conf.CPIface.Dnn,
+		dnn:              []string{conf.CPIface.Dnn},
+		peers:            conf.CPIface.Peers,
+		reportNotifyChan: make(chan uint64, 1024),
+		maxReqRetries:    conf.MaxReqRetries,
+		enableHBTimer:    conf.EnableHBTimer,
+		readTimeout:      time.Second * time.Duration(conf.ReadTimeout),
+		n4addr:           conf.N4Addr,
 	}
 
 	if len(conf.CPIface.Peers) > 0 {
