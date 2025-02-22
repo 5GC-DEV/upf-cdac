@@ -113,6 +113,35 @@ func NewUPF(conf *Conf, fp datapath) *upf {
 
 		nodeID = hosts[0]
 	}
+	/*
+		u := &upf{
+			enableUeIPAlloc:   conf.CPIface.EnableUeIPAlloc,
+			enableEndMarker:   conf.EnableEndMarker,
+			enableFlowMeasure: conf.EnableFlowMeasure,
+			accessIface:       conf.AccessIface.IfName,
+			coreIface:         conf.CoreIface.IfName,
+			ippoolCidr:        conf.CPIface.UEIPPool,
+			nodeID:            nodeID,
+			datapath:          fp,
+			// dnn:               conf.CPIface.Dnn,
+			dnn:              []string{conf.CPIface.Dnn},
+			peers:            conf.CPIface.Peers,
+			reportNotifyChan: make(chan uint64, 1024),
+			maxReqRetries:    conf.MaxReqRetries,
+			enableHBTimer:    conf.EnableHBTimer,
+			readTimeout:      time.Second * time.Duration(conf.ReadTimeout),
+			n4addr:           conf.N4Addr,
+		} */
+	var dnns []string
+	var ippoolCidr string
+
+	// Extract DNN names and UEIPPool from the new DnnList structure
+	for _, dnnInfo := range conf.CPIface.DnnList {
+		dnns = append(dnns, dnnInfo.DNN)
+		if ippoolCidr == "" { // Assign first available UEIPPool (adjust if needed)
+			ippoolCidr = dnnInfo.UEIPPool
+		}
+	}
 
 	u := &upf{
 		enableUeIPAlloc:   conf.CPIface.EnableUeIPAlloc,
@@ -120,17 +149,16 @@ func NewUPF(conf *Conf, fp datapath) *upf {
 		enableFlowMeasure: conf.EnableFlowMeasure,
 		accessIface:       conf.AccessIface.IfName,
 		coreIface:         conf.CoreIface.IfName,
-		ippoolCidr:        conf.CPIface.UEIPPool,
+		ippoolCidr:        ippoolCidr, // Use extracted UEIPPool
 		nodeID:            nodeID,
 		datapath:          fp,
-		// dnn:               conf.CPIface.Dnn,
-		dnn:              []string{conf.CPIface.Dnn},
-		peers:            conf.CPIface.Peers,
-		reportNotifyChan: make(chan uint64, 1024),
-		maxReqRetries:    conf.MaxReqRetries,
-		enableHBTimer:    conf.EnableHBTimer,
-		readTimeout:      time.Second * time.Duration(conf.ReadTimeout),
-		n4addr:           conf.N4Addr,
+		dnn:               dnns, // Use extracted DNN list
+		peers:             conf.CPIface.Peers,
+		reportNotifyChan:  make(chan uint64, 1024),
+		maxReqRetries:     conf.MaxReqRetries,
+		enableHBTimer:     conf.EnableHBTimer,
+		readTimeout:       time.Second * time.Duration(conf.ReadTimeout),
+		n4addr:            conf.N4Addr,
 	}
 
 	if len(conf.CPIface.Peers) > 0 {
