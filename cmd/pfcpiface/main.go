@@ -22,6 +22,7 @@ func main() {
 
 	// Read and parse json startup file.
 	conf, err := pfcpiface.LoadConfigFile(*configPath)
+	logger.InitLog.Infof("Loaded Config: %+v", conf)
 	if err != nil {
 		logger.InitLog.Fatalln("error reading conf file:", err)
 	}
