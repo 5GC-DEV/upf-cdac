@@ -86,13 +86,19 @@ type SimModeInfo struct {
 
 // CPIfaceInfo : CPIface interface settings.
 type CPIfaceInfo struct {
-	Peers           []string `json:"peers"`
-	UseFQDN         bool     `json:"use_fqdn"`
-	NodeID          string   `json:"hostname"`
-	HTTPPort        string   `json:"http_port"`
-	Dnn             string   `json:"dnn"`
-	EnableUeIPAlloc bool     `json:"enable_ue_ip_alloc"`
-	UEIPPool        string   `json:"ue_ip_pool"`
+	Peers    []string `json:"peers"`
+	UseFQDN  bool     `json:"use_fqdn"`
+	NodeID   string   `json:"hostname"`
+	HTTPPort string   `json:"http_port"`
+	// Dnn             string   `json:"dnn"`
+	EnableUeIPAlloc bool `json:"enable_ue_ip_alloc"`
+	// UEIPPool        string   `json:"ue_ip_pool"`
+	DnnList []DNNInfo `json:"dnn_list"`
+}
+
+type DNNInfo struct {
+	DNN      string `json:"dnn"`
+	UEIPPool string `json:"ue_ip_pool"`
 }
 
 // IfaceType : Gateway interface struct.
@@ -119,9 +125,11 @@ func validateConf(conf Conf) error {
 			return ErrInvalidArgumentWithReason("conf.P4rtcIface.AccessIP", conf.P4rtcIface.AccessIP, err.Error())
 		}
 
-		_, _, err = net.ParseCIDR(conf.CPIface.UEIPPool)
-		if err != nil {
-			return ErrInvalidArgumentWithReason("conf.UEIPPool", conf.CPIface.UEIPPool, err.Error())
+		for _, dnn := range conf.CPIface.DnnList {
+			_, _, err := net.ParseCIDR(dnn.UEIPPool)
+			if err != nil {
+				return ErrInvalidArgumentWithReason("conf.CPIface.DnnList.UEIPPool", dnn.UEIPPool, err.Error())
+			}
 		}
 
 		if conf.Mode != "" {
@@ -141,10 +149,19 @@ func validateConf(conf Conf) error {
 		}
 	}
 
-	if conf.CPIface.EnableUeIPAlloc {
+	/*if conf.CPIface.EnableUeIPAlloc {
 		_, _, err := net.ParseCIDR(conf.CPIface.UEIPPool)
 		if err != nil {
 			return ErrInvalidArgumentWithReason("conf.UEIPPool", conf.CPIface.UEIPPool, err.Error())
+		}
+	}*/
+
+	if conf.CPIface.EnableUeIPAlloc {
+		for _, dnn := range conf.CPIface.DnnList {
+			_, _, err := net.ParseCIDR(dnn.UEIPPool)
+			if err != nil {
+				return ErrInvalidArgumentWithReason("conf.CPIface.DnnList.UEIPPool", dnn.UEIPPool, err.Error())
+			}
 		}
 	}
 
