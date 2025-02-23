@@ -10,7 +10,6 @@
     // "sim" to generate synthetic traffic from BESS's Source module,
     // "" when running with UP4
     "mode": "dpdk",
-
     "table_sizes": {
         // Example sizes based on sim mode and 50K sessions. Customize as per your control plane
         // 50K per unique tuple, we send 4 unique PDR patterns
@@ -24,10 +23,8 @@
         // there are 3 FARs
         "farLookup": 150000
     },
-
     // [Optional] Set the log level to one of \"panic\", \"fatal\", \"error\", \"warning\", \"info\", \"debug\", \"trace\"
     "log_level": "info",
-
     // Use the sim block to enable simulation using either Source module or via il_trafficgen
     "sim": {
         // At this point we can simulate either N3/N6 or N3/N9 traffic, so choose n6 or n9 below
@@ -49,34 +46,25 @@
         "pkt_size": 128,
         "total_flows": 5000
     },
-
     // Max IP frag table entries (for IPv4 reassembly). Uncomment line below to enable
     // "max_ip_defrag_flows": "1000",
-
     // Uncomment line below to enable
     // "ip_frag_with_eth_mtu": "1518",
-
     // Enable hardware offload of checksum. Might disable vector PMD
     "hwcksum": false,
-
     // Enable PDU Session Container extension
     "gtppsc": false,
-
     // Enable Intel Dynamic Device Personalization (DDP)
     "ddp": false,
-
     // [Optional] Telemetry-See this link for details: https://github.com/omec-project/bess/blob/master/bessctl/module_tests/timestamp.py
     "measure_upf": true,
-
     // [Optional] Whether to enable flow-level measurements
     "measure_flow": true,
-
     // N3 interface
     "access": {
         // "cndp_jsonc_file": "conf/cndp_upf_1worker.jsonc",
         "ifname": "access"
     },
-
     // N6 or N9 interface (depending on the UPF's deployment [PSA-UPF or I-UPF])
     "core": {
         // "cndp_jsonc_file": "conf/cndp_upf_1worker.jsonc",
@@ -84,37 +72,28 @@
         // "ip_masquerade": "18.0.0.1 or 18.0.0.2 or 18.0.0.3",
         "ifname": "core"
     },
-
     // Number of worker threads. Default: 1
     "workers": 1,
-
     // Parameters for handling outgoing requests
     "max_req_retries": 5,
     "resp_timeout": "2s",
-
     // Whether to enable Network Token Functions
     "enable_ntf": false,
-
     // [Optional] Whether to enable End Marker Support
     // "enable_end_marker": false,
-
     // [Optional] Whether to enable Notify BESS feature
     // "enable_notify_bess": false,
-
     // Whether to enable P4Runtime feature
     "enable_p4rt": false,
     // "conn_timeout": "1000",
     // "read_timeout": "25",
     // "notify_sockaddr": "/tmp/notifycp",
     // "endmarker_sockaddr": "/tmp/pfcpport",
-
     // Whether to enable UPF HeartBeatTimer feature
     "enable_hbTimer": false,
     // "heart_beat_interval": "5s",
-
     // Whether to enable GTPu Path Monitoring
     "enable_gtpu_path_monitoring": false,
-
     "qci_qos_config": [
         {
             // Default values for QERs with QCI/QFI not listed below
@@ -140,7 +119,6 @@
             "priority": 5
         }
     ],
-
     // [Optional] Slice-wide meter rate limits
     "slice_rate_limit_config": {
         // Uplink policer
@@ -150,19 +128,24 @@
         "n3_bps": 500000000,
         "n3_burst_bytes": 625000
     },
-
     // Control plane controller settings
     "cpiface": {
-        "peers": ["148.162.12.214"],
+        "peers": [
+            "148.162.12.214"
+        ],
         // [Optional] Below parameters
-        "dnn": "internet",
+        "dnn_list": [
+            {
+                "dnn": "internet",
+                "ue_ip_pool": "10.250.0.0/16"
+            }
+        ],
         "http_port": "8080",
-        "enable_ue_ip_alloc": false,
+        "enable_ue_ip_alloc": false
         // "use_fqdn": "true",
         // "hostname": "upf-0",
-        "ue_ip_pool": "10.250.0.0/16"
+        // "ue_ip_pool": "10.250.0.0/16"
     },
-
     // p4rtc interface settings,
     "p4rtciface": {
         "access_ip": "172.17.0.1/32",
