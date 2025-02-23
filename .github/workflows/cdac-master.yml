@@ -191,7 +191,7 @@ jobs:
   docker-build-push-images:
     runs-on: ubuntu-latest
     if: github.repository_owner == '5GC-DEV'
-    needs: [route-control-tests, unit-tests-pfcp, integration-tests-up4, integration-tests-bess]
+    needs: [route-control-tests, unit-tests-pfcp, integration-tests-bess]
     
     env:
       REGISTRY: docker.io
