@@ -6,6 +6,7 @@ package integration
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net"
 	"os"
 	"testing"
@@ -307,7 +308,6 @@ func setup(t *testing.T, configType uint32) {
 	// TODO: we currently need to reset the DefaultRegisterer between tests, as some leave the
 	// 		 the registry in a bad state. Use custom registries to avoid global state.
 	prometheus.DefaultRegisterer = prometheus.NewRegistry()
-
 	switch os.Getenv(EnvDatapath) {
 	case DatapathBESS:
 		bessFake = fake_bess.NewFakeBESS()
@@ -322,14 +322,16 @@ func setup(t *testing.T, configType uint32) {
 	case DatapathUP4:
 		MustStartMockUP4()
 	}
-
+	fmt.Println("EnvMode:", os.Getenv(EnvMode))
 	switch os.Getenv(EnvMode) {
 	case ModeDocker:
+		fmt.Println("Running in Docker mode")
 		jsonConf, _ := json.Marshal(GetConfig(os.Getenv(EnvDatapath), configType))
 		err := os.WriteFile(ConfigPath, jsonConf, os.ModePerm)
 		require.NoError(t, err)
 		MustStartPFCPAgent()
 	case ModeNative:
+		fmt.Println("Running in Native mode")
 		upfConf := GetConfig(os.Getenv(EnvDatapath), configType)
 		upfConf.N4Addr = "127.0.0.8"
 		pfcpAgent = pfcpiface.NewPFCPIface(upfConf)

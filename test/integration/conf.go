@@ -107,7 +107,7 @@ func UP4ConfigDefault() pfcpiface.Conf {
 		DnnList: []pfcpiface.DNNInfo{ // Correct reference
 			{
 				// Dnn:      "internet",
-				UEIPPool: UEPoolUPF,
+				UEIPPool: UEPoolCP,
 			},
 		},
 	}
