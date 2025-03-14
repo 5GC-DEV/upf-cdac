@@ -55,9 +55,13 @@ func BESSConfigUPFBasedIPAllocation() pfcpiface.Conf {
 	config := BESSConfigDefault()
 	config.CPIface = pfcpiface.CPIfaceInfo{
 		EnableUeIPAlloc: true,
-		UEIPPool:        UEPoolUPF,
+		DnnList: []pfcpiface.DNNInfo{ // Correct reference
+			{
+				// Dnn:      "internet",
+				UEIPPool: UEPoolUPF,
+			},
+		},
 	}
-
 	return config
 }
 
@@ -85,7 +89,12 @@ func UP4ConfigDefault() pfcpiface.Conf {
 	}
 
 	config.CPIface = pfcpiface.CPIfaceInfo{
-		UEIPPool: UEPoolCP,
+		// EnableUeIPAlloc: true,
+		DnnList: []pfcpiface.DNNInfo{
+			{
+				UEIPPool: UEPoolCP,
+			},
+		},
 	}
 
 	return config
@@ -95,7 +104,11 @@ func UP4ConfigUPFBasedIPAllocation() pfcpiface.Conf {
 	config := UP4ConfigDefault()
 	config.CPIface = pfcpiface.CPIfaceInfo{
 		EnableUeIPAlloc: true,
-		UEIPPool:        UEPoolUPF,
+		DnnList: []pfcpiface.DNNInfo{
+			{
+				UEIPPool: UEPoolUPF,
+			},
+		},
 	}
 
 	return config
