@@ -29,12 +29,8 @@ func TimeBasedElectionId() p4_v1.Uint128 {
 }
 
 func ConnectP4rt(addr string, asMaster bool) (*client.Client, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
-
 	var err error
-
-	grpcConn, err = grpc.DialContext(ctx, addr, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
+	grpcConn, err = grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials())) // No ':='
 	if err != nil {
 		return nil, err
 	}
