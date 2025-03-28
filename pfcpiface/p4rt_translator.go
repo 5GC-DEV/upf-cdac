@@ -150,6 +150,7 @@ func (t *P4rtTranslator) getTableByID(tableID uint32) (*p4ConfigV1.Table, error)
 	return nil, ErrNotFoundWithParam("table", "ID", tableID)
 }
 
+//lint:ignore U1000 This function will be used in future development
 //nolint:unused
 func (t *P4rtTranslator) getMatchFieldIDByName(table *p4ConfigV1.Table, fieldName string) uint32 {
 	for _, field := range table.MatchFields {
@@ -379,6 +380,7 @@ func (t *P4rtTranslator) withActionParam(action *p4.Action, name string, value i
 	return nil
 }
 
+//lint:ignore U1000 This function will be used in future development
 //nolint:unused
 func (t *P4rtTranslator) getActionParamValue(tableEntry *p4.TableEntry, id uint32) ([]byte, error) {
 	for _, param := range tableEntry.Action.GetAction().Params {
@@ -390,6 +392,7 @@ func (t *P4rtTranslator) getActionParamValue(tableEntry *p4.TableEntry, id uint3
 	return nil, ErrNotFoundWithParam("action param", "id", id)
 }
 
+//lint:ignore U1000 This function will be used in future development
 //nolint:unused
 func (t *P4rtTranslator) getLPMMatchFieldValue(tableEntry *p4.TableEntry, name string) (*net.IPNet, error) {
 	tableID := tableEntry.TableId

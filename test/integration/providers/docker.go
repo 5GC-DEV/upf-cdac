@@ -131,14 +131,14 @@ func WaitForContainerRunning(name string) error {
 	defer cli.Close()
 
 	timeout := time.After(10 * time.Second)
-	ticker := time.Tick(500 * time.Millisecond)
+	ticker := time.NewTicker(500 * time.Millisecond)
 
 	// Keep trying until we're timed out or get a result/error
 	for {
 		select {
 		case <-timeout:
 			return errors.New("timed out")
-		case <-ticker:
+		case <-ticker.C:
 			info, err := cli.ContainerInspect(ctx, name)
 			if err != nil {
 				return errors.New("failed to get container status")
