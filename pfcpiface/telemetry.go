@@ -42,6 +42,7 @@ type upfCollector struct {
 }
 
 func newUpfCollector(upf *upf) *upfCollector {
+	logger.PfcpLog.Info("---in newUpfCollector()")
 	return &upfCollector{
 		packets: prometheus.NewDesc(prometheus.BuildFQName("upf", "packets", "count"),
 			"Shows the number of packets received by the UPF port",
@@ -85,6 +86,7 @@ func newUpfCollector(upf *upf) *upfCollector {
 
 // Describe writes all descriptors to the prometheus desc channel.
 func (uc *upfCollector) Describe(ch chan<- *prometheus.Desc) {
+	logger.PfcpLog.Info("---in Describe()")
 	ch <- uc.packets
 	ch <- uc.bytes
 	ch <- uc.dropped
@@ -100,12 +102,14 @@ func (uc *upfCollector) Describe(ch chan<- *prometheus.Desc) {
 
 // Collect writes all metrics to prometheus metric channel.
 func (uc *upfCollector) Collect(ch chan<- prometheus.Metric) {
+	logger.PfcpLog.Info("---in Collect()")
 	uc.summaryLatencyJitter(ch)
 	uc.portStats(ch)
 	uc.summaryGtpuLatency(ch)
 }
 
 func (uc *upfCollector) portStats(ch chan<- prometheus.Metric) {
+	logger.PfcpLog.Info("---in portStats telemetry()")
 	// When operating in sim mode there are no BESS ports
 	uc.upf.PortStats(uc, ch)
 }
@@ -174,9 +178,12 @@ func (col PfcpNodeCollector) Collect(ch chan<- prometheus.Metric) {
 }
 
 func setupProm(mux *http.ServeMux, upf *upf, node *PFCPNode) (*upfCollector, *PfcpNodeCollector, error) {
+	logger.PfcpLog.Info("---in setupProm()")
 	uc := newUpfCollector(upf)
 	if err := prometheus.Register(uc); err != nil {
 		return nil, nil, err
+	} else {
+		logger.PfcpLog.Info("---upf collector registered")
 	}
 
 	nc := NewPFCPNodeCollector(node)
@@ -185,7 +192,6 @@ func setupProm(mux *http.ServeMux, upf *upf, node *PFCPNode) (*upfCollector, *Pf
 	}
 
 	mux.Handle("/metrics", promhttp.Handler())
-
 	return uc, nc, nil
 }
 

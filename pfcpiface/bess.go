@@ -255,8 +255,11 @@ func (b *bess) getPortStats(ifname string) *pb.GetPortStatsResponse {
 }
 
 func (b *bess) PortStats(uc *upfCollector, ch chan<- prometheus.Metric) {
+	logger.BessLog.Info("---In Portstats function")
 	portstats := func(ifaceLabel, ifaceName string) {
+		logger.BessLog.Info("---inside portstats function variable")
 		packets := func(packets uint64, direction string) {
+			logger.BessLog.Info("---inside packets function variable")
 			p := prometheus.MustNewConstMetric(
 				uc.packets,
 				prometheus.CounterValue,
@@ -266,6 +269,7 @@ func (b *bess) PortStats(uc *upfCollector, ch chan<- prometheus.Metric) {
 			ch <- p
 		}
 		bytes := func(bytes uint64, direction string) {
+			logger.BessLog.Info("---inside bytes function variable")
 			p := prometheus.MustNewConstMetric(
 				uc.bytes,
 				prometheus.CounterValue,
@@ -275,6 +279,7 @@ func (b *bess) PortStats(uc *upfCollector, ch chan<- prometheus.Metric) {
 			ch <- p
 		}
 		dropped := func(dropped uint64, direction string) {
+			logger.BessLog.Info("---inside dropped function variable")
 			p := prometheus.MustNewConstMetric(
 				uc.dropped,
 				prometheus.CounterValue,
