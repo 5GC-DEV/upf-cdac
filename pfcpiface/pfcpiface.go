@@ -54,6 +54,8 @@ func NewPFCPIface(conf Conf) *PFCPIface {
 
 	httpPort := "8080"
 	if conf.CPIface.HTTPPort != "" {
+		logger.PfcpLog.Info("---conf.CPIface.HTTPPort:", conf.CPIface.HTTPPort)
+		logger.PfcpLog.Info("---conf.CPIface.HTTPPort is there so conf.CPIface.HTTPPort not 8080")
 		httpPort = conf.CPIface.HTTPPort
 	}
 
@@ -65,6 +67,7 @@ func NewPFCPIface(conf Conf) *PFCPIface {
 }
 
 func (p *PFCPIface) mustInit() {
+	logger.PfcpLog.Info("---In mustinit()")
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
@@ -84,6 +87,7 @@ func (p *PFCPIface) mustInit() {
 	// Note: due to error with golangci-lint ("Error: G112: Potential Slowloris Attack
 	// because ReadHeaderTimeout is not configured in the http.Server (gosec)"),
 	// the ReadHeaderTimeout is set to the same value as in nginx (client_header_timeout)
+	logger.PfcpLog.Info("---p.httpEndpoint:", p.httpEndpoint)
 	p.httpSrv = &http.Server{Addr: p.httpEndpoint, Handler: httpMux, ReadHeaderTimeout: 60 * time.Second}
 }
 
