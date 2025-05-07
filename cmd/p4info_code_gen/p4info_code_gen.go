@@ -12,8 +12,8 @@ import (
 	"strings"
 
 	"github.com/ettle/strcase"
-	"github.com/golang/protobuf/proto"
 	"github.com/omec-project/upf-epc/logger"
+	"google.golang.org/protobuf/proto"
 
 	p4ConfigV1 "github.com/p4lang/p4runtime/go/p4/config/v1"
 )
@@ -301,7 +301,7 @@ func mustGetP4Config(p4infopath string) *p4ConfigV1.P4Info {
 
 	var p4info p4ConfigV1.P4Info
 
-	err = proto.UnmarshalText(string(p4infoBytes), &p4info)
+	err = proto.Unmarshal(p4infoBytes, &p4info)
 	if err != nil {
 		panic("Could not parse P4Info file")
 	}
