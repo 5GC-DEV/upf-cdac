@@ -16,10 +16,8 @@ import (
 
 	"google.golang.org/grpc/credentials/insecure"
 
-	//nolint:staticcheck // Ignore SA1019.
-	// Upgrading to google.golang.org/protobuf/proto is not a drop-in replacement,
-	// as also P4Runtime stubs are based on the deprecated proto.
-	"github.com/golang/protobuf/proto"
+	
+	"google.golang.org/protobuf/proto"
 	grpcRetry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
 	"github.com/omec-project/upf-epc/logger"
 	p4ConfigV1 "github.com/p4lang/p4runtime/go/p4/config/v1"
@@ -30,8 +28,6 @@ import (
 
 // P4DeviceConfig ... Device config.
 type P4DeviceConfig []byte
-
-const invalidID = 0 //nolint:unused //lint:ignore U1000 Suppress unused warning
 
 // Table Entry Function Type.
 const (
