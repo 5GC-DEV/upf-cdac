@@ -174,6 +174,7 @@ func (col PfcpNodeCollector) Collect(ch chan<- prometheus.Metric) {
 }
 
 func setupProm(mux *http.ServeMux, upf *upf, node *PFCPNode) (*upfCollector, *PfcpNodeCollector, error) {
+	logger.PfcpLog.Infoln("--setting up prometheus")
 	uc := newUpfCollector(upf)
 	if err := prometheus.Register(uc); err != nil {
 		return nil, nil, err
