@@ -36,8 +36,9 @@ func ConnectP4rt(addr string, asMaster bool) (*client.Client, error) {
 	}
 
 	c := p4_v1.NewP4RuntimeClient(grpcConn)
+	electionID := TimeBasedElectionId()
 	// Election only happens if asMaster is true.
-	p4RtC := client.NewClient(c, 1, TimeBasedElectionId(), client.DisableCanonicalBytestrings)
+	p4RtC := client.NewClient(c, 1, &electionID, client.DisableCanonicalBytestrings)
 
 	if asMaster {
 		// perform Master Arbitration
@@ -57,9 +58,9 @@ func ConnectP4rt(addr string, asMaster bool) (*client.Client, error) {
 		// deletes channel, otherwise DisconnectP4rt blocks forever for non-master P4runtime channel
 		stopCh = nil
 	}
-
+	ctx := context.Background()
 	// used to retrieve P4Info if exists on device
-	p4RtC.GetFwdPipe(client.GetFwdPipeP4InfoAndCookie)
+	p4RtC.GetFwdPipe(ctx, client.GetFwdPipeP4InfoAndCookie)
 
 	return p4RtC, nil
 }
