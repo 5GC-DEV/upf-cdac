@@ -14,14 +14,19 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/libp2p/go-reuseport v0.1.0
 	github.com/omec-project/pfcpsim v1.2.0
-	github.com/p4lang/p4runtime v1.3.0
+	github.com/p4lang/p4runtime v1.4.0
 	github.com/prometheus/client_golang v1.11.1
 	github.com/stretchr/testify v1.9.0
 	github.com/wmnsk/go-pfcp v0.0.24
 	go.uber.org/zap v1.27.0
 	google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1
 	google.golang.org/grpc v1.67.0
-	google.golang.org/protobuf v1.34.2
+	google.golang.org/protobuf v1.36.6
+)
+
+require (
+	github.com/gogo/protobuf v1.3.2 // indirect
+	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
 )
 
 require (
@@ -35,9 +40,7 @@ require (
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
-	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/kr/pretty v0.2.1 // indirect
-	github.com/matttproud/golang_protobuf_extensions v1.0.4 // indirect
 	github.com/moby/docker-image-spec v1.3.1 // indirect
 	github.com/moby/term v0.0.0-20210619224110-3f7ff695adc6 // indirect
 	github.com/morikuni/aec v1.0.0 // indirect
