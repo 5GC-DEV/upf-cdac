@@ -19,7 +19,7 @@ require (
 	github.com/stretchr/testify v1.9.0
 	github.com/wmnsk/go-pfcp v0.0.24
 	go.uber.org/zap v1.27.0
-	google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240814211410-ddb44dafa142
 	google.golang.org/grpc v1.67.0
 	google.golang.org/protobuf v1.36.6
 )
@@ -63,6 +63,7 @@ require (
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
 	golang.org/x/time v0.0.0-20211116232009-f0f3c7e86c11 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20240814211410-ddb44dafa142 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gotest.tools/v3 v3.1.0 // indirect
 )
