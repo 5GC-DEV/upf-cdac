@@ -15,11 +15,11 @@ import (
 	"google.golang.org/grpc/status"
 
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/protobuf/proto"
 
 	//nolint:staticcheck // Ignore SA1019.
 	// Upgrading to google.golang.org/protobuf/proto is not a drop-in replacement,
 	// as also P4Runtime stubs are based on the deprecated proto.
-	"github.com/golang/protobuf/proto"
 	grpcRetry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
 	"github.com/omec-project/upf-epc/logger"
 	p4ConfigV1 "github.com/p4lang/p4runtime/go/p4/config/v1"
@@ -122,13 +122,14 @@ func (c *P4rtClient) CheckStatus() connectivity.State {
 }
 
 // SetMastership .. API.
-func (c *P4rtClient) SetMastership(electionID p4.Uint128) (err error) {
-	c.electionID = electionID
+func (c *P4rtClient) SetMastership(electionID *p4.Uint128) (err error) {
+	c.electionID.High = electionID.High
+	c.electionID.Low = electionID.Low
 	mastershipReq := &p4.StreamMessageRequest{
 		Update: &p4.StreamMessageRequest_Arbitration{
 			Arbitration: &p4.MasterArbitrationUpdate{
 				DeviceId:   1,
-				ElectionId: &electionID,
+				ElectionId: electionID,
 			},
 		},
 	}
@@ -209,7 +210,7 @@ func (c *P4rtClient) ReadCounterEntry(entry *p4.CounterEntry) (*p4.ReadResponse,
 		Entity: &p4.Entity_CounterEntry{CounterEntry: entry},
 	}
 
-	logger.P4Log.Debugln(proto.MarshalTextString(entity))
+	logger.P4Log.Debugln(proto.Marshal(entity))
 
 	return c.ReadReq(entity)
 }
@@ -221,7 +222,7 @@ func (c *P4rtClient) ReadTableEntry(entry *p4.TableEntry) (*p4.ReadResponse, err
 	entity := &p4.Entity{
 		Entity: &p4.Entity_TableEntry{TableEntry: entry},
 	}
-	logger.P4Log.Debugln(proto.MarshalTextString(entity))
+	logger.P4Log.Debugln(proto.Marshal(entity))
 
 	return c.ReadReq(entity)
 }
@@ -233,13 +234,13 @@ func (c *P4rtClient) ReadReqEntities(entities []*p4.Entity) (*p4.ReadResponse, e
 		DeviceId: c.deviceID,
 		Entities: entities,
 	}
-	logger.P4Log.Debugln(proto.MarshalTextString(req))
+	logger.P4Log.Debugln(proto.Marshal(req))
 
 	readClient, err := c.client.Read(context.Background(), req)
 	if err == nil {
 		readRes, err = readClient.Recv()
 		if err == nil {
-			logger.P4Log.Debugln(proto.MarshalTextString(readRes))
+			logger.P4Log.Debugln(proto.Marshal(readRes))
 			return readRes, nil
 		}
 	}
@@ -258,13 +259,13 @@ func (c *P4rtClient) ReadReq(entity *p4.Entity) (*p4.ReadResponse, error) {
 		2*time.Second)
 	defer cancel()
 
-	logger.P4Log.Debugln(proto.MarshalTextString(&req))
+	logger.P4Log.Debugln(proto.Marshal(&req))
 
 	readClient, err := c.client.Read(ctx, &req)
 	if err == nil {
 		readRes, err = readClient.Recv()
 		if err == nil {
-			logger.P4Log.Debugln(proto.MarshalTextString(readRes))
+			logger.P4Log.Debugln(proto.Marshal(readRes))
 			return readRes, nil
 		}
 	}
@@ -349,7 +350,7 @@ func (c *P4rtClient) InsertTableEntry(entry *p4.TableEntry, funcType uint8) erro
 		},
 	}
 
-	logger.P4Log.Debugln(proto.MarshalTextString(update))
+	logger.P4Log.Debugln(proto.Marshal(update))
 
 	return c.WriteReq(update)
 }
@@ -364,7 +365,12 @@ func (c *P4rtClient) ApplyTableEntries(methodType p4.Update_Type, entries ...*p4
 				Entity: &p4.Entity_TableEntry{TableEntry: entry},
 			},
 		}
-		logger.P4Log.Debugln("writing table entry:", proto.MarshalTextString(update))
+		marshaledUpdate, err := proto.Marshal(update)
+		if err != nil {
+			logger.P4Log.Errorln("failed to marshal update:", err)
+			return err
+		}
+		logger.P4Log.Debugln("writing table entry:", marshaledUpdate)
 
 		updates = append(updates, update)
 	}
@@ -382,7 +388,12 @@ func (c *P4rtClient) ApplyMeterEntries(methodType p4.Update_Type, entries ...*p4
 				Entity: &p4.Entity_MeterEntry{MeterEntry: entry},
 			},
 		}
-		logger.P4Log.Debugln("writing meter entry:", proto.MarshalTextString(update))
+		marshaledUpdate, err := proto.Marshal(update)
+		if err != nil {
+			logger.P4Log.Errorln("failed to marshal update:", err)
+			return err
+		}
+		logger.P4Log.Debugln("writing meter entry:", marshaledUpdate)
 		updates = append(updates, update)
 	}
 
@@ -411,7 +422,7 @@ func (c *P4rtClient) WriteBatchReq(updates []*p4.Update) error {
 
 	req.Updates = append(req.Updates, updates...)
 
-	logger.P4Log.Debugln(proto.MarshalTextString(req))
+	logger.P4Log.Debugln(proto.Marshal(req))
 
 	_, err := c.client.Write(context.Background(), req)
 
@@ -471,7 +482,7 @@ func (c *P4rtClient) SetForwardingPipelineConfig(p4InfoPath, deviceConfigPath st
 
 	p4Info := &p4ConfigV1.P4Info{}
 
-	err = proto.UnmarshalText(string(p4infoBytes), p4Info)
+	err = proto.Unmarshal(p4infoBytes, p4Info)
 	if err != nil {
 		logger.P4Log.Errorln("unmarshal test failed for p4info", err)
 		return
@@ -587,7 +598,8 @@ func CreateChannel(host string, deviceID uint64) (*P4rtClient, error) {
 		}
 	}
 
-	err = client.SetMastership(TimeBasedElectionId())
+	electionID := TimeBasedElectionId()
+	err = client.SetMastership(&electionID)
 	if err != nil {
 		logger.P4Log.Errorln("set Mastership error:", err)
 		closeStreamOnError()
