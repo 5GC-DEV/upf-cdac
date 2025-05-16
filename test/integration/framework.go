@@ -4,7 +4,6 @@
 package integration
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 	"net"
@@ -246,8 +245,7 @@ func initForwardingPipelineConfig() {
 	}
 	defer providers.DisconnectP4rt()
 
-	ctx := context.Background()
-	_, err = p4rtClient.SetFwdPipe(ctx, deviceConfigPath, p4InfoPath, 0)
+	_, err = p4rtClient.SetFwdPipe(deviceConfigPath, p4InfoPath, 0)
 	if err != nil {
 		panic("Cannot init forwarding pipeline config: " + err.Error())
 	}
@@ -265,18 +263,17 @@ func mustInitCountersWithDummyValue() {
 
 	igCounterName := p4constants.GetCounterIDToNameMap()[p4constants.CounterPreQosPipePreQosCounter]
 	egCounterName := p4constants.GetCounterIDToNameMap()[p4constants.CounterPostQosPipePostQosCounter]
-	ctx := context.Background()
 	for i, maxSize := uint64(0), p4constants.CounterSizePreQosPipePreQosCounter; i < maxSize; i++ {
 		dummyValue := &v1.CounterData{
 			ByteCount:   1,
 			PacketCount: 1,
 		}
 
-		if err := p4rtClient.ModifyCounterEntry(ctx, igCounterName, int64(i), dummyValue); err != nil {
+		if err := p4rtClient.ModifyCounterEntry(igCounterName, int64(i), dummyValue); err != nil {
 			panic(err)
 		}
 
-		if err := p4rtClient.ModifyCounterEntry(ctx, egCounterName, int64(i), dummyValue); err != nil {
+		if err := p4rtClient.ModifyCounterEntry(egCounterName, int64(i), dummyValue); err != nil {
 			panic(err)
 		}
 	}
