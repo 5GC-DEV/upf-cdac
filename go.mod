@@ -6,7 +6,7 @@ toolchain go1.23.9
 
 require (
 	github.com/Showmax/go-fqdn v1.0.0
-	github.com/antoninbas/p4runtime-go-client v0.0.0-20220204221603-49eba9f248c1
+	github.com/antoninbas/p4runtime-go-client v0.0.0-20250129182037-de3748d9d859
 	github.com/deckarep/golang-set v1.8.0
 	github.com/docker/docker v26.1.5+incompatible
 	github.com/docker/go-connections v0.4.0
@@ -16,7 +16,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/libp2p/go-reuseport v0.4.0
 	github.com/omec-project/pfcpsim v1.2.0
-	github.com/p4lang/p4runtime v1.4.0
+	github.com/p4lang/p4runtime v1.4.0-rc.5
 	github.com/prometheus/client_golang v1.11.1
 	github.com/stretchr/testify v1.10.0
 	github.com/wmnsk/go-pfcp v0.0.24
