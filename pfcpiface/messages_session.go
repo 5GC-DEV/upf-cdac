@@ -444,11 +444,11 @@ func (pConn *PFCPConn) handleSessionDeletionRequest(msg message.Message) (messag
 
 	sendError := func(err error) (message.Message, error) {
 		smres := message.NewSessionDeletionResponse(0, /* MO?? <-- what's this */
-			0,                                    /* FO <-- what's this? */
-			0,                                    /* seid */
-			sdreq.SequenceNumber,                 /* seq # */
-			0,                                    /* priority */
-			ie.NewCause(ie.CauseRequestRejected), /* accept it blindly for the time being */
+			0,                    /* FO <-- what's this? */
+			0,                    /* seid */
+			sdreq.SequenceNumber, /* seq # */
+			0,                    /* priority */
+			ie.NewCause(ie.CauseSessionContextNotFound), /* accept it blindly for the time being */
 		)
 
 		return smres, err
