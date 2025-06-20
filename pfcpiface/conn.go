@@ -121,7 +121,7 @@ func (node *PFCPNode) NewPFCPConn(lAddr, rAddr string, buf []byte) *PFCPConn {
 	logger.PfcpLog.Infoln("created PFCPConn from:", conn.LocalAddr(), "to:", conn.RemoteAddr())
 
 	rng := rand.New(rand.NewSource(time.Now().UnixNano())) // #nosec G404
-
+	logger.PfcpLog.Info("Initialized SEID random generator with timestamp")
 	var p = &PFCPConn{
 		ctx:            node.ctx,
 		Conn:           conn,
