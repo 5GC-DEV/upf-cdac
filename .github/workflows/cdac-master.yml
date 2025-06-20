@@ -34,7 +34,7 @@ jobs:
       #  run: DOCKER_TARGETS=pfcpiface make docker-build
 
   build-ptf:
-    if: github.event_name == 'pull_request' && github.repository_owner == '5GC-DEV'
+    # if: github.event_name == 'pull_request' && github.repository_owner == '5GC-DEV'
     runs-on: ubuntu-latest
     env:
       REGISTRY: docker.io
