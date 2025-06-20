@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y \
 ARG GITHUB_USERNAME
 ARG GITHUB_TOKEN
 WORKDIR /bess
-RUN git clone -b action-error-fix https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/5GC-DEV/bess-cdac.git . && \
+RUN git clone -b ubuntu-version-change https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/5GC-DEV/bess-cdac.git . && \
     # git checkout ${BESS_COMMIT} && \
     cp -a protobuf /protobuf
 
