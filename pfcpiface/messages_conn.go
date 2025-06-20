@@ -230,7 +230,7 @@ func (pConn *PFCPConn) handleAssociationReleaseRequest(msg message.Message) (mes
 
 	// Build response message
 	arres := message.NewAssociationReleaseResponse(arreq.SequenceNumber,
-		ie.NewRecoveryTimeStamp(pConn.ts.local),
+		//ie.NewRecoveryTimeStamp(pConn.ts.local),
 		pConn.nodeID.localIE,
 		ie.NewCause(ie.CauseRequestAccepted),
 	)
