@@ -70,7 +70,7 @@ func (s *PFCPSession) MarkSessionQer(qers []qer) {
 	lastPdrIndex := len(s.pdrs) - 1
 	// create search list with first pdr's qerlist */
 	if lastPdrIndex >= len(s.pdrs) {
-		logger.PfcpLog.Warnf("MarkSessionQer: lastPdrIndex=%d out of bounds s.pdrs len=%d", lastPdrIndex, len(s.pdrs))
+		logger.PfcpLog.Warnf("=====MarkSessionQer: lastPdrIndex=%d out of  bounds s.pdrs len=%d", lastPdrIndex, len(s.pdrs))
 		logger.PfcpLog.Infoln("=====return if lastPdrIndex out of bounds====")
 		return
 	}
