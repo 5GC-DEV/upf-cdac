@@ -1,48 +1,70 @@
+# SPDX-FileCopyrightText: 2021 Intel Corporation
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2021 Intel Corporation
-# Copyright 2021 Open Networking Foundation
 
-# golangci-lint configuration used for CI
+version: "2"
 run:
   tests: true
-  timeout: 10m
-  skip-files:
-    - ".*\\.pb\\.go"
-  skip-dirs-use-default: true
-
-# all available settings of specific linters
-linters-settings:
-  govet:
-    # report about shadowed variables
-    check-shadowing: true
-    # settings per analyzer
-    settings:
-      printf: # analyzer name, run `go tool vet help` to see all analyzers
-        funcs: # run `go tool vet help printf` to see available settings for `printf` analyzer
-          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Infof
-          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Warnf
-          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Errorf
-          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Fatalf
-    # enable all analyzers
-    enable-all: true
-    disable:
-      - fieldalignment
-
 linters:
   enable:
+    - asciicheck
+    - dogsled
     - goconst
-    - gofmt
-    - goimports
+    - gomodguard
     - govet
-    - ineffassign
     - misspell
+    - noctx
     - nilerr
     - nilnil
+    - predeclared
+    - unconvert
     - unparam
-
+    - unused
+    - whitespace
   disable:
     - errcheck
-    - goerr113
-    - gosec
+    - godox
+    - nakedret
     - staticcheck
-    - wsl
+  settings:
+    errcheck:
+      check-type-assertions: false
+      check-blank: true
+    goconst:
+      min-len: 3
+      min-occurrences: 3
+    govet:
+      enable-all: true
+      disable:
+        - fieldalignment
+      settings:
+        printf:
+          funcs:
+            - (github.com/golangci/golangci-lint/pkg/logutils.Log).Infof
+            - (github.com/golangci/golangci-lint/pkg/logutils.Log).Warnf
+            - (github.com/golangci/golangci-lint/pkg/logutils.Log).Errorf
+            - (github.com/golangci/golangci-lint/pkg/logutils.Log).Fatalf
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - .*\.pb\.go
+      - third_party$
+      - builtin$
+      - examples$
+issues:
+  uniq-by-line: true
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - .*\.pb\.go
+      - third_party$
+      - builtin$
+      - examples$

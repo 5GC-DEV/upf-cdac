@@ -19,15 +19,16 @@ const (
 )
 
 func (u upfMsgType) String() string {
-	if u == upfMsgTypeAdd {
+	switch u {
+	case upfMsgTypeAdd:
 		return "add"
-	} else if u == upfMsgTypeMod {
+	case upfMsgTypeMod:
 		return "modify"
-	} else if u == upfMsgTypeDel {
+	case upfMsgTypeDel:
 		return "delete" //nolint
-	} else if u == upfMsgTypeClear {
+	case upfMsgTypeClear:
 		return "clear"
-	} else {
+	default:
 		return "unknown"
 	}
 }
@@ -43,9 +44,9 @@ type datapath interface {
 	SendEndMarkers(endMarkerList *[][]byte) error
 	/* write pdr/far/qer to datapath */
 	// "master" function to send create/update/delete messages to UPF.
-	// "new" PacketForwardingRules are only used for update messages to UPF.
+	// "newRules" PacketForwardingRules are only used for update messages to UPF.
 	// TODO: we should have better CRUD API, with a single function per message type.
-	SendMsgToUPF(method upfMsgType, all PacketForwardingRules, new PacketForwardingRules) uint8
+	SendMsgToUPF(method upfMsgType, all PacketForwardingRules, newRules PacketForwardingRules) uint8
 	/* check of communication channel to datapath is setup */
 	IsConnected(accessIP *net.IP) bool
 	SummaryLatencyJitter(uc *upfCollector, ch chan<- prometheus.Metric)

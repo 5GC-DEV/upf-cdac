@@ -366,7 +366,6 @@ class RouteController:
 
     def bootstrap_routes(self) -> None:
         """Goes through all routes and handles new ones."""
-        # routes = self._ipr.get_routes()
         routes = self._ipr.get_routes(family=AF_INET)
         for route in routes:
             if route["event"] == KEY_NEW_ROUTE_ACTION:
@@ -589,8 +588,6 @@ class RouteController:
         """
         self._unresolved_arp_queries_cache[route_entry.next_hop_ip] = route_entry
         logger.info("Adding entry %s in arp table by pinging", route_entry)
-        if not validate_ipv4(route_entry.next_hop_ip):
-            return
         send_ping(route_entry.next_hop_ip)
 
     def _get_gate_idx(self, route_entry: RouteEntry, module_name: str) -> int:

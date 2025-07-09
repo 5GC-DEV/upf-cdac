@@ -3,7 +3,7 @@
 # Copyright 2019-present Intel Corporation
 
 # Stage bess-build: fetch BESS dependencies & pre-reqs
-FROM registry.aetherproject.org/sdcore/bess_build:latest AS bess-build
+FROM registry.aetherproject.org/sdcore/bess_build:241202 AS bess-build
 ARG CPU=native
 ARG BESS_COMMIT=main
 ENV PLUGINS_DIR=plugins
@@ -102,7 +102,7 @@ WORKDIR /opt/bess/bessctl
 ENTRYPOINT ["bessd", "-f"]
 
 # Stage build bess golang pb
-FROM golang:1.23.3-bookworm AS protoc-gen
+FROM golang:1.24.3-bookworm AS protoc-gen
 RUN go install github.com/golang/protobuf/protoc-gen-go@latest
 
 FROM bess-build AS go-pb
@@ -120,7 +120,7 @@ RUN mkdir /bess_pb && \
     --python_out=plugins=grpc:/bess_pb \
     --grpc_python_out=/bess_pb
 
-FROM golang:1.23.3-bookworm AS pfcpiface-build
+FROM golang:1.24.3-bookworm AS pfcpiface-build
 ARG GOFLAGS
 WORKDIR /pfcpiface
 
@@ -134,7 +134,7 @@ COPY . /pfcpiface
 RUN CGO_ENABLED=0 go build $GOFLAGS -o /bin/pfcpiface ./cmd/pfcpiface
 
 # Stage pfcpiface: runtime image of pfcpiface toward SMF/SPGW-C
-FROM alpine:3.20.3 AS pfcpiface
+FROM alpine:3.22 AS pfcpiface
 COPY conf /opt/bess/bessctl/conf
 COPY --from=pfcpiface-build /bin/pfcpiface /bin
 ENTRYPOINT [ "/bin/pfcpiface" ]
