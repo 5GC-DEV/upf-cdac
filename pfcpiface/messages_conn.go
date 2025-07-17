@@ -93,11 +93,11 @@ func (pConn *PFCPConn) handleIncomingResponse(msg message.Message) {
 
 func (pConn *PFCPConn) associationIEs() []*ie.IE {
 	upf := pConn.upf
-	networkInstance := string(ie.NewNetworkInstanceFQDN(strings.Join(upf.dnn, ",")).Payload)
+	networkInstance := string(ie.NewNetworkInstanceFQDN(strings.Join(upf.dnns, ",")).Payload)
 	flags := uint8(0x41)
 
-	if len(upf.dnn) != 0 {
-		logger.PfcpLog.Infoln("association Setup with DNN:", upf.dnn)
+	if len(upf.dnns) != 0 {
+		logger.PfcpLog.Infoln("association Setup with DNN:", upf.dnns)
 		// add ASSONI flag to set network instance.
 		flags = uint8(0x61)
 	}
