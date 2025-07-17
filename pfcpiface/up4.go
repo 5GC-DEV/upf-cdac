@@ -154,6 +154,8 @@ type UP4 struct {
 
 	reportNotifyChan chan<- uint64
 	endMarkerChan    chan []byte
+
+	dnnIPPoolMap map[string]*net.IPNet
 }
 
 func toUP4ApplicationFilter(p pdr) up4ApplicationFilter {
@@ -403,14 +405,14 @@ func (up4 *UP4) SetUpfInfo(u *upf, conf *Conf) {
 	u.accessIP = up4.accessIP.IP
 
 	logger.PfcpLog.Infof("AccessIP: %v", up4.accessIP)
-
-	if len(conf.CPIface.DnnList) > 0 {
-		up4.ueIPPool = MustParseStrIP(conf.CPIface.DnnList[0].UEIPPool)
-	} else {
-		logger.PfcpLog.Fatalln("No UE IP pool configured in DnnList")
+	up4.dnnIPPoolMap = make(map[string]*net.IPNet)
+	for _, dnn := range conf.CPIface.DnnList {
+		if dnn.UEIPPool == "" {
+			logger.PfcpLog.Warnf("UE IP pool missing for DNN: %s", dnn.DNN)
+			continue
+		}
+		up4.dnnIPPoolMap[dnn.DNN] = MustParseStrIP(dnn.UEIPPool)
 	}
-
-	logger.PfcpLog.Infof("UE IP pool: %v", up4.ueIPPool)
 
 	p4rtcServer := conf.P4rtcIface.P4rtcServer
 

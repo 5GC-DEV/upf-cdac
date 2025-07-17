@@ -154,7 +154,6 @@
     // Control plane controller settings
     "cpiface": {
         "peers": ["148.162.12.214"],
-        // [Optional] Below parameters
         "dnn_list": [
             {
                 "dnn": "internet",
@@ -165,7 +164,6 @@
         "enable_ue_ip_alloc": false
         // "use_fqdn": "true",
         // "hostname": "upf-0",
-        // "ue_ip_pool": "10.250.0.0/16"
     },
 
     // p4rtc interface settings,

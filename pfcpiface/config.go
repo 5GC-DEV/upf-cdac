@@ -92,7 +92,6 @@ type CPIfaceInfo struct {
 	HTTPPort        string    `json:"http_port"`
 	DnnList         []DNNInfo `json:"dnn_list"`
 	EnableUeIPAlloc bool      `json:"enable_ue_ip_alloc"`
-	UEIPPool        string    `json:"ue_ip_pool"`
 }
 
 type DNNInfo struct {
@@ -125,6 +124,9 @@ func validateConf(conf Conf) error {
 		}
 
 		for _, dnn := range conf.CPIface.DnnList {
+			if dnn.UEIPPool == "" {
+				return ErrInvalidArgumentWithReason("conf.CPIface.DnnList.UEIPPool", dnn.UEIPPool, "UE IP Pool must not be empty")
+			}
 			_, _, err := net.ParseCIDR(dnn.UEIPPool)
 			if err != nil {
 				return ErrInvalidArgumentWithReason("conf.CPIface.DnnList.UEIPPool", dnn.UEIPPool, err.Error())

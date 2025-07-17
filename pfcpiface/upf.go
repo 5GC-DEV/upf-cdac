@@ -48,11 +48,12 @@ type upf struct {
 	nodeID            string
 	ippool            *IPPool
 	peers             []string
-	dnn               []string
+	dnns              []string
 	reportNotifyChan  chan uint64
 	sliceInfo         *SliceInfo
 	readTimeout       time.Duration
 	fteidGenerator    *FTEIDGenerator
+	ippoolMap         map[string]string
 
 	datapath
 	maxReqRetries uint8
@@ -116,15 +117,12 @@ func NewUPF(conf *Conf, fp datapath) *upf {
 		nodeID = hosts[0]
 	}
 
-	var dnns []string
-	var ippoolCidr string
+	dnns := make([]string, 0)
+	ippoolMap := make(map[string]string) // or map[string]*net.IPNet if parsing
 
-	// Extract DNN names and UEIPPool from the new DnnList structure
 	for _, dnnInfo := range conf.CPIface.DnnList {
 		dnns = append(dnns, dnnInfo.DNN)
-		if ippoolCidr == "" {
-			ippoolCidr = dnnInfo.UEIPPool
-		}
+		ippoolMap[dnnInfo.DNN] = dnnInfo.UEIPPool
 	}
 
 	u := &upf{
@@ -134,10 +132,10 @@ func NewUPF(conf *Conf, fp datapath) *upf {
 		enableGtpuMonitor: conf.EnableGtpuPathMonitoring,
 		accessIface:       conf.AccessIface.IfName,
 		coreIface:         conf.CoreIface.IfName,
-		ippoolCidr:        ippoolCidr,
+		ippoolMap:         ippoolMap,
 		nodeID:            nodeID,
 		datapath:          fp,
-		dnn:               dnns,
+		dnns:              dnns,
 		peers:             conf.CPIface.Peers,
 		reportNotifyChan:  make(chan uint64, 1024),
 		maxReqRetries:     conf.MaxReqRetries,
