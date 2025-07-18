@@ -59,7 +59,7 @@ func BESSConfigUPFBasedIPAllocation() pfcpiface.Conf {
 		EnableUeIPAlloc: true,
 		DnnList: []pfcpiface.DNNInfo{ // Correct reference
 			{
-				DNN:      "internet",
+				// DNN:      "internet",
 				UEIPPool: UEPoolUPF,
 			},
 		},
@@ -109,7 +109,7 @@ func UP4ConfigUPFBasedIPAllocation() pfcpiface.Conf {
 		EnableUeIPAlloc: true,
 		DnnList: []pfcpiface.DNNInfo{
 			{
-				DNN:      "internet",
+				// DNN:      "internet",
 				UEIPPool: UEPoolUPF,
 			},
 		},

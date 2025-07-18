@@ -157,7 +157,7 @@
         "dnn_list": [
             {
                 "dnn": "internet",
-                "ue_ip_pool": "172.250.0.0/16"
+                "ue_ip_pool": "10.250.0.0/16"
             }
         ],
         "http_port": "8080",
