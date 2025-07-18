@@ -41,19 +41,19 @@ type upf struct {
 	enableGtpuMonitor bool
 	accessIface       string
 	coreIface         string
-	ippoolCidr        string
-	n4addr            string
-	accessIP          net.IP
-	coreIP            net.IP
-	nodeID            string
-	ippool            *IPPool
-	peers             []string
-	dnns              []string
-	reportNotifyChan  chan uint64
-	sliceInfo         *SliceInfo
-	readTimeout       time.Duration
-	fteidGenerator    *FTEIDGenerator
-	ippoolMap         map[string]string
+	// ippoolCidr        string
+	n4addr           string
+	accessIP         net.IP
+	coreIP           net.IP
+	nodeID           string
+	ippools          map[string]*IPPool
+	peers            []string
+	dnns             []string
+	reportNotifyChan chan uint64
+	sliceInfo        *SliceInfo
+	readTimeout      time.Duration
+	fteidGenerator   *FTEIDGenerator
+	ippoolMap        map[string]string
 
 	datapath
 	maxReqRetries uint8
@@ -142,6 +142,7 @@ func NewUPF(conf *Conf, fp datapath) *upf {
 		enableHBTimer:     conf.EnableHBTimer,
 		readTimeout:       time.Second * time.Duration(conf.ReadTimeout),
 		n4addr:            conf.N4Addr,
+		ippools:           make(map[string]*IPPool),
 	}
 
 	if len(conf.CPIface.Peers) > 0 {
@@ -181,10 +182,34 @@ func NewUPF(conf *Conf, fp datapath) *upf {
 		}
 	}
 
-	if u.enableUeIPAlloc {
-		u.ippool, err = NewIPPool(u.ippoolCidr)
+	/*if u.enableUeIPAlloc {
+		u.ippool, err = NewIPPool(u.ippoolMap[u.dnns[0]])
 		if err != nil {
 			logger.PfcpLog.Fatalln("ip pool init failed", err)
+		}
+	}*/
+	if u.enableUeIPAlloc {
+		for _, dnn := range u.dnns {
+			poolCidr, exists := u.ippoolMap[dnn]
+			if !exists {
+				logger.PfcpLog.Warnf("No IP pool configuration found for DNN: %s", dnn)
+				continue
+			}
+
+			pool, err := NewIPPool(poolCidr)
+			if err != nil {
+				logger.PfcpLog.Errorf("Failed to initialize IP pool for DNN %s: %v", dnn, err)
+				// Continue with other DNNs instead of failing completely
+				continue
+			}
+
+			u.ippools[dnn] = pool
+			logger.PfcpLog.Infof("Successfully initialized IP pool for DNN: %s with CIDR: %s", dnn, poolCidr)
+		}
+
+		// Check if at least one IP pool was successfully initialized
+		if len(u.ippools) == 0 {
+			logger.PfcpLog.Fatalln("No IP pools could be initialized, but UE IP allocation is enabled")
 		}
 	}
 
