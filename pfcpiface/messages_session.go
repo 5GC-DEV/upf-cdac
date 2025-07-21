@@ -228,28 +228,6 @@ func extractDNNFromPDR(createPDR *ie.IE) string {
 	return findNetworkInstance(createPDR)
 }
 
-func extractDNNFromSessionWithFallback(sereq *message.SessionEstablishmentRequest, upf *upf) string {
-	// Try to extract DNN from the session
-	if dnn := extractDNNFromSessionEstablishment(sereq); dnn != "" {
-		// Validate that this DNN is supported by UPF
-		for _, supportedDNN := range upf.dnns {
-			if supportedDNN == dnn {
-				return dnn
-			}
-		}
-		// DNN found but not supported - log warning
-		logger.PfcpLog.Warnf("DNN '%s' found in session but not supported by UPF", dnn)
-	}
-
-	// Fallback to first configured DNN
-	if len(upf.dnns) > 0 {
-		logger.PfcpLog.Infof("Using fallback DNN: %s", upf.dnns[0])
-		return upf.dnns[0]
-	}
-
-	return ""
-}
-
 func extractDNNFromSessionEstablishment(sereq *message.SessionEstablishmentRequest) string {
 	// Method 1: Try to extract DNN from CreatePDR
 	if dnn := extractDNNFromCreatePDR(sereq.CreatePDR); dnn != "" {
@@ -463,9 +441,11 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 			return sendError(fmt.Errorf("IP pool not found for DNN: %s", dnn))
 		}
 
-		if err := p.parsePDR(uPDR, localSEID, pConn.appPFDs, pool); err != nil {
+		err = p.parsePDR(uPDR, localSEID, pConn.appPFDs, pool)
+		if err != nil {
 			return sendError(err)
 		}
+
 		/*if err = p.parsePDR(uPDR, localSEID, pConn.appPFDs, upf.ippool); err != nil {
 			return sendError(err)
 		}*/

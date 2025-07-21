@@ -13,20 +13,21 @@ import (
 func releaseAllocatedIPs(ippools map[string]*IPPool, session *PFCPSession) error {
 	logger.PfcpLog.Infoln("release allocated IP")
 
-	// Check if we allocated an UE IP for this session and delete it.
 	for _, pdr := range session.pdrs {
 		if (pdr.allocIPFlag) && (pdr.srcIface == core) {
 			ueIP := int2ip(pdr.ueAddress)
 			logger.PfcpLog.Debugf("Releasing IP %s of session %d", ueIP.String(), session.localSEID)
+			var lastErr error
 			for poolName, pool := range ippools {
 				if err := pool.DeallocIP(session.localSEID); err == nil {
 					logger.PfcpLog.Debugf("Released IP from pool %s", poolName)
 					return nil
 				} else {
+					lastErr = err
 					logger.PfcpLog.Debugf("IP not found in pool %s: %v", poolName, err)
 				}
 			}
-			// return ippool.DeallocIP(session.localSEID)
+			return lastErr
 		}
 	}
 	return nil
