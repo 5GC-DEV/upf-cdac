@@ -5,7 +5,7 @@ package pfcpiface
 
 import (
 	"errors"
-	"strings"
+	//"strings"
 
 	"github.com/omec-project/upf-epc/logger"
 	"github.com/wmnsk/go-pfcp/ie"
@@ -91,7 +91,7 @@ func (pConn *PFCPConn) handleIncomingResponse(msg message.Message) {
 	}
 }
 
-func (pConn *PFCPConn) associationIEs() []*ie.IE {
+/*func (pConn *PFCPConn) associationIEs() []*ie.IE {
 	upf := pConn.upf
 	networkInstance := string(ie.NewNetworkInstanceFQDN(strings.Join(upf.dnns, ",")).Payload)
 	flags := uint8(0x41)
@@ -122,6 +122,48 @@ func (pConn *PFCPConn) associationIEs() []*ie.IE {
 		ie.NewUserPlaneIPResourceInformation(flags, 0, upf.accessIP.String(), "", networkInstance, ie.SrcInterfaceAccess),
 		// ie.NewUserPlaneIPResourceInformation(0x41, 0, coreIP, "", "", ie.SrcInterfaceCore),
 		ie.NewUPFunctionFeatures(features...),
+	}
+
+	return ies
+} */
+
+func (pConn *PFCPConn) associationIEs() []*ie.IE {
+	upf := pConn.upf
+	features := make([]uint8, 4)
+
+	if upf.enableUeIPAlloc {
+		setUeipFeature(features...)
+	}
+
+	setFTUPFeature(features...)
+
+	if upf.enableEndMarker {
+		setEndMarkerFeature(features...)
+	}
+
+	ies := []*ie.IE{
+		ie.NewRecoveryTimeStamp(pConn.ts.local),
+		pConn.nodeID.localIE,
+		ie.NewUPFunctionFeatures(features...),
+	}
+
+	for _, dnn := range upf.dnns {
+		networkInstance := string(ie.NewNetworkInstanceFQDN(dnn).Payload)
+		flags := uint8(0x61) // SrcInterface + Network Instance + IPv4
+
+		ipRes := ie.NewUserPlaneIPResourceInformation(
+			flags,
+			0,
+			upf.accessIP.String(),
+			"",
+			networkInstance,
+			ie.SrcInterfaceAccess,
+		)
+
+		// Optional: Add UE IP address pool information here if available
+		// uePoolIE := ie.NewUEIPAddressPoolInformation(...) // if implemented
+
+		ies = append(ies, ipRes)
 	}
 
 	return ies

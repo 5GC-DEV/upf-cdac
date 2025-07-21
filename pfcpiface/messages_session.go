@@ -5,6 +5,7 @@ package pfcpiface
 
 import (
 	"errors"
+	"fmt"
 	"net"
 	"strings"
 
@@ -88,7 +89,25 @@ func (pConn *PFCPConn) handleSessionEstablishmentRequest(msg message.Message) (m
 
 	for _, cPDR := range sereq.CreatePDR {
 		var p pdr
-		if err = p.parsePDR(cPDR, session.localSEID, pConn.appPFDs, upf.ippool); err != nil {
+		/*if err = p.parsePDR(cPDR, session.localSEID, pConn.appPFDs, upf.ippools[sereq.APNDNN[0]]); err != nil {
+			return errProcessReply(err, ie.CauseRequestRejected)
+		}*/
+		dnn := extractDNNFromPDR(cPDR)
+		if dnn == "" {
+			// Try session-level extraction
+			dnn = extractDNNFromSessionEstablishment(sereq)
+			if dnn == "" {
+				return errProcessReply(fmt.Errorf("no DNN found"), ie.CauseRequestRejected)
+			}
+		}
+
+		// Get IP pool for the DNN
+		pool, exists := upf.ippools[dnn]
+		if !exists {
+			return errProcessReply(fmt.Errorf("IP pool not found for DNN: %s", dnn), ie.CauseRequestRejected)
+		}
+
+		if err = p.parsePDR(cPDR, session.localSEID, pConn.appPFDs, pool); err != nil {
 			return errProcessReply(err, ie.CauseRequestRejected)
 		}
 
@@ -96,7 +115,7 @@ func (pConn *PFCPConn) handleSessionEstablishmentRequest(msg message.Message) (m
 			var fteid uint32
 			// fteid, err = pConn.upf.fteidGenerator.Allocate()
 			if pConn.upf.fteidGenerator == nil {
-				logger.PfcpLog.Warnf("fteid is nil")
+				logger.PfcpLog.Warnf("fteid is nill")
 				pConn.upf.fteidGenerator = NewFTEIDGenerator()
 			}
 			fteid, err = pConn.upf.fteidGenerator.Allocate()
@@ -186,6 +205,141 @@ func (pConn *PFCPConn) handleSessionEstablishmentRequest(msg message.Message) (m
 	return seres, nil
 }
 
+func extractDNNFromPDR(createPDR *ie.IE) string {
+	if createPDR == nil {
+		return ""
+	}
+
+	// Look for PDI in CreatePDR - PDI() returns []*ie.IE
+	pdiIEs, err := createPDR.PDI()
+	if err != nil {
+		// Fallback: search directly in CreatePDR
+		return findNetworkInstance(createPDR)
+	}
+
+	// Look for Network Instance in PDI IEs
+	for _, pdiIE := range pdiIEs {
+		if netInstance := findNetworkInstance(pdiIE); netInstance != "" {
+			return netInstance
+		}
+	}
+
+	// Fallback: search directly in CreatePDR
+	return findNetworkInstance(createPDR)
+}
+
+func extractDNNFromSessionWithFallback(sereq *message.SessionEstablishmentRequest, upf *upf) string {
+	// Try to extract DNN from the session
+	if dnn := extractDNNFromSessionEstablishment(sereq); dnn != "" {
+		// Validate that this DNN is supported by UPF
+		for _, supportedDNN := range upf.dnns {
+			if supportedDNN == dnn {
+				return dnn
+			}
+		}
+		// DNN found but not supported - log warning
+		logger.PfcpLog.Warnf("DNN '%s' found in session but not supported by UPF", dnn)
+	}
+
+	// Fallback to first configured DNN
+	if len(upf.dnns) > 0 {
+		logger.PfcpLog.Infof("Using fallback DNN: %s", upf.dnns[0])
+		return upf.dnns[0]
+	}
+
+	return ""
+}
+
+func extractDNNFromSessionEstablishment(sereq *message.SessionEstablishmentRequest) string {
+	// Method 1: Try to extract DNN from CreatePDR
+	if dnn := extractDNNFromCreatePDR(sereq.CreatePDR); dnn != "" {
+		return dnn
+	}
+
+	return ""
+}
+func extractDNNFromSessionModification(sereq *message.SessionModificationRequest) string {
+	// Method 1: Try to extract DNN from CreatePDR
+	if dnn := extractDNNFromCreatePDR(sereq.CreatePDR); dnn != "" {
+		return dnn
+	}
+
+	return ""
+}
+
+func findNetworkInstance(parentIE *ie.IE) string {
+	if parentIE == nil {
+		return ""
+	}
+
+	// Method 1: Try direct NetworkInstance extraction if this IE is NetworkInstance type
+	if parentIE.Type == ie.NetworkInstance {
+		if netInstanceStr, err := parentIE.NetworkInstance(); err == nil && netInstanceStr != "" {
+			return netInstanceStr
+		}
+	}
+
+	// Method 2: Try direct extraction if this IE has NetworkInstance method
+	if netInstanceStr, err := parentIE.NetworkInstance(); err == nil && netInstanceStr != "" {
+		return netInstanceStr
+	}
+
+	// Method 3: Search in child IEs
+	for _, childIE := range parentIE.ChildIEs {
+		if childIE == nil {
+			continue
+		}
+
+		// Check if child IE is NetworkInstance type
+		if childIE.Type == ie.NetworkInstance {
+			if netInstanceStr, err := childIE.NetworkInstance(); err == nil && netInstanceStr != "" {
+				return netInstanceStr
+			}
+		}
+
+		// Recursive search in nested IEs
+		if nestedNetInstance := findNetworkInstance(childIE); nestedNetInstance != "" {
+			return nestedNetInstance
+		}
+	}
+
+	return ""
+}
+
+func extractDNNFromCreatePDR(createPDRs []*ie.IE) string {
+	for _, createPDR := range createPDRs {
+		if createPDR == nil {
+			continue
+		}
+
+		// Look for PDI (Packet Detection Information) in CreatePDR
+		pdiIEs, err := createPDR.PDI()
+		if err != nil {
+			// Alternative: Search directly in CreatePDR if PDI parsing fails
+			if netInstance := findNetworkInstance(createPDR); netInstance != "" {
+				logger.PfcpLog.Infof("Found DNN '%s' in CreatePDR", netInstance)
+				return netInstance
+			}
+			continue
+		}
+
+		// Look for NetworkInstance in PDI IEs - PDI() returns []*ie.IE
+		for _, pdiIE := range pdiIEs {
+			if netInstance := findNetworkInstance(pdiIE); netInstance != "" {
+				logger.PfcpLog.Infof("Found DNN '%s' in CreatePDR PDI", netInstance)
+				return netInstance
+			}
+		}
+
+		// Alternative: Search directly in CreatePDR
+		if netInstance := findNetworkInstance(createPDR); netInstance != "" {
+			logger.PfcpLog.Infof("Found DNN '%s' in CreatePDR", netInstance)
+			return netInstance
+		}
+	}
+	return ""
+}
+
 func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (message.Message, error) {
 	upf := pConn.upf
 
@@ -238,7 +392,22 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 
 	for _, cPDR := range smreq.CreatePDR {
 		var p pdr
-		if err := p.parsePDR(cPDR, localSEID, pConn.appPFDs, upf.ippool); err != nil {
+		dnn := extractDNNFromPDR(cPDR)
+		if dnn == "" {
+			// Try session-level extraction
+			dnn = extractDNNFromSessionModification(smreq)
+			if dnn == "" {
+				return sendError(fmt.Errorf("no DNN found"))
+			}
+		}
+
+		// Get IP pool for the DNN
+		pool, exists := upf.ippools[dnn]
+		if !exists {
+			return sendError(fmt.Errorf("IP pool not found for DNN: %s", dnn))
+		}
+
+		if err := p.parsePDR(cPDR, localSEID, pConn.appPFDs, pool); err != nil {
 			return sendError(err)
 		}
 
@@ -279,9 +448,27 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 			err error
 		)
 
-		if err = p.parsePDR(uPDR, localSEID, pConn.appPFDs, upf.ippool); err != nil {
+		dnn := extractDNNFromPDR(uPDR)
+		if dnn == "" {
+			// Try session-level extraction
+			dnn = extractDNNFromSessionModification(smreq)
+			if dnn == "" {
+				return sendError(fmt.Errorf("no DNN found"))
+			}
+		}
+
+		// Get IP pool for the DNN
+		pool, exists := upf.ippools[dnn]
+		if !exists {
+			return sendError(fmt.Errorf("IP pool not found for DNN: %s", dnn))
+		}
+
+		if err := p.parsePDR(uPDR, localSEID, pConn.appPFDs, pool); err != nil {
 			return sendError(err)
 		}
+		/*if err = p.parsePDR(uPDR, localSEID, pConn.appPFDs, upf.ippool); err != nil {
+			return sendError(err)
+		}*/
 
 		p.fseidIP = fseidIP
 
@@ -444,11 +631,11 @@ func (pConn *PFCPConn) handleSessionDeletionRequest(msg message.Message) (messag
 
 	sendError := func(err error) (message.Message, error) {
 		smres := message.NewSessionDeletionResponse(0, /* MO?? <-- what's this */
-			0,                    /* FO <-- what's this? */
-			0,                    /* seid */
-			sdreq.SequenceNumber, /* seq # */
-			0,                    /* priority */
-			ie.NewCause(ie.CauseSessionContextNotFound), /* accept it blindly for the time being */
+			0,                                    /* FO <-- what's this? */
+			0,                                    /* seid */
+			sdreq.SequenceNumber,                 /* seq # */
+			0,                                    /* priority */
+			ie.NewCause(ie.CauseRequestRejected), /* accept it blindly for the time being */
 		)
 
 		return smres, err
@@ -467,7 +654,7 @@ func (pConn *PFCPConn) handleSessionDeletionRequest(msg message.Message) (messag
 		return sendError(ErrWriteToDatapath)
 	}
 
-	if err := releaseAllocatedIPs(upf.ippool, &session); err != nil {
+	if err := releaseAllocatedIPs(upf.ippools, &session); err != nil {
 		return sendError(ErrOperationFailedWithReason("session IP dealloc", err.Error()))
 	}
 
