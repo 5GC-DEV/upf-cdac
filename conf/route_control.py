@@ -145,16 +145,23 @@ class BessController:
             )
 
     def get_ip_lookup_rules(self, module_name: str) -> Optional[List[Dict]]:
-        """Gets the rules from an IPLookup module using get_info."""
-        try:
-            module_info = self._bess.get_module_info(module_name)
-            return module_info['info']['rules']
-        except BESS.Error as e:
-            logger.error("BESS Error getting rules from module %s: %s", module_name, e)
-            return None
-        except KeyError:
-            logger.error("Could not find 'rules' in info for module %s.", module_name)
-            return None
+    """Gets the rules from an IPLookup module using get_info."""
+    try:
+        module_info = self._bess.get_module_info(module_name)
+        # FIX: Access the data using dot notation, not dictionary keys.
+        # Also, the info field is a protobuf message, not a dict.
+        # The 'rules' attribute is directly available on the info object.
+        return module_info.info.rules
+    except BESS.Error as e:
+        logger.error(f"BESS Error getting rules from module {module_name}: {e}")
+        return None
+    except AttributeError:
+        # It's better to catch AttributeError if 'info' or 'rules' doesn't exist
+        logger.error(
+            f"Could not find 'rules' in the info for module {module_name}. "
+            f"The module may not be an IPLookup module or has no rules."
+        )
+        return None
 
     def delete_module_route_entry(self, route_entry: RouteEntry) -> None:
         """Deletes a route entry from BESS module.
@@ -497,21 +504,22 @@ class RouteController:
             return
 
     def add_unresolved_new_neighbor(self, netlink_message: dict) -> None:
-        """Handle new neighbor event.
+    """Handle new neighbor event safely."""
+    attr_dict = dict(netlink_message["attrs"])
+    ip_addr = attr_dict.get(KEY_NETWORK_LAYER_DEST_ADDR)
+    
+    # FIX: Check if the MAC address key exists before accessing it.
+    if KEY_LINK_LAYER_ADDRESS not in attr_dict:
+        logger.info(f"Neighbor event for {ip_addr} has no MAC address. Ignoring.")
+        return
 
-        It will add the neighbor if it was in the unresolved ARP queries cache.
-
-        Args:
-            netlink_message (dict): The netlink message.
-        """
-        attr_dict = dict(netlink_message["attrs"])
-        route_entry = self._unresolved_arp_queries_cache.get(
-            attr_dict[KEY_NETWORK_LAYER_DEST_ADDR]
-        )
-        gateway_mac = attr_dict[KEY_LINK_LAYER_ADDRESS]
-        if route_entry:
-            self._add_neighbor(route_entry, gateway_mac)
-            del self._unresolved_arp_queries_cache[route_entry.next_hop_ip]
+    gateway_mac = attr_dict[KEY_LINK_LAYER_ADDRESS]
+    
+    # Check if this IP was in our cache of pending routes
+    if ip_addr and (route_entry := self._unresolved_arp_queries_cache.get(ip_addr)):
+        logger.info(f"ARP resolution complete for {ip_addr}. MAC: {gateway_mac}. Adding neighbor.")
+        self._add_neighbor(route_entry, gateway_mac)
+        del self._unresolved_arp_queries_cache[route_entry.next_hop_ip]
 
     def _create_module_links(
         self,
