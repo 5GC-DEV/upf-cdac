@@ -143,6 +143,18 @@ class BessController:
                     module_name,
                 )
             )
+    # --- NEW METHOD ---
+    def get_ip_lookup_rules(self, module_name: str) -> Optional[List[Dict]]:
+        """Gets the rules from an IPLookup module using get_info."""
+        try:
+            module_info = self._bess.get_module_info(module_name)
+            return module_info['info']['rules']
+        except BESS.Error as e:
+            logger.error("BESS Error getting rules from module %s: %s", module_name, e)
+            return None
+        except KeyError:
+            logger.error("Could not find 'rules' in info for module %s.", module_name)
+            return None
 
     def delete_module_route_entry(self, route_entry: RouteEntry) -> None:
         """Deletes a route entry from BESS module.
@@ -390,6 +402,29 @@ class RouteController:
             return
 
         self._add_neighbor(route_entry, next_hop_mac)
+    
+    # --- NEW METHOD ---
+    def print_all_routing_tables(self, number: int) -> None:
+        """Handles a signal to print the routing tables of all managed modules."""
+        logger.info("Received signal %i. Printing BESS routing tables...", number)
+        with self._lock:
+            for interface in self._interfaces:
+                module_name = get_route_module_name(interface)
+                logger.info("=" * 60)
+                logger.info("Querying BESS routing table for module: %s", module_name)
+                rules = self._bess_controller.get_ip_lookup_rules(module_name)
+                if rules is None:
+                    logger.warning("Could not retrieve rules for %s.", module_name)
+                    continue
+                if not rules:
+                    logger.info("Table is empty.")
+                    continue
+                header = f"{'Prefix':<18} | {'Prefix Len':<12} | {'Gate':<6}"
+                logger.info(header)
+                logger.info("-" * len(header))
+                for rule in rules:
+                    logger.info(f"{rule.get('prefix', 'N/A'):<18} | {rule.get('prefix_len', 'N/A'):<12} | {rule.get('gate', 'N/A'):<6}")
+                logger.info("=" * 60)
 
     def _add_neighbor(self, route_entry: RouteEntry, next_hop_mac: str) -> None:
         """Adds the route in BESS module.
@@ -676,6 +711,8 @@ class RouteController:
         signal.pause()
         logger.info("Received: %i reconfigured", number)
 
+    # --- EDITED CODE SNIPPET ---
+
     def _parse_route_entry_msg(self, route_entry: dict) -> Optional[RouteEntry]:
         """Parses a route entry message.
         If the entry passes the checks, it is returned as a RouteEntry object.
@@ -688,35 +725,49 @@ class RouteController:
         """
         try:
             attr_dict = dict(route_entry["attrs"])
+            # Added these lines to get info for logging
+            dest_prefix_from_attr = attr_dict.get(KEY_DESTINATION_IP, "N/A")
+            prefix_len = route_entry.get(KEY_DESTINATION_PREFIX_LENGTH, "N/A")
+            event = route_entry.get("event", "N/A")
         except (ValueError, KeyError):
-            logger.exception("Error parsing route entry message")
+            logger.exception("Error parsing netlink message attributes.")
             return None
 
+        # --- FILTER 1: Must have a next-hop gateway ---
         if not (next_hop_ip := attr_dict.get(KEY_DESTINATION_GATEWAY_IP)):
+            # ADDED THIS LOG LINE:
+            logger.info(f"FILTERED({event}): Route to {dest_prefix_from_attr}/{prefix_len} ignored -> REASON: No gateway (likely a directly connected route).")
             return None
 
-        if not attr_dict.get(KEY_INTERFACE):
+        # --- FILTER 2: Must have a valid, managed interface ---
+        if not (if_index := attr_dict.get(KEY_INTERFACE)):
+            # ADDED THIS LOG LINE:
+            logger.info(f"FILTERED({event}): Route to {dest_prefix_from_attr}/{prefix_len} ignored -> REASON: No output interface specified.")
             return None
-        interface_index = int(attr_dict.get(KEY_INTERFACE))
-        interface = self._ndb.interfaces[interface_index].get("ifname")
+        interface = self._ndb.interfaces[if_index].get("ifname")
         if interface not in self._interfaces:
+            # ADDED THIS LOG LINE:
+            logger.info(f"FILTERED({event}): Route to {dest_prefix_from_attr}/{prefix_len} ignored -> REASON: Interface '{interface}' is not in managed list {self._interfaces}.")
             return None
 
+        # --- FILTER 3: Must have a destination prefix ---
         dest_prefix = None
         if route_entry.get(KEY_DESTINATION_PREFIX_LENGTH) == 0:
             dest_prefix = "0.0.0.0"
-
-        if attr_dict.get(KEY_DESTINATION_IP):
+        elif attr_dict.get(KEY_DESTINATION_IP):
             dest_prefix = attr_dict.get(KEY_DESTINATION_IP)
-
         if not dest_prefix:
+            # ADDED THIS LOG LINE:
+            logger.info(f"FILTERED({event}): Route via {next_hop_ip} ignored -> REASON: No destination prefix found.")
             return None
 
+        # ADDED THIS SUCCESS LOG LINE:
+        logger.info(f"ACCEPTED({event}): Route to {dest_prefix}/{prefix_len} via {next_hop_ip} on interface {interface}.")
         return RouteEntry(
             dest_prefix=dest_prefix,
             next_hop_ip=next_hop_ip,
             interface=interface,
-            prefix_len=route_entry[KEY_DESTINATION_PREFIX_LENGTH],
+            prefix_len=prefix_len,
         )
 
 
@@ -827,7 +878,10 @@ def register_signal_handlers(controller: RouteController) -> None:
     signal.signal(signal.SIGHUP, lambda number, _: controller.reconfigure(number))
     signal.signal(signal.SIGINT, lambda number, _: controller.cleanup(number))
     signal.signal(signal.SIGTERM, lambda number, _: controller.cleanup(number))
-    logger.info("Registered signals handlers.")
+    # THIS LINE WAS ADDED:
+    signal.signal(signal.SIGUSR1, lambda number, _: controller.print_all_routing_tables(number))
+    # THIS LOG MESSAGE WAS UPDATED:
+    logger.info("Registered signal handlers (SIGHUP, SIGINT, SIGTERM, SIGUSR1).")
 
 
 if __name__ == "__main__":
