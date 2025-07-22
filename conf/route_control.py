@@ -145,7 +145,7 @@ class BessController:
             )
 
     def get_ip_lookup_rules(self, module_name: str) -> Optional[List[Dict]]:
-    """Gets the rules from an IPLookup module using get_info."""
+    #Gets the rules from an IPLookup module using get_info.
     try:
         module_info = self._bess.get_module_info(module_name)
         # FIX: Access the data using dot notation, not dictionary keys.
