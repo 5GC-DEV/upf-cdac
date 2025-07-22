@@ -504,22 +504,22 @@ class RouteController:
             return
 
     def add_unresolved_new_neighbor(self, netlink_message: dict) -> None:
-    """Handle new neighbor event safely."""
-    attr_dict = dict(netlink_message["attrs"])
-    ip_addr = attr_dict.get(KEY_NETWORK_LAYER_DEST_ADDR)
-    
-    # FIX: Check if the MAC address key exists before accessing it.
-    if KEY_LINK_LAYER_ADDRESS not in attr_dict:
-        logger.info(f"Neighbor event for {ip_addr} has no MAC address. Ignoring.")
-        return
+        """Handle new neighbor event safely."""
+        attr_dict = dict(netlink_message["attrs"])
+        ip_addr = attr_dict.get(KEY_NETWORK_LAYER_DEST_ADDR)
+        
+        # FIX: Check if the MAC address key exists before accessing it.
+        if KEY_LINK_LAYER_ADDRESS not in attr_dict:
+            logger.info(f"Neighbor event for {ip_addr} has no MAC address. Ignoring.")
+            return
 
-    gateway_mac = attr_dict[KEY_LINK_LAYER_ADDRESS]
-    
-    # Check if this IP was in our cache of pending routes
-    if ip_addr and (route_entry := self._unresolved_arp_queries_cache.get(ip_addr)):
-        logger.info(f"ARP resolution complete for {ip_addr}. MAC: {gateway_mac}. Adding neighbor.")
-        self._add_neighbor(route_entry, gateway_mac)
-        del self._unresolved_arp_queries_cache[route_entry.next_hop_ip]
+        gateway_mac = attr_dict[KEY_LINK_LAYER_ADDRESS]
+        
+        # Check if this IP was in our cache of pending routes
+        if ip_addr and (route_entry := self._unresolved_arp_queries_cache.get(ip_addr)):
+            logger.info(f"ARP resolution complete for {ip_addr}. MAC: {gateway_mac}. Adding neighbor.")
+            self._add_neighbor(route_entry, gateway_mac)
+            del self._unresolved_arp_queries_cache[route_entry.next_hop_ip]
 
     def _create_module_links(
         self,
