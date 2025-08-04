@@ -5,8 +5,7 @@
 # Stage bess-build: fetch BESS dependencies & pre-reqs
 FROM docker.io/cdac5gc/bess_build:latest AS bess-build
 ARG CPU=native
-# ARG BESS_COMMIT=cdacmaster
-ARG BESS_COMMIT=migrate-omec
+ARG BESS_COMMIT=cdacmaster
 ENV PLUGINS_DIR=plugins
 ARG MAKEFLAGS
 ENV PKG_CONFIG_PATH=/usr/lib64/pkgconfig
