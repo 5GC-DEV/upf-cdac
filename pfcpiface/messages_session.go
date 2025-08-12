@@ -131,17 +131,20 @@ func (pConn *PFCPConn) handleSessionEstablishmentRequest(msg message.Message) (m
 			return errProcessReply(err, ie.CauseRequestRejected)
 		}
 
+		logger.PfcpLog.Infof("[PFCP] Received QER from SMF: QER-ID=%d, QFI=%d", q.qerID, q.qfi)
+
 		q.fseidIP = fseidIP
 		session.CreateQER(q)
 		addQERs = append(addQERs, q)
 	}
-
+	logger.PfcpLog.Infof("[PFCP] Total QERs received from SMF in this request: %d", len(addQERs))
 	session.MarkSessionQer(session.qers)
 	// FIXME: since PacketForwardingRules doesn't store pointers,
 	//  we must also mark session QERs in addQERs.
 	//  We need a kind of refactoring to clean it up.
+	logger.PfcpLog.Infof("[PFCP] Session QER count after MarkSessionQer(session.qers): %d", len(session.qers))
 	session.MarkSessionQer(addQERs)
-
+	logger.PfcpLog.Infof("[PFCP] Session QER count after MarkSessionQer(addQERs): %d", len(session.qers))
 	// session.PacketForwardingRules stores all PFCP rules that has been installed so far,
 	// while 'updated' stores only the PFCP rules that have been provided in this particular message.
 	updated := PacketForwardingRules{
