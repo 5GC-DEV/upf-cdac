@@ -228,12 +228,62 @@ func (pConn *PFCPConn) handleAssociationReleaseRequest(msg message.Message) (mes
 		return nil, errUnmarshal(errMsgUnexpectedType)
 	}
 
-	// Build response message
+	// Check if NodeID IE is missing
+	if arreq.NodeID == nil {
+		logger.PfcpLog.Errorln("Association Release Request missing mandatory NodeID IE")
+
+		arres := message.NewAssociationReleaseResponse(arreq.SequenceNumber,
+			pConn.nodeID.localIE,
+			ie.NewCause(ie.CauseMandatoryIEMissing),
+			//ie.NewOffendingIE(ie.NodeID),
+		)
+		return arres, errProcess(errors.New("mandatory IE missing: NodeID"))
+	}
+
+	// Extract NodeID from the incoming request
+	receivedNodeID, err := arreq.NodeID.NodeID()
+	if err != nil {
+		logger.PfcpLog.Errorln("Failed to parse NodeID from Association Release Request:", err)
+
+		arres := message.NewAssociationReleaseResponse(arreq.SequenceNumber,
+			pConn.nodeID.localIE,
+			ie.NewCause(ie.CauseMandatoryIEMissing),
+			//ie.NewOffendingIE(ie.NodeID), // 16 = NodeID
+		)
+		return arres, errUnmarshal(err)
+	}
+
+	// Compare with stored value
+	expectedNodeID := pConn.nodeID.remote
+	if expectedNodeID == "" {
+		logger.PfcpLog.Warnln("No expected NodeID stored — treating as invalid")
+
+		arres := message.NewAssociationReleaseResponse(arreq.SequenceNumber,
+			pConn.nodeID.localIE,
+			ie.NewCause(ie.CauseRequestRejected),
+			//ie.NewOffendingIE(ie.NodeID),
+		)
+		return arres, nil
+	}
+
+	if receivedNodeID != expectedNodeID {
+		logger.PfcpLog.Warnf("NodeID mismatch: got %s, expected %s", receivedNodeID, expectedNodeID)
+
+		arres := message.NewAssociationReleaseResponse(arreq.SequenceNumber,
+			pConn.nodeID.localIE,
+			ie.NewCause(ie.CauseMandatoryIEIncorrect),
+			//ie.NewOffendingIE(16),
+		)
+		return arres, nil
+	}
+
+	// Valid NodeID — send accepted response
 	arres := message.NewAssociationReleaseResponse(arreq.SequenceNumber,
 		//ie.NewRecoveryTimeStamp(pConn.ts.local),
 		pConn.nodeID.localIE,
 		ie.NewCause(ie.CauseRequestAccepted),
 	)
+	logger.PfcpLog.Infoln("Association Release accepted for NodeID:", receivedNodeID)
 
 	return arres, nil
 }
