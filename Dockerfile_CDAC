@@ -3,7 +3,8 @@
 # Copyright 2019-present Intel Corporation
 
 # Stage bess-build: fetch BESS dependencies & pre-reqs
-FROM docker.io/cdac5gc/bess_build:latest AS bess-build
+# FROM docker.io/cdac5gc/bess_build:latest AS bess-build
+FROM registry.aetherproject.org/sdcore/bess_build:241202 AS bess-build
 ARG CPU=native
 ARG BESS_COMMIT=cdacmaster
 ENV PLUGINS_DIR=plugins
@@ -23,7 +24,10 @@ RUN apt-get update && apt-get install -y \
 ARG GITHUB_USERNAME
 ARG GITHUB_TOKEN
 WORKDIR /bess
-RUN git clone https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/5GC-DEV/bess-cdac.git . && \
+# RUN git clone https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/5GC-DEV/bess-cdac.git . && \
+    # git checkout ${BESS_COMMIT} && \
+    # cp -a protobuf /protobuf
+RUN git clone https://github.com/omec-project/bess.git . && \
     git checkout ${BESS_COMMIT} && \
     cp -a protobuf /protobuf
 
