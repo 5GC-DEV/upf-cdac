@@ -126,7 +126,8 @@ func (pConn *PFCPConn) handleSessionEstablishmentRequest(msg message.Message) (m
 	}
 
 	for idx, cQER := range sereq.CreateQER {
-		logger.PfcpLog.Infof("[PFCP] Raw QER[%d] IE: %s", idx, cQER.String())
+		raw, _ := cQER.MarshalBinary()
+		logger.PfcpLog.Infof("[PFCP] Raw QER[%d] IE (hex): %x", idx, raw)
 		var q qer
 		if err = q.parseQER(cQER, session.localSEID); err != nil {
 			return errProcessReply(err, ie.CauseRequestRejected)
