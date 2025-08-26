@@ -125,14 +125,13 @@ func (pConn *PFCPConn) handleSessionEstablishmentRequest(msg message.Message) (m
 		addFARs = append(addFARs, f)
 	}
 
-	for _, cQER := range sereq.CreateQER {
+	for idx, cQER := range sereq.CreateQER {
+		logger.PfcpLog.Infof("[PFCP] Raw QER[%d] IE: %s", idx, cQER.String())
 		var q qer
 		if err = q.parseQER(cQER, session.localSEID); err != nil {
 			return errProcessReply(err, ie.CauseRequestRejected)
 		}
-
-		logger.PfcpLog.Infof("[PFCP] Received QER from SMF: QER-ID=%d, QFI=%d", q.qerID, q.qfi)
-
+		logger.PfcpLog.Infof("[PFCP] Parsed QER[%d]: QER-ID=%d, QFI=%d", idx, q.qerID, q.qfi)
 		q.fseidIP = fseidIP
 		session.CreateQER(q)
 		addQERs = append(addQERs, q)
@@ -145,6 +144,10 @@ func (pConn *PFCPConn) handleSessionEstablishmentRequest(msg message.Message) (m
 	logger.PfcpLog.Infof("[PFCP] Session QER count after MarkSessionQer(session.qers): %d", len(session.qers))
 	session.MarkSessionQer(addQERs)
 	logger.PfcpLog.Infof("[PFCP] Session QER count after MarkSessionQer(addQERs): %d", len(session.qers))
+	// ADDED LOG: dump all QERs in session
+	for _, qer := range session.qers {
+		logger.PfcpLog.Infof("[PFCP] Session QER State: QER-ID=%d, QFI=%d", qer.qerID, qer.qfi)
+	}
 	// session.PacketForwardingRules stores all PFCP rules that has been installed so far,
 	// while 'updated' stores only the PFCP rules that have been provided in this particular message.
 	updated := PacketForwardingRules{
@@ -152,7 +155,12 @@ func (pConn *PFCPConn) handleSessionEstablishmentRequest(msg message.Message) (m
 		fars: addFARs,
 		qers: addQERs,
 	}
-
+	// ADDED LOG: QERs being sent to UPF
+	logger.PfcpLog.Infof("[PFCP] Sending to datapath: PDRs=%d, FARs=%d, QERs=%d",
+		len(updated.pdrs), len(updated.fars), len(updated.qers))
+	for _, q := range updated.qers {
+		logger.PfcpLog.Infof("[PFCP] -> Datapath QER: QER-ID=%d, QFI=%d", q.qerID, q.qfi)
+	}
 	cause := upf.SendMsgToUPF(upfMsgTypeAdd, session.PacketForwardingRules, updated)
 	if cause == ie.CauseRequestRejected {
 		pConn.RemoveSession(session)

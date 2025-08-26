@@ -25,11 +25,20 @@ func releaseAllocatedIPs(ippool *IPPool, session *PFCPSession) error {
 }
 
 func addPdrInfo(msg *message.SessionEstablishmentResponse, pdrs []pdr) {
-	logger.PfcpLog.Infoln("add PDRs with UPF alloc IPs to Establishment response")
-	logger.PfcpLog.Infoln("PDRs:", pdrs)
+	logger.PfcpLog.Infoln("[PFCP] Adding PDRs with UPF alloc IPs to Establishment response")
+	logger.PfcpLog.Infof("[PFCP] Total PDRs to encode in response: %d", len(pdrs))
 	for _, pdr := range pdrs {
+		logger.PfcpLog.Infof("[PFCP] -> PDRID=%d, srcIface=%d, allocIP=%t, UPAllocFTEID=%t",
+			pdr.pdrID, pdr.srcIface, pdr.allocIPFlag, pdr.UPAllocateFteid)
+		// If PDR has QERs associated, log them here (QERs won’t go in the response!)
+		if len(pdr.qerIDList) > 0 {
+			logger.PfcpLog.Infof("[PFCP]    PDRID=%d is linked to QER IDs: %v", pdr.pdrID, pdr.qerIDList)
+		} else {
+			logger.PfcpLog.Infof("[PFCP]    PDRID=%d has no linked QERs", pdr.pdrID)
+		}
 		logger.PfcpLog.Infoln("pdrID:", pdr.pdrID)
 		if pdr.UPAllocateFteid {
+			logger.PfcpLog.Infof("[PFCP]    Adding F-TEID: TEID=%d, IPv4=%s", pdr.tunnelTEID, int2ip(pdr.tunnelIP4Dst).String())
 			logger.PfcpLog.Infoln("adding PDR with tunnel TEID:", pdr.tunnelTEID)
 			msg.CreatedPDR = append(msg.CreatedPDR,
 				ie.NewCreatedPDR(
@@ -41,6 +50,7 @@ func addPdrInfo(msg *message.SessionEstablishmentResponse, pdrs []pdr) {
 			logger.PfcpLog.Debugln("pdrID:", pdr.pdrID)
 			var flags uint8 = 0x02
 			ueIP := int2ip(pdr.ueAddress)
+			logger.PfcpLog.Infof("[PFCP]    Adding UE IP for PDRID=%d: %s", pdr.pdrID, ueIP.String())
 			logger.PfcpLog.Debugln("ueIP:", ueIP.String())
 			msg.CreatedPDR = append(msg.CreatedPDR,
 				ie.NewCreatedPDR(

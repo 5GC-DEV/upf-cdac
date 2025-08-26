@@ -90,6 +90,26 @@ func (pConn *PFCPConn) HandlePFCPMsg(buf []byte) {
 
 	// Session related messages
 	case message.MsgTypeSessionEstablishmentRequest:
+		logger.PfcpLog.Infof("[PFCP-UPF] Received SessionEstablishmentRequest from %s (NodeID=%s)", addr, pConn.nodeID.remote)
+		// Try to log QER info directly from the raw message
+		if ser, ok := msg.(*message.SessionEstablishmentRequest); ok {
+			logger.PfcpLog.Infof("[PFCP-UPF] SessionEstablishmentRequest: SEID=%d, PDRs=%d, FARs=%d, QERs=%d",
+				ser.SEID(), len(ser.CreatePDR), len(ser.CreateFAR), len(ser.CreateQER))
+
+			for idx, qerIE := range ser.CreateQER {
+				qerID, err := qerIE.QERID()
+				if err != nil {
+					logger.PfcpLog.Warnf("[PFCP-UPF] QER[%d] failed to parse QERID: %v", idx, err)
+					continue
+				}
+				qfi, _ := qerIE.QFI()
+				gateStatus, _ := qerIE.GateStatus()
+
+				logger.PfcpLog.Infof("[PFCP-UPF] QER[%d]: QERID=%d QFI=%d GateStatus=%+v", idx, qerID, qfi, gateStatus)
+			}
+		} else {
+			logger.PfcpLog.Warnf("[PFCP-UPF] Failed type assertion to SessionEstablishmentRequest")
+		}
 		reply, err = pConn.handleSessionEstablishmentRequest(msg)
 	case message.MsgTypeSessionModificationRequest:
 		reply, err = pConn.handleSessionModificationRequest(msg)

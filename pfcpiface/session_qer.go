@@ -69,10 +69,13 @@ func (s *PFCPSession) MarkSessionQer(qers []qer) {
 	sessQerIDList := make([]uint32, 0)
 	lastPdrIndex := len(s.pdrs) - 1
 	// create search list with first pdr's qerlist */
-	if lastPdrIndex < 0 || lastPdrIndex >= len(s.pdrs) {
-		logger.PfcpLog.Warnf("=====MarkSessionQer: lastPdrIndex=%d out of bounds s.pdrs len=%d", lastPdrIndex, len(s.pdrs))
-		logger.PfcpLog.Infoln("=====return if lastPdrIndex out of bounds====")
-		return
+	//add return if panic occurs
+	if lastPdrIndex < 0 {
+		logger.PfcpLog.Errorf("[PFCP][QER] MarkSessionQer: no PDRs available in session (localSEID=%d, remoteSEID=%d). lastPdrIndex=%d",
+			s.localSEID, s.remoteSEID, lastPdrIndex)
+	} else {
+		logger.PfcpLog.Debugf("[PFCP][QER] MarkSessionQer: accessing last PDR index=%d, PDRID=%d, QER list=%v (localSEID=%d, remoteSEID=%d)",
+			lastPdrIndex, s.pdrs[lastPdrIndex].pdrID, s.pdrs[lastPdrIndex].qerIDList, s.localSEID, s.remoteSEID)
 	}
 	sessQerIDList = append(sessQerIDList, s.pdrs[lastPdrIndex].qerIDList...)
 
