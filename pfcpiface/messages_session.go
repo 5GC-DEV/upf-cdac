@@ -86,31 +86,72 @@ func (pConn *PFCPConn) handleSessionEstablishmentRequest(msg message.Message) (m
 	addFARs := make([]far, 0, MaxItems)
 	addQERs := make([]qer, 0, MaxItems)
 
-	for _, cPDR := range sereq.CreatePDR {
+	// for _, cPDR := range sereq.CreatePDR {
+	// 	var p pdr
+	// 	if err = p.parsePDR(cPDR, session.localSEID, pConn.appPFDs, upf.ippool); err != nil {
+	// 		return errProcessReply(err, ie.CauseRequestRejected)
+	// 	}
+
+	// 	if p.UPAllocateFteid {
+	// 		var fteid uint32
+	// 		// fteid, err = pConn.upf.fteidGenerator.Allocate()
+	// 		if pConn.upf.fteidGenerator == nil {
+	// 			logger.PfcpLog.Warnf("fteid is nill")
+	// 			pConn.upf.fteidGenerator = NewFTEIDGenerator()
+	// 		}
+	// 		fteid, err = pConn.upf.fteidGenerator.Allocate()
+	// 		if err != nil {
+	// 			return errProcessReply(err, ie.CauseNoResourcesAvailable)
+	// 		}
+	// 		p.tunnelTEID = fteid
+	// 		p.tunnelTEIDMask = 0xFFFFFFFF
+	// 		p.tunnelIP4Dst = ip2int(upf.accessIP)
+	// 		p.tunnelIP4DstMask = 0xFFFFFFFF
+	// 	}
+
+	// 	p.fseidIP = fseidIP
+	// 	session.CreatePDR(p)
+	// 	addPDRs = append(addPDRs, p)
+	// }
+
+	for idx, cPDR := range sereq.CreatePDR {
+		logger.PfcpLog.Infof("[PFCP][PDR] Processing CreatePDR[%d]", idx)
+
 		var p pdr
 		if err = p.parsePDR(cPDR, session.localSEID, pConn.appPFDs, upf.ippool); err != nil {
+			logger.PfcpLog.Errorf("[PFCP][PDR] Failed to parse PDR[%d]: %v", idx, err)
 			return errProcessReply(err, ie.CauseRequestRejected)
 		}
+		logger.PfcpLog.Debugf("[PFCP][PDR] Parsed PDR[%d]: PDRID=%d, allocIPFlag=%t, UPAllocateFteid=%t, qerIDList=%v",
+			idx, p.pdrID, p.allocIPFlag, p.UPAllocateFteid, p.qerIDList)
 
 		if p.UPAllocateFteid {
 			var fteid uint32
-			// fteid, err = pConn.upf.fteidGenerator.Allocate()
 			if pConn.upf.fteidGenerator == nil {
-				logger.PfcpLog.Warnf("fteid is nill")
+				logger.PfcpLog.Warnf("[PFCP][PDR] fteidGenerator is nil, creating new generator")
 				pConn.upf.fteidGenerator = NewFTEIDGenerator()
 			}
 			fteid, err = pConn.upf.fteidGenerator.Allocate()
 			if err != nil {
+				logger.PfcpLog.Errorf("[PFCP][PDR] Failed to allocate F-TEID for PDR[%d]: %v", idx, err)
 				return errProcessReply(err, ie.CauseNoResourcesAvailable)
 			}
 			p.tunnelTEID = fteid
 			p.tunnelTEIDMask = 0xFFFFFFFF
 			p.tunnelIP4Dst = ip2int(upf.accessIP)
 			p.tunnelIP4DstMask = 0xFFFFFFFF
+
+			logger.PfcpLog.Infof("[PFCP][PDR] Allocated F-TEID for PDR[%d]: TEID=%d, tunnelIP=%s",
+				idx, p.tunnelTEID, upf.accessIP.String())
 		}
 
 		p.fseidIP = fseidIP
+		logger.PfcpLog.Debugf("[PFCP][PDR] Assigning F-SEID IP=%s to PDR[%d]", p.fseidIP, idx)
+
 		session.CreatePDR(p)
+		logger.PfcpLog.Infof("[PFCP][PDR] Added PDR[%d] (PDRID=%d) to session(localSEID=%d, remoteSEID=%d). Total PDRs=%d",
+			idx, p.pdrID, session.localSEID, session.remoteSEID, len(session.pdrs))
+
 		addPDRs = append(addPDRs, p)
 	}
 
