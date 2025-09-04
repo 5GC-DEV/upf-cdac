@@ -163,6 +163,7 @@ func (pConn *PFCPConn) handleSessionEstablishmentRequest(msg message.Message) (m
 
 		f.fseidIP = fseidIP
 		session.CreateFAR(f)
+		logger.PfcpLog.Infof("[PFCP][FAR] Added FAR (FAR-ID=%d) to session(localSEID=%d, remoteSEID=%d). Total FARs=%d", f.farID, session.localSEID, session.remoteSEID, len(session.fars))
 		addFARs = append(addFARs, f)
 	}
 
@@ -175,6 +176,7 @@ func (pConn *PFCPConn) handleSessionEstablishmentRequest(msg message.Message) (m
 		logger.PfcpLog.Infof("[PFCP] Parsed QER[%d]: QER-ID=%d, QFI=%d", idx, q.qerID, q.qfi)
 		q.fseidIP = fseidIP
 		session.CreateQER(q)
+		logger.PfcpLog.Infof("[PFCP][QER] Parsed QER[%d]: QER-ID=%d, QFI=%d, Session(localSEID=%d, remoteSEID=%d)", idx, q.qerID, q.qfi, session.localSEID, session.remoteSEID)
 		addQERs = append(addQERs, q)
 	}
 	logger.PfcpLog.Infof("[PFCP] Total QERs received from SMF in this request: %d", len(addQERs))
@@ -197,8 +199,7 @@ func (pConn *PFCPConn) handleSessionEstablishmentRequest(msg message.Message) (m
 		qers: addQERs,
 	}
 	// ADDED LOG: QERs being sent to UPF
-	logger.PfcpLog.Infof("[PFCP] Sending to datapath: PDRs=%d, FARs=%d, QERs=%d",
-		len(updated.pdrs), len(updated.fars), len(updated.qers))
+	logger.PfcpLog.Infof("[PFCP] Sending to datapath (localSEID=%d, remoteSEID=%d): PDRs=%d, FARs=%d, QERs=%d", session.localSEID, session.remoteSEID, len(updated.pdrs), len(updated.fars), len(updated.qers))
 	for _, q := range updated.qers {
 		logger.PfcpLog.Infof("[PFCP] -> Datapath QER: QER-ID=%d, QFI=%d", q.qerID, q.qfi)
 	}
@@ -234,7 +235,7 @@ func (pConn *PFCPConn) handleSessionEstablishmentRequest(msg message.Message) (m
 		localFSEID,
 	)
 	addPdrInfo(seres, addPDRs)
-
+	logger.PfcpLog.Infof("[PFCP] SessionEstablishmentResponse built for session(localSEID=%d, remoteSEID=%d, seq=%d)", session.localSEID, session.remoteSEID, sereq.SequenceNumber)
 	return seres, nil
 }
 

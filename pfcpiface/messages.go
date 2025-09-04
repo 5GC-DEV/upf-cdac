@@ -93,6 +93,15 @@ func (pConn *PFCPConn) HandlePFCPMsg(buf []byte) {
 		logger.PfcpLog.Infof("[PFCP-UPF] Received SessionEstablishmentRequest from %s (NodeID=%s)", addr, pConn.nodeID.remote)
 		// Try to log QER info directly from the raw message
 		if ser, ok := msg.(*message.SessionEstablishmentRequest); ok {
+
+			fseid, err := ser.CPFSEID.FSEID()
+			if err != nil {
+				logger.PfcpLog.Warnf("[PFCP-UPF] Failed to parse F-SEID from SessionEstablishmentRequest: %v", err)
+			} else {
+				logger.PfcpLog.Infof("[PFCP-UPF] SessionEstablishmentRequest: remoteSEID=%d, PDRs=%d, FARs=%d, QERs=%d",
+					fseid.SEID, len(ser.CreatePDR), len(ser.CreateFAR), len(ser.CreateQER))
+			}
+
 			logger.PfcpLog.Infof("[PFCP-UPF] SessionEstablishmentRequest: SEID=%d, PDRs=%d, FARs=%d, QERs=%d",
 				ser.SEID(), len(ser.CreatePDR), len(ser.CreateFAR), len(ser.CreateQER))
 
