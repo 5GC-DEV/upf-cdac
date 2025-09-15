@@ -247,7 +247,7 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 		session.CreatePDR(p)
 		addPDRs = append(addPDRs, p)
 	}
-	logger.PfcpLog.Debugln("PDRs added:", addPDRs)
+	logger.PfcpLog.Infoln("PDRs added:", addPDRs)
 
 	for _, cFAR := range smreq.CreateFAR {
 		var f far
@@ -268,7 +268,7 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 		}
 
 		q.fseidIP = fseidIP
-
+		logger.PfcpLog.Infof("Created QER ID=%d for session SEID=%d", q.qerID, localSEID)
 		session.CreateQER(q)
 		addQERs = append(addQERs, q)
 	}
@@ -397,9 +397,10 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 		if err != nil {
 			return sendError(err)
 		}
-
+		logger.PfcpLog.Infof("Trying to remove QER ID=%d from session SEID=%d", qerID, localSEID)
 		q, err := session.RemoveQER(qerID)
 		if err != nil {
+			logger.PfcpLog.Errorf("QER ID=%d not found in session SEID=%d", qerID, localSEID)
 			return sendError(err)
 		}
 
