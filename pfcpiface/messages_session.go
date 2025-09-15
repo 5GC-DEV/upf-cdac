@@ -395,6 +395,23 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 	for _, dQER := range smreq.RemoveQER {
 		qerID, err := dQER.QERID()
 		if err != nil {
+			logger.PfcpLog.Errorf("Failed to get QERID from RemoveQER: %v", err)
+			continue // skip this one, but process the rest
+		}
+
+		logger.PfcpLog.Infof("Trying to remove QER ID=%d from session SEID=%d", qerID, localSEID)
+		q, err := session.RemoveQER(qerID)
+		if err != nil {
+			logger.PfcpLog.Errorf("QER ID=%d not found in session SEID=%d", qerID, localSEID)
+			continue // don’t return, try next QER
+		}
+
+		delQERs = append(delQERs, *q)
+	}
+
+	/*for _, dQER := range smreq.RemoveQER {
+		qerID, err := dQER.QERID()
+		if err != nil {
 			return sendError(err)
 		}
 		logger.PfcpLog.Infof("Trying to remove QER ID=%d from session SEID=%d", qerID, localSEID)
@@ -405,7 +422,7 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 		}
 
 		delQERs = append(delQERs, *q)
-	}
+	}*/
 
 	deleted := PacketForwardingRules{
 		pdrs: delPDRs,
