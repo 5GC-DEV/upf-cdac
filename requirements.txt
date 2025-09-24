@@ -2,7 +2,7 @@
 # Copyright 2023 Intel Corporation
 
 flask
-grpcio==1.74.1
+grpcio==1.74.0
 iptools
 jsoncomment
 mitogen
