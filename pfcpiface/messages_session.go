@@ -151,10 +151,10 @@ func (pConn *PFCPConn) handleSessionEstablishmentRequest(msg message.Message) (m
 	}
 
 	cause := upf.SendMsgToUPF(upfMsgTypeAdd, session.PacketForwardingRules, updated)
-	if cause == ie.CauseRequestRejected {
+	if cause != ie.CauseRequestAccepted {
 		pConn.RemoveSession(session)
 		return errProcessReply(ErrWriteToDatapath,
-			ie.CauseRequestRejected)
+			cause)
 	}
 
 	err = pConn.store.PutSession(session)
@@ -196,15 +196,15 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 
 	var remoteSEID uint64
 
-	sendError := func(err error) (message.Message, error) {
+	sendError := func(err error, cause uint8) (message.Message, error) {
 		logger.PfcpLog.Errorln(err)
 
 		smres := message.NewSessionModificationResponse(0, /* MO?? <-- what's this */
-			0,                                    /* FO <-- what's this? */
-			remoteSEID,                           /* seid */
-			smreq.SequenceNumber,                 /* seq # */
-			0,                                    /* priority */
-			ie.NewCause(ie.CauseRequestRejected), /* accept it blindly for the time being */
+			0,                    /* FO <-- what's this? */
+			remoteSEID,           /* seid */
+			smreq.SequenceNumber, /* seq # */
+			0,                    /* priority */
+			ie.NewCause(cause),
 		)
 
 		return smres, err
@@ -214,7 +214,7 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 
 	session, ok := pConn.store.GetSession(localSEID)
 	if !ok {
-		return sendError(ErrNotFoundWithParam("PFCP session", "localSEID", localSEID))
+		return sendError(ErrNotFoundWithParam("PFCP session", "localSEID", localSEID), ie.CauseRequestRejected)
 	}
 
 	var fseidIP uint32
@@ -239,7 +239,7 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 	for _, cPDR := range smreq.CreatePDR {
 		var p pdr
 		if err := p.parsePDR(cPDR, localSEID, pConn.appPFDs, upf.ippool); err != nil {
-			return sendError(err)
+			return sendError(err, ie.CauseRequestRejected)
 		}
 
 		p.fseidIP = fseidIP
@@ -252,7 +252,7 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 	for _, cFAR := range smreq.CreateFAR {
 		var f far
 		if err := f.parseFAR(cFAR, localSEID, upf, create); err != nil {
-			return sendError(err)
+			return sendError(err, ie.CauseRequestRejected)
 		}
 
 		f.fseidIP = fseidIP
@@ -264,7 +264,7 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 	for _, cQER := range smreq.CreateQER {
 		var q qer
 		if err := q.parseQER(cQER, localSEID); err != nil {
-			return sendError(err)
+			return sendError(err, ie.CauseRequestRejected)
 		}
 
 		q.fseidIP = fseidIP
@@ -280,7 +280,7 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 		)
 
 		if err = p.parsePDR(uPDR, localSEID, pConn.appPFDs, upf.ippool); err != nil {
-			return sendError(err)
+			return sendError(err, ie.CauseRequestRejected)
 		}
 
 		p.fseidIP = fseidIP
@@ -301,7 +301,7 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 		)
 
 		if err = f.parseFAR(uFAR, localSEID, upf, update); err != nil {
-			return sendError(err)
+			return sendError(err, ie.CauseRequestRejected)
 		}
 
 		f.fseidIP = fseidIP
@@ -322,7 +322,7 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 		)
 
 		if err = q.parseQER(uQER, localSEID); err != nil {
-			return sendError(err)
+			return sendError(err, ie.CauseRequestRejected)
 		}
 
 		q.fseidIP = fseidIP
@@ -350,7 +350,7 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 
 	cause := upf.SendMsgToUPF(upfMsgTypeMod, session.PacketForwardingRules, updated)
 	if cause == ie.CauseRequestRejected {
-		return sendError(ErrWriteToDatapath)
+		return sendError(ErrWriteToDatapath, cause)
 	}
 
 	if upf.enableEndMarker {
@@ -367,12 +367,12 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 	for _, rPDR := range smreq.RemovePDR {
 		pdrID, err := rPDR.PDRID()
 		if err != nil {
-			return sendError(err)
+			return sendError(err, ie.CauseRequestRejected)
 		}
 
 		p, err := session.RemovePDR(uint32(pdrID))
 		if err != nil {
-			return sendError(err)
+			return sendError(err, ie.CauseRequestRejected)
 		}
 
 		delPDRs = append(delPDRs, *p)
@@ -381,12 +381,12 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 	for _, dFAR := range smreq.RemoveFAR {
 		farID, err := dFAR.FARID()
 		if err != nil {
-			return sendError(err)
+			return sendError(err, ie.CauseRequestRejected)
 		}
 
 		f, err := session.RemoveFAR(farID)
 		if err != nil {
-			return sendError(err)
+			return sendError(err, ie.CauseRequestRejected)
 		}
 
 		delFARs = append(delFARs, *f)
@@ -395,12 +395,12 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 	for _, dQER := range smreq.RemoveQER {
 		qerID, err := dQER.QERID()
 		if err != nil {
-			return sendError(err)
+			return sendError(err, ie.CauseRequestRejected)
 		}
 
 		q, err := session.RemoveQER(qerID)
 		if err != nil {
-			return sendError(err)
+			return sendError(err, ie.CauseRequestRejected)
 		}
 
 		delQERs = append(delQERs, *q)
@@ -414,7 +414,7 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 
 	cause = upf.SendMsgToUPF(upfMsgTypeDel, deleted, PacketForwardingRules{})
 	if cause == ie.CauseRequestRejected {
-		return sendError(ErrWriteToDatapath)
+		return sendError(ErrWriteToDatapath, cause)
 	}
 
 	err := pConn.store.PutSession(session)
