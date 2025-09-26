@@ -4,7 +4,7 @@
 
 # Stage bess-build: fetch BESS dependencies & pre-reqs
 # FROM docker.io/cdac5gc/bess_build:250925 AS bess-build
-FROM registry.aetherproject.org/sdcore/bess_build:250619 AS bess-build
+FROM registry.aetherproject.org/sdcore/bess_build:250926 AS bess-build
 ARG CPU=native
 # ARG BESS_COMMIT=restore-migration
 ARG BESS_COMMIT=main
