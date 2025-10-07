@@ -252,6 +252,11 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 	for _, cFAR := range smreq.CreateFAR {
 		var f far
 		if err := f.parseFAR(cFAR, localSEID, upf, create); err != nil {
+			if errors.Is(err, ErrInvalidForwardingPolicy) {
+				// If it's our specific error, send the specific cause (70)
+				return sendError(err, ie.CauseInvalidForwardingPolicy)
+			}
+			// For all other errors, send the generic cause (64)
 			return sendError(err, ie.CauseRequestRejected)
 		}
 
@@ -301,6 +306,11 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 		)
 
 		if err = f.parseFAR(uFAR, localSEID, upf, update); err != nil {
+			if errors.Is(err, ErrInvalidForwardingPolicy) {
+				// Same logic here: check for our specific error...
+				return sendError(err, ie.CauseInvalidForwardingPolicy)
+			}
+			// ...and fall back to the generic cause otherwise.
 			return sendError(err, ie.CauseRequestRejected)
 		}
 

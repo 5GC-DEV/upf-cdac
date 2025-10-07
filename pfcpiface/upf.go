@@ -35,24 +35,25 @@ type UeResource struct {
 }
 
 type upf struct {
-	enableUeIPAlloc   bool
-	enableEndMarker   bool
-	enableFlowMeasure bool
-	enableGtpuMonitor bool
-	accessIface       string
-	coreIface         string
-	ippoolCidr        string
-	n4addr            string
-	accessIP          net.IP
-	coreIP            net.IP
-	nodeID            string
-	ippool            *IPPool
-	peers             []string
-	dnn               []string
-	reportNotifyChan  chan uint64
-	sliceInfo         *SliceInfo
-	readTimeout       time.Duration
-	fteidGenerator    *FTEIDGenerator
+	enableUeIPAlloc    bool
+	enableEndMarker    bool
+	enableFlowMeasure  bool
+	enableGtpuMonitor  bool
+	accessIface        string
+	coreIface          string
+	ippoolCidr         string
+	n4addr             string
+	accessIP           net.IP
+	coreIP             net.IP
+	nodeID             string
+	ippool             *IPPool
+	peers              []string
+	dnn                []string
+	reportNotifyChan   chan uint64
+	sliceInfo          *SliceInfo
+	readTimeout        time.Duration
+	fteidGenerator     *FTEIDGenerator
+	ForwardingPolicies map[string]struct{}
 
 	datapath
 	maxReqRetries uint8
@@ -76,6 +77,13 @@ const (
 	n6 = 0x1
 	n9 = 0x2
 )
+
+func (u *upf) IsForwardingPolicyValid(policyID string) bool {
+	// This helper method provides a clean way to check if a policy ID
+	// exists in the UPF's configured list.
+	_, ok := u.ForwardingPolicies[policyID]
+	return ok
+}
 
 func (u *upf) isConnected() bool {
 	return u.IsConnected(&u.accessIP)
@@ -128,22 +136,28 @@ func NewUPF(conf *Conf, fp datapath) *upf {
 	}
 
 	u := &upf{
-		enableUeIPAlloc:   conf.CPIface.EnableUeIPAlloc,
-		enableEndMarker:   conf.EnableEndMarker,
-		enableFlowMeasure: conf.EnableFlowMeasure,
-		enableGtpuMonitor: conf.EnableGtpuPathMonitoring,
-		accessIface:       conf.AccessIface.IfName,
-		coreIface:         conf.CoreIface.IfName,
-		ippoolCidr:        ippoolCidr,
-		nodeID:            nodeID,
-		datapath:          fp,
-		dnn:               dnns,
-		peers:             conf.CPIface.Peers,
-		reportNotifyChan:  make(chan uint64, 1024),
-		maxReqRetries:     conf.MaxReqRetries,
-		enableHBTimer:     conf.EnableHBTimer,
-		readTimeout:       time.Second * time.Duration(conf.ReadTimeout),
-		n4addr:            conf.N4Addr,
+		enableUeIPAlloc:    conf.CPIface.EnableUeIPAlloc,
+		enableEndMarker:    conf.EnableEndMarker,
+		enableFlowMeasure:  conf.EnableFlowMeasure,
+		enableGtpuMonitor:  conf.EnableGtpuPathMonitoring,
+		accessIface:        conf.AccessIface.IfName,
+		coreIface:          conf.CoreIface.IfName,
+		ippoolCidr:         ippoolCidr,
+		nodeID:             nodeID,
+		datapath:           fp,
+		dnn:                dnns,
+		peers:              conf.CPIface.Peers,
+		reportNotifyChan:   make(chan uint64, 1024),
+		maxReqRetries:      conf.MaxReqRetries,
+		enableHBTimer:      conf.EnableHBTimer,
+		readTimeout:        time.Second * time.Duration(conf.ReadTimeout),
+		n4addr:             conf.N4Addr,
+		ForwardingPolicies: make(map[string]struct{}),
+	}
+
+	for _, policy := range conf.ForwardingPolicies {
+		u.ForwardingPolicies[policy] = struct{}{}
+		logger.PfcpLog.Infof("Loaded forwarding policy: %s", policy)
 	}
 
 	if len(conf.CPIface.Peers) > 0 {

@@ -49,6 +49,7 @@ type Conf struct {
 	EnableHBTimer            bool             `json:"enable_hbTimer"`
 	HeartBeatInterval        string           `json:"heart_beat_interval"`
 	N4Addr                   string           `json:"n4_addr"`
+	ForwardingPolicies       []string         `json:"forwarding_policies"`
 }
 
 // QciQosConfig : Qos configured attributes.

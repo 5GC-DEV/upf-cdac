@@ -4,6 +4,7 @@
 package pfcpiface
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/omec-project/upf-epc/logger"
@@ -29,6 +30,8 @@ const (
 	create operation = iota
 	update
 )
+
+var ErrInvalidForwardingPolicy = errors.New("invalid forwarding policy identifier")
 
 type far struct {
 	farID   uint32
@@ -110,6 +113,21 @@ func (f *far) parseFAR(farIE *ie.IE, fseid uint64, upf *upf, op operation) error
 
 	for _, fwdIE := range fwdIEs {
 		switch fwdIE.Type {
+		case ie.ForwardingPolicy:
+			// Use the ForwardingPolicyIdentifier() helper to get the ID directly as a string.
+			// This is cleaner than parsing the byte slice ourselves.
+			policyID, err := fwdIE.ForwardingPolicyIdentifier()
+			if err != nil {
+				logger.PfcpLog.Errorln("unable to parse ForwardingPolicy IE:", err)
+				continue
+			}
+			// The validation check remains the same.
+			if !upf.IsForwardingPolicyValid(policyID) {
+				logger.PfcpLog.Warnf("Received FAR with invalid Forwarding Policy ID: %s", policyID)
+				// If validation fails, return our specific error.
+				return ErrInvalidForwardingPolicy
+			}
+
 		case ie.OuterHeaderCreation:
 			fields = Set(fields, FwdIEOuterHeaderCreation)
 
