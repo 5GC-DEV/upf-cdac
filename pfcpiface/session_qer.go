@@ -68,7 +68,8 @@ func findItemIndex(slice []uint32, val uint32) int {
 func (s *PFCPSession) MarkSessionQer(qers []qer) {
 	if len(s.pdrs) < 1 {
 		logger.PfcpLog.Infoln("need at least 1 PDR, it should not be empty")
-		return
+		logger.PfcpLog.Infoln("=====return if lastPdrIndex out of bounds====")
+		/*		return */
 	}
 	sessQerIDList := make([]uint32, 0)
 	lastPdrIndex := len(s.pdrs) - 1
