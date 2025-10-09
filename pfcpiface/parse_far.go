@@ -103,7 +103,13 @@ func (f *far) parseFAR(farIE *ie.IE, fseid uint64, upf *upf, op operation) error
 	}
 
 	if err != nil {
-		return err
+		if errors.Is(err, ie.ErrIENotFound) {
+			// No forwarding parameters found, which is okay. Proceed with an empty list.
+			fwdIEs = make([]*ie.IE, 0)
+		} else {
+			// A different, unexpected error occurred.
+			return err
+		}
 	}
 
 	f.sendEndMarker = false

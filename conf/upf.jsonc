@@ -151,6 +151,10 @@
         "n3_burst_bytes": 625000
     },
 
+    // This defines the list of valid forwarding policies.
+    // An empty list means the feature is enabled but no policies are currently allowed.
+    "forwarding_policies": [],
+
     // Control plane controller settings
     "cpiface": {
         "peers": ["148.162.12.214"],
