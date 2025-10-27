@@ -294,12 +294,38 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 		addPDRs = append(addPDRs, p)
 	}
 
+	// Iterate through each "Update FAR" instruction in the request.
 	for _, uFAR := range smreq.UpdateFAR {
 		var (
 			f   far
 			err error
 		)
 
+		// Extract the FAR ID from the incoming update instruction.
+		farID, err := uFAR.FARID()
+		if err != nil {
+			// This indicates a malformed IE.
+			return sendError(err, ie.CauseMandatoryIEIncorrect)
+		}
+
+		// Validate that the FAR ID exists before attempting to update it.
+		farExists := false
+		// Since session.fars is a slice, we must loop through it to check for the ID.
+		for _, existingFAR := range session.fars {
+			if existingFAR.farID == farID {
+				farExists = true
+				break // Found it, no need to loop further
+			}
+		}
+
+		// If the FAR ID was not found in the session, the request is invalid.
+		if !farExists {
+			logger.PfcpLog.Warnf("Attempted to update a non-existent FAR ID: %d for local SEID: %d", farID, localSEID)
+			// Reject with "Invalid Forwarding Policy".
+			return sendError(errors.New("invalid forwarding policy: FAR ID not found"), ie.CauseInvalidForwardingPolicy)
+		}
+
+		// Validation passed. Now, parse and apply the update.
 		if err = f.parseFAR(uFAR, localSEID, upf, update); err != nil {
 			return sendError(err, ie.CauseRequestRejected)
 		}
@@ -308,10 +334,11 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 
 		err = session.UpdateFAR(&f, &endMarkerList)
 		if err != nil {
-			logger.PfcpLog.Errorln("session PDR update failed", err)
-			continue
+			logger.PfcpLog.Errorf("session FAR update failed: %v", err)
+			return sendError(err, ie.CauseRequestRejected)
 		}
 
+		// Add the successfully updated FAR to be pushed to the datapath.
 		addFARs = append(addFARs, f)
 	}
 
