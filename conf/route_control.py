@@ -15,7 +15,7 @@ from threading import Lock, Thread
 from typing import Dict, List, Optional, Tuple
 from pyroute2.netlink.rtnl.rtmsg import rtmsg
 from pyroute2.netlink.rtnl.ndmsg import ndmsg
-from pybess.bess import *
+from pybess.bess import BESS
 from pyroute2 import NDB, IPRoute
 from scapy.all import ICMP, IP, send
 from socket import AF_INET

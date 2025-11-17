@@ -6,13 +6,13 @@ from ipaddress import IPv4Address
 from pprint import pprint
 
 import ptf.testutils as testutils
-from grpc_test import *
+from grpc_test import GrpcTest
 from pkt_utils import GTPU_PORT
-from trex_stl_lib.api import *
+from trex_stl_lib.api import ( STLVM, STLStream, STLPktBuilder, STLTXCont, STLFlowLatencyStats )
 from trex_test import TrexTest
-from trex_utils import *
-
-from common import *
+from trex_utils import ( get_latency_stats, get_flow_stats )
+from common import ( UE_IP_START, UE_COUNT, N6, CORE, ACTION_FORWARD, DST_ACCESS, N3_IP, GNB_IP, GTPU_PORT, PDN_IP, UPF_CORE_MAC, TREX_SRC_MAC,
+    RATE, DURATION, UPF_CORE_PORT, TREX_RECEIVER_PORT)
 
 class DownlinkPerformanceBaselineTest(TrexTest, GrpcTest):
     """

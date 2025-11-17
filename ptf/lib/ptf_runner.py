@@ -58,9 +58,10 @@ def set_up_interfaces(ifaces):
 def create_dummy_interface():
     try:
         subprocess.check_output(["ip", "link", "show", DUMMY_IFACE_NAME])
-        return True  # device already exists, skip
-    except:
-        # interface does not exists
+        return True 
+    except (SystemExit, KeyboardInterrupt):
+        raise 
+    except subprocess.CalledProcessError:
         pass
     try:
         subprocess.check_output(
@@ -85,8 +86,10 @@ def remove_dummy_interface():
             )
             return False
         return True
-    except:
-        # interface does not exists
+
+    except (SystemExit, KeyboardInterrupt):
+        raise  
+    except subprocess.CalledProcessError:
         return True
 
 

@@ -6,12 +6,13 @@ from ipaddress import IPv4Address
 from pprint import pprint
 
 import ptf.testutils as testutils
-from grpc_test import *
+from grpc_test import GrpcTest
 from pkt_utils import GTPU_PORT
 from trex_stl_lib.api import STLVM, STLPktBuilder, STLStream, STLTXCont
 from trex_test import TrexTest
 
-from common import *
+from common import ( UE_IP_START, UE_COUNT, N3_IP, GNB_IP, PDN_IP, UPF_CORE_MAC, UPF_ACCESS_MAC, UPF_CORE_PORT, UPF_ACCESS_PORT, ACTION_FORWARD, DST_ACCESS, DST_CORE,
+    GATE_METER, K, M, PKT_SIZE_L, CORE, ACCESS, GTPU_PORT, to_readable )
 
 
 class PerFlowQosMetricsTest(TrexTest, GrpcTest):

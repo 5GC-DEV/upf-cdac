@@ -98,7 +98,11 @@ def peer_by_interface(name: str) -> str:
     try:
         peer_idx = ndb.interfaces[name]["link"]
         peer_name = ndb.interfaces[peer_idx]["ifname"]
-    except:
+    except (SystemExit, KeyboardInterrupt, BaseException):
+        # Re-raise fatal exceptions exactly as required by the rule
+        raise
+    except Exception:
+        # Handle only normal runtime exceptions
         raise Exception("veth interface {} does not exist".format(name))
     else:
         return peer_name

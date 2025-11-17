@@ -222,17 +222,36 @@ func (up4 *UP4) AddSliceInfo(sliceInfo *SliceInfo) error {
 	return nil
 }
 
+// SummaryLatencyJitter collects latency and jitter summary metrics from the UP4 component.
 func (up4 *UP4) SummaryLatencyJitter(uc *upfCollector, ch chan<- prometheus.Metric) {
+	/*
+	   NOTE: Currently empty because UP4 latency/jitter metrics are not yet implemented.
+	   This placeholder ensures the interface compliance and allows future metric collection
+	   logic (e.g., P4 counters or external telemetry data) to be added without breaking code.
+	*/
 }
 
+// SessionStats collects per-session PFCP-related statistics.
 func (up4 *UP4) SessionStats(*PfcpNodeCollector, chan<- prometheus.Metric) error {
 	return nil
 }
 
+// PortStats collects statistics about UP4 network ports.
 func (up4 *UP4) PortStats(uc *upfCollector, ch chan<- prometheus.Metric) {
+	/*
+	   NOTE: This is intentionally left empty.
+	   Port-level metrics (e.g., Tx/Rx bytes, errors) are planned to be integrated
+	   once UP4 exposes port telemetry via the P4Runtime or gNMI interfaces.
+	*/
 }
 
+// SummaryGtpuLatency collects summarized GTP-U latency metrics.
 func (up4 *UP4) SummaryGtpuLatency(uc *upfCollector, ch chan<- prometheus.Metric) {
+	/*
+	   NOTE: Empty for now.
+	   This will be implemented to collect end-to-end GTP-U tunnel latency summaries
+	   once UP4 exports GTPU latency counters or timestamp data.
+	*/
 }
 
 func (up4 *UP4) initCounter(counterID uint8, name string, counterSize uint64) {
