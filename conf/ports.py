@@ -69,17 +69,13 @@ class Port:
             raise Exception("Port {}: Out of BPF gates to allocate".format(self.name))
 
     def detect_mode(self):
-    try:
-        peer_by_interface(self.name)
-        return "dpdk"
-    except (SystemExit, KeyboardInterrupt):
-        raise
-    except FileNotFoundError:
-        return "linux"
-    except OSError:
-        return "linux"
-    except Exception:
-        raise
+        mode = None
+        try:
+            peer_by_interface(self.name)
+            mode = "dpdk"
+        except OSError:
+            mode = "linux"
+        return mode
 
     def configure_flow_profiles(self, iface):
         if iface == "access":
@@ -228,13 +224,13 @@ class Port:
                 }
                 try:
                     self.init_datapath(**kwargs)
-                except (SystemExit, KeyboardInterrupt, BaseException):
-                    raise
-                except Exception:
+                except OSError:
                     kwargs = None
                     print(
-                        "Unable to initialize {} datapath using alias {}, "
-                        "falling back to scan".format(name, pci)
+                        "Unable to initialize {} datapath using alias {},\
+                        falling back to scan".format(
+                            name, pci
+                        )
                     )
             if kwargs is None:
                 # Fallback to scanning ports
