@@ -59,9 +59,12 @@ def create_dummy_interface():
     try:
         subprocess.check_output(["ip", "link", "show", DUMMY_IFACE_NAME])
         return True  # device already exists, skip
-    except:
+    except subprocess.CalledProcessError:
         # interface does not exists
         pass
+    except Exception as e:
+        info(f'Unexpected error checking interface "{DUMMY_IFACE_NAME}": {e}')
+        return False
     try:
         subprocess.check_output(
             ["ip", "link", "add", DUMMY_IFACE_NAME, "type", "dummy"]
@@ -85,14 +88,13 @@ def remove_dummy_interface():
             )
             return False
         return True
-    except:
+    except OSError:
         # interface does not exists
         return True
 
 
 def set_up_trex_server(trex_daemon_client, trex_address, trex_config):
     """Start the TRex daemon client to run while PTF tests are running
-
     The TRex daemon client handles spawning TRex clients for each PTF
     test case. A TRex client is a temporary client that generates
     traffic. At the end of the PTF test, the TRex daemon client also

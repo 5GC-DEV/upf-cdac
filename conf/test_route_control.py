@@ -17,24 +17,42 @@ class BessControllerMock(object):
     """Mock of BessController to avoid using BESS from pybess.bess"""
 
     def __init__(self):
+        # This mock does not require any initialization state because
+        # unit tests using this controller only verify call flows,
+        # not real BESS interactions.
         pass
 
     def _get_bess(self, *args, **kwargs) -> None:
+        # This method is intentionally left empty because in unit tests,
+        # we do not connect to a real BESS daemon. The mock replaces the
+        # real BESS controller so tests can run without requiring BESS
+        # infrastructure.
         pass
 
     def add_route_to_module(self, *args, **kwargs) -> None:
+        # This mock method does nothing because unit tests only validate
+        # whether the method was called, not actual route creation in BESS.
         pass
 
     def delete_module_route_entry(self, *args, **kwargs) -> None:
+        # Kept empty intentionally: A mock does not modify any route table.
+        # Tests use this to ensure delete operations are invoked correctly.
         pass
 
     def create_module(self, *args, **kwargs) -> None:
+        # The real controller would create a module inside BESS.  
+        # In the mock, we skip the actual logic since unit tests
+        # only simulate control-plane behavior.
         pass
 
     def delete_module(self, *args, **kwargs) -> None:
+        # No real deletion happens in the mock. This allows tests to run
+        # without depending on or modifying real BESS state.
         pass
 
     def link_modules(self, *args, **kwargs) -> None:
+        # This empty method simulates the linking behavior between modules.
+        # In tests, we only verify that linking was requested, not executed.
         pass
 
 

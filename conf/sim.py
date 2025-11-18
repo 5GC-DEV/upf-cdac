@@ -2,11 +2,12 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2019 Intel Corporation
 
-from scapy.all import *
-from scapy.contrib.gtp import *
+from scapy.layers.l2 import Ether
+from scapy.layers.inet import IP, UDP
+from scapy.contrib.gtp import GTP_U_Header, GTPPDUSessionContainer
 
 # for ip2long
-from conf.utils import *
+from conf.utils import ip2long
 
 # ====================================================
 #       SIM Create Packet Functions
