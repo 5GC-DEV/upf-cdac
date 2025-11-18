@@ -2,8 +2,8 @@
 # Copyright 2022 Intel Corporation
 
 import scapy.all as scapy
-from scapy.contrib.gtp import *
-from scapy.packet import *
+from scapy.contrib.gtp import GTPHeader, GTPEchoRequest
+from scapy.packet import Padding
 
 def gtp_echo_request(src_ip):
   #use scapy to build a GTP-U Echo Request packet template

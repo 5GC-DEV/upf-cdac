@@ -3,7 +3,7 @@
 # Copyright 2019 Intel Corporation
 
 # for get_env
-from conf.utils import *
+from conf.utils import get_env, get_json_conf
 
 # how many times should controller try to connect before giving up
 MAX_RETRIES = 5

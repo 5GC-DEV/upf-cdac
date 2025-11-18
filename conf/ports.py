@@ -6,8 +6,7 @@ import errno
 import inspect
 import sys
 
-from conf.parser import *
-
+from conf.parser import MAX_GATES
 
 def setup_globals():
     caller_frame = inspect.stack()[1][0]
@@ -74,7 +73,10 @@ class Port:
         try:
             peer_by_interface(self.name)
             mode = "dpdk"
-        except:
+        except OSError:
+            mode = "linux"
+        except Exception as e:
+            print(f"Unexpected error: {e}")  
             mode = "linux"
         return mode
 
@@ -225,7 +227,7 @@ class Port:
                 }
                 try:
                     self.init_datapath(**kwargs)
-                except:
+                except Exception:
                     kwargs = None
                     print(
                         "Unable to initialize {} datapath using alias {},\
