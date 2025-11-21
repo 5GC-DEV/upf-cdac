@@ -9,6 +9,7 @@ import logging
 import signal
 import sys
 import time
+import errno
 from collections import defaultdict
 from dataclasses import dataclass, field
 from threading import Lock, Thread

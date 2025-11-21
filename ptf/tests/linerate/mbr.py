@@ -9,7 +9,7 @@ from trex_stl_lib.api import STLPktBuilder, STLStream, STLTXCont
 from trex_test import TrexTest
 from trex_utils import (get_flow_stats, start_and_monitor_port_stats )
 
-from common import ( UE_IP_START, UE_COUNT, N3_IP, GNB_IP, PDN_IP, UPF_CORE_MAC, UPF_ACCESS_MAC, UPF_CORE_PORT, UPF_ACCESS_PORT, ACTION_FORWARD, DST_ACCESS, DST_CORE,
+from common import ( UE_IP_START, N3_IP, GNB_IP, PDN_IP, UPF_CORE_MAC, UPF_ACCESS_MAC, UPF_CORE_PORT, UPF_ACCESS_PORT, ACTION_FORWARD, DST_ACCESS, DST_CORE,
     GATE_METER, K, M, PKT_SIZE_L, CORE, ACCESS, GTPU_PORT, to_readable )
 
 class AppMbrTest(TrexTest, GrpcTest):
