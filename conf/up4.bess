@@ -4,6 +4,7 @@
 # Copyright 2019 Intel Corporation
 
 from conf.parser import *
+from conf.utils import *
 from conf.gtp_echo import *
 import conf.ports as port
 import conf.sim as sim

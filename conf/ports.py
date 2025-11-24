@@ -7,6 +7,13 @@ import inspect
 import sys
 
 from conf.parser import MAX_GATES
+from conf.utils import (
+    peer_by_interface,
+    alias_by_interface, 
+    mac_by_interface,
+    ips_by_interface,
+    mac2hex
+)
 
 def setup_globals():
     caller_frame = inspect.stack()[1][0]
