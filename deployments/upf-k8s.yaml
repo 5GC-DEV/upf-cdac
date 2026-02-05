@@ -76,6 +76,7 @@ metadata:
             { "name": "core-net", "interface": "core" }
     ]'
 spec:
+  automountServiceAccountToken: false
   shareProcessNamespace: true
   initContainers:
   # Currently CNI doesn't allow metric we're doing it here instead of net-attach-def
@@ -122,6 +123,7 @@ spec:
       limits:
         cpu: 256m
         memory: 128Mi
+        ephemeral-storage: 64Mi
   - name: bessd
     image: omecproject/upf-epc-bess:master-latest
     stdin: true
@@ -167,6 +169,7 @@ spec:
       limits:
         cpu: 256m
         memory: 128Mi
+        ephemeral-storage: 64Mi
   - name: pfcpiface
     image: omecproject/upf-epc-pfcpiface:master-latest
     command: ["pfcpiface"]
