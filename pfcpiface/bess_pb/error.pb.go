@@ -46,18 +46,18 @@ import (
 
 const (
 	// Verify that this generated code is sufficiently up-to-date.
-	_ = protoimpl.EnforceVersion(20 - protoimpl.MinVersion)
+	_	= protoimpl.EnforceVersion(20 - protoimpl.MinVersion)
 	// Verify that runtime/protoimpl is sufficiently up-to-date.
-	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
+	_	= protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
 type Error struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Code   int32  `protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty"` // 0 for success, errno (>0) for failure
-	Errmsg string `protobuf:"bytes,2,opt,name=errmsg,proto3" json:"errmsg,omitempty"`
+	Code	int32	`protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty"`	// 0 for success, errno (>0) for failure
+	Errmsg	string	`protobuf:"bytes,2,opt,name=errmsg,proto3" json:"errmsg,omitempty"`
 }
 
 func (x *Error) Reset() {
@@ -73,7 +73,8 @@ func (x *Error) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Error) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*Error) ProtoMessage()	{}
 
 func (x *Error) ProtoReflect() protoreflect.Message {
 	mi := &file_error_proto_msgTypes[0]
@@ -121,8 +122,8 @@ var file_error_proto_rawDesc = []byte{
 }
 
 var (
-	file_error_proto_rawDescOnce sync.Once
-	file_error_proto_rawDescData = file_error_proto_rawDesc
+	file_error_proto_rawDescOnce	sync.Once
+	file_error_proto_rawDescData	= file_error_proto_rawDesc
 )
 
 func file_error_proto_rawDescGZIP() []byte {
@@ -134,17 +135,17 @@ func file_error_proto_rawDescGZIP() []byte {
 
 var file_error_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_error_proto_goTypes = []interface{}{
-	(*Error)(nil), // 0: bess.pb.Error
+	(*Error)(nil),	// 0: bess.pb.Error
 }
 var file_error_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0,	// [0:0] is the sub-list for method output_type
+	0,	// [0:0] is the sub-list for method input_type
+	0,	// [0:0] is the sub-list for extension type_name
+	0,	// [0:0] is the sub-list for extension extendee
+	0,	// [0:0] is the sub-list for field type_name
 }
 
-func init() { file_error_proto_init() }
+func init()	{ file_error_proto_init() }
 func file_error_proto_init() {
 	if File_error_proto != nil {
 		return
@@ -166,16 +167,16 @@ func file_error_proto_init() {
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
-			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_error_proto_rawDesc,
-			NumEnums:      0,
-			NumMessages:   1,
-			NumExtensions: 0,
-			NumServices:   0,
+			GoPackagePath:	reflect.TypeOf(x{}).PkgPath(),
+			RawDescriptor:	file_error_proto_rawDesc,
+			NumEnums:	0,
+			NumMessages:	1,
+			NumExtensions:	0,
+			NumServices:	0,
 		},
-		GoTypes:           file_error_proto_goTypes,
-		DependencyIndexes: file_error_proto_depIdxs,
-		MessageInfos:      file_error_proto_msgTypes,
+		GoTypes:		file_error_proto_goTypes,
+		DependencyIndexes:	file_error_proto_depIdxs,
+		MessageInfos:		file_error_proto_msgTypes,
 	}.Build()
 	File_error_proto = out.File
 	file_error_proto_rawDesc = nil

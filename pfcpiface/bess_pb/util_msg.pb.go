@@ -46,23 +46,23 @@ import (
 
 const (
 	// Verify that this generated code is sufficiently up-to-date.
-	_ = protoimpl.EnforceVersion(20 - protoimpl.MinVersion)
+	_	= protoimpl.EnforceVersion(20 - protoimpl.MinVersion)
 	// Verify that runtime/protoimpl is sufficiently up-to-date.
-	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
+	_	= protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-/// The Field message represents one field in a packet -- either stored in
-/// metadata or in the packet body.
+// / The Field message represents one field in a packet -- either stored in
+// / metadata or in the packet body.
 type Field struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
 	// Types that are assignable to Position:
 	//	*Field_AttrName
 	//	*Field_Offset
-	Position isField_Position `protobuf_oneof:"position"`
-	NumBytes uint32           `protobuf:"varint,3,opt,name=num_bytes,json=numBytes,proto3" json:"num_bytes,omitempty"` /// The size of the data in bytes
+	Position	isField_Position	`protobuf_oneof:"position"`
+	NumBytes	uint32			`protobuf:"varint,3,opt,name=num_bytes,json=numBytes,proto3" json:"num_bytes,omitempty"`	/// The size of the data in bytes
 }
 
 func (x *Field) Reset() {
@@ -78,7 +78,8 @@ func (x *Field) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Field) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*Field) ProtoMessage()	{}
 
 func (x *Field) ProtoReflect() protoreflect.Message {
 	mi := &file_util_msg_proto_msgTypes[0]
@@ -130,28 +131,28 @@ type isField_Position interface {
 }
 
 type Field_AttrName struct {
-	AttrName string `protobuf:"bytes,1,opt,name=attr_name,json=attrName,proto3,oneof"` /// The metadata attribute assigned to store the data
+	AttrName string `protobuf:"bytes,1,opt,name=attr_name,json=attrName,proto3,oneof"`	/// The metadata attribute assigned to store the data
 }
 
 type Field_Offset struct {
-	Offset uint32 `protobuf:"varint,2,opt,name=offset,proto3,oneof"` /// The offset in bytes to store the data into
+	Offset uint32 `protobuf:"varint,2,opt,name=offset,proto3,oneof"`	/// The offset in bytes to store the data into
 }
 
-func (*Field_AttrName) isField_Position() {}
+func (*Field_AttrName) isField_Position()	{}
 
-func (*Field_Offset) isField_Position() {}
+func (*Field_Offset) isField_Position()	{}
 
-/// The FieldData message encodes a value to insert into a packet; the value can
-/// be supplied as either an int or a bytestring.
+// / The FieldData message encodes a value to insert into a packet; the value can
+// / be supplied as either an int or a bytestring.
 type FieldData struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
 	// Types that are assignable to Encoding:
 	//	*FieldData_ValueBin
 	//	*FieldData_ValueInt
-	Encoding isFieldData_Encoding `protobuf_oneof:"encoding"`
+	Encoding	isFieldData_Encoding	`protobuf_oneof:"encoding"`
 }
 
 func (x *FieldData) Reset() {
@@ -167,7 +168,8 @@ func (x *FieldData) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*FieldData) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*FieldData) ProtoMessage()	{}
 
 func (x *FieldData) ProtoReflect() protoreflect.Message {
 	mi := &file_util_msg_proto_msgTypes[1]
@@ -212,16 +214,16 @@ type isFieldData_Encoding interface {
 }
 
 type FieldData_ValueBin struct {
-	ValueBin []byte `protobuf:"bytes,1,opt,name=value_bin,json=valueBin,proto3,oneof"` /// The value as a bytestring
+	ValueBin []byte `protobuf:"bytes,1,opt,name=value_bin,json=valueBin,proto3,oneof"`	/// The value as a bytestring
 }
 
 type FieldData_ValueInt struct {
-	ValueInt uint64 `protobuf:"varint,2,opt,name=value_int,json=valueInt,proto3,oneof"` /// The value in integer format
+	ValueInt uint64 `protobuf:"varint,2,opt,name=value_int,json=valueInt,proto3,oneof"`	/// The value in integer format
 }
 
-func (*FieldData_ValueBin) isFieldData_Encoding() {}
+func (*FieldData_ValueBin) isFieldData_Encoding()	{}
 
-func (*FieldData_ValueInt) isFieldData_Encoding() {}
+func (*FieldData_ValueInt) isFieldData_Encoding()	{}
 
 var File_util_msg_proto protoreflect.FileDescriptor
 
@@ -247,8 +249,8 @@ var file_util_msg_proto_rawDesc = []byte{
 }
 
 var (
-	file_util_msg_proto_rawDescOnce sync.Once
-	file_util_msg_proto_rawDescData = file_util_msg_proto_rawDesc
+	file_util_msg_proto_rawDescOnce	sync.Once
+	file_util_msg_proto_rawDescData	= file_util_msg_proto_rawDesc
 )
 
 func file_util_msg_proto_rawDescGZIP() []byte {
@@ -260,18 +262,18 @@ func file_util_msg_proto_rawDescGZIP() []byte {
 
 var file_util_msg_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_util_msg_proto_goTypes = []interface{}{
-	(*Field)(nil),     // 0: bess.pb.Field
-	(*FieldData)(nil), // 1: bess.pb.FieldData
+	(*Field)(nil),		// 0: bess.pb.Field
+	(*FieldData)(nil),	// 1: bess.pb.FieldData
 }
 var file_util_msg_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0,	// [0:0] is the sub-list for method output_type
+	0,	// [0:0] is the sub-list for method input_type
+	0,	// [0:0] is the sub-list for extension type_name
+	0,	// [0:0] is the sub-list for extension extendee
+	0,	// [0:0] is the sub-list for field type_name
 }
 
-func init() { file_util_msg_proto_init() }
+func init()	{ file_util_msg_proto_init() }
 func file_util_msg_proto_init() {
 	if File_util_msg_proto != nil {
 		return
@@ -313,16 +315,16 @@ func file_util_msg_proto_init() {
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
-			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_util_msg_proto_rawDesc,
-			NumEnums:      0,
-			NumMessages:   2,
-			NumExtensions: 0,
-			NumServices:   0,
+			GoPackagePath:	reflect.TypeOf(x{}).PkgPath(),
+			RawDescriptor:	file_util_msg_proto_rawDesc,
+			NumEnums:	0,
+			NumMessages:	2,
+			NumExtensions:	0,
+			NumServices:	0,
 		},
-		GoTypes:           file_util_msg_proto_goTypes,
-		DependencyIndexes: file_util_msg_proto_depIdxs,
-		MessageInfos:      file_util_msg_proto_msgTypes,
+		GoTypes:		file_util_msg_proto_goTypes,
+		DependencyIndexes:	file_util_msg_proto_depIdxs,
+		MessageInfos:		file_util_msg_proto_msgTypes,
 	}.Build()
 	File_util_msg_proto = out.File
 	file_util_msg_proto_rawDesc = nil

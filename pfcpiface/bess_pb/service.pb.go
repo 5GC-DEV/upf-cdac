@@ -49,9 +49,9 @@ import (
 
 const (
 	// Verify that this generated code is sufficiently up-to-date.
-	_ = protoimpl.EnforceVersion(20 - protoimpl.MinVersion)
+	_	= protoimpl.EnforceVersion(20 - protoimpl.MinVersion)
 	// Verify that runtime/protoimpl is sufficiently up-to-date.
-	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
+	_	= protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
 var File_service_proto protoreflect.FileDescriptor
@@ -288,168 +288,168 @@ var file_service_proto_rawDesc = []byte{
 }
 
 var file_service_proto_goTypes = []interface{}{
-	(*EmptyRequest)(nil),                       // 0: bess.pb.EmptyRequest
-	(*ImportPluginRequest)(nil),                // 1: bess.pb.ImportPluginRequest
-	(*UnloadPluginRequest)(nil),                // 2: bess.pb.UnloadPluginRequest
-	(*PauseWorkerRequest)(nil),                 // 3: bess.pb.PauseWorkerRequest
-	(*ResumeWorkerRequest)(nil),                // 4: bess.pb.ResumeWorkerRequest
-	(*AddWorkerRequest)(nil),                   // 5: bess.pb.AddWorkerRequest
-	(*DestroyWorkerRequest)(nil),               // 6: bess.pb.DestroyWorkerRequest
-	(*ListTcsRequest)(nil),                     // 7: bess.pb.ListTcsRequest
-	(*AddTcRequest)(nil),                       // 8: bess.pb.AddTcRequest
-	(*UpdateTcParamsRequest)(nil),              // 9: bess.pb.UpdateTcParamsRequest
-	(*UpdateTcParentRequest)(nil),              // 10: bess.pb.UpdateTcParentRequest
-	(*GetTcStatsRequest)(nil),                  // 11: bess.pb.GetTcStatsRequest
-	(*GetDriverInfoRequest)(nil),               // 12: bess.pb.GetDriverInfoRequest
-	(*CreatePortRequest)(nil),                  // 13: bess.pb.CreatePortRequest
-	(*DestroyPortRequest)(nil),                 // 14: bess.pb.DestroyPortRequest
-	(*SetPortConfRequest)(nil),                 // 15: bess.pb.SetPortConfRequest
-	(*GetPortConfRequest)(nil),                 // 16: bess.pb.GetPortConfRequest
-	(*GetPortStatsRequest)(nil),                // 17: bess.pb.GetPortStatsRequest
-	(*GetLinkStatusRequest)(nil),               // 18: bess.pb.GetLinkStatusRequest
-	(*GetMclassInfoRequest)(nil),               // 19: bess.pb.GetMclassInfoRequest
-	(*CreateModuleRequest)(nil),                // 20: bess.pb.CreateModuleRequest
-	(*DestroyModuleRequest)(nil),               // 21: bess.pb.DestroyModuleRequest
-	(*GetModuleInfoRequest)(nil),               // 22: bess.pb.GetModuleInfoRequest
-	(*ConnectModulesRequest)(nil),              // 23: bess.pb.ConnectModulesRequest
-	(*DisconnectModulesRequest)(nil),           // 24: bess.pb.DisconnectModulesRequest
-	(*DumpMempoolRequest)(nil),                 // 25: bess.pb.DumpMempoolRequest
-	(*CommandRequest)(nil),                     // 26: bess.pb.CommandRequest
-	(*GetGateHookClassInfoRequest)(nil),        // 27: bess.pb.GetGateHookClassInfoRequest
-	(*ConfigureGateHookRequest)(nil),           // 28: bess.pb.ConfigureGateHookRequest
-	(*GateHookCommandRequest)(nil),             // 29: bess.pb.GateHookCommandRequest
-	(*ConfigureResumeHookRequest)(nil),         // 30: bess.pb.ConfigureResumeHookRequest
-	(*VersionResponse)(nil),                    // 31: bess.pb.VersionResponse
-	(*EmptyResponse)(nil),                      // 32: bess.pb.EmptyResponse
-	(*ListPluginsResponse)(nil),                // 33: bess.pb.ListPluginsResponse
-	(*ListWorkersResponse)(nil),                // 34: bess.pb.ListWorkersResponse
-	(*ListTcsResponse)(nil),                    // 35: bess.pb.ListTcsResponse
-	(*CheckSchedulingConstraintsResponse)(nil), // 36: bess.pb.CheckSchedulingConstraintsResponse
-	(*GetTcStatsResponse)(nil),                 // 37: bess.pb.GetTcStatsResponse
-	(*ListDriversResponse)(nil),                // 38: bess.pb.ListDriversResponse
-	(*GetDriverInfoResponse)(nil),              // 39: bess.pb.GetDriverInfoResponse
-	(*ListPortsResponse)(nil),                  // 40: bess.pb.ListPortsResponse
-	(*CreatePortResponse)(nil),                 // 41: bess.pb.CreatePortResponse
-	(*CommandResponse)(nil),                    // 42: bess.pb.CommandResponse
-	(*GetPortConfResponse)(nil),                // 43: bess.pb.GetPortConfResponse
-	(*GetPortStatsResponse)(nil),               // 44: bess.pb.GetPortStatsResponse
-	(*GetLinkStatusResponse)(nil),              // 45: bess.pb.GetLinkStatusResponse
-	(*ListMclassResponse)(nil),                 // 46: bess.pb.ListMclassResponse
-	(*GetMclassInfoResponse)(nil),              // 47: bess.pb.GetMclassInfoResponse
-	(*ListModulesResponse)(nil),                // 48: bess.pb.ListModulesResponse
-	(*CreateModuleResponse)(nil),               // 49: bess.pb.CreateModuleResponse
-	(*GetModuleInfoResponse)(nil),              // 50: bess.pb.GetModuleInfoResponse
-	(*DumpMempoolResponse)(nil),                // 51: bess.pb.DumpMempoolResponse
-	(*ListGateHookClassResponse)(nil),          // 52: bess.pb.ListGateHookClassResponse
-	(*GetGateHookClassInfoResponse)(nil),       // 53: bess.pb.GetGateHookClassInfoResponse
-	(*ConfigureGateHookResponse)(nil),          // 54: bess.pb.ConfigureGateHookResponse
-	(*ListGateHooksResponse)(nil),              // 55: bess.pb.ListGateHooksResponse
+	(*EmptyRequest)(nil),				// 0: bess.pb.EmptyRequest
+	(*ImportPluginRequest)(nil),			// 1: bess.pb.ImportPluginRequest
+	(*UnloadPluginRequest)(nil),			// 2: bess.pb.UnloadPluginRequest
+	(*PauseWorkerRequest)(nil),			// 3: bess.pb.PauseWorkerRequest
+	(*ResumeWorkerRequest)(nil),			// 4: bess.pb.ResumeWorkerRequest
+	(*AddWorkerRequest)(nil),			// 5: bess.pb.AddWorkerRequest
+	(*DestroyWorkerRequest)(nil),			// 6: bess.pb.DestroyWorkerRequest
+	(*ListTcsRequest)(nil),				// 7: bess.pb.ListTcsRequest
+	(*AddTcRequest)(nil),				// 8: bess.pb.AddTcRequest
+	(*UpdateTcParamsRequest)(nil),			// 9: bess.pb.UpdateTcParamsRequest
+	(*UpdateTcParentRequest)(nil),			// 10: bess.pb.UpdateTcParentRequest
+	(*GetTcStatsRequest)(nil),			// 11: bess.pb.GetTcStatsRequest
+	(*GetDriverInfoRequest)(nil),			// 12: bess.pb.GetDriverInfoRequest
+	(*CreatePortRequest)(nil),			// 13: bess.pb.CreatePortRequest
+	(*DestroyPortRequest)(nil),			// 14: bess.pb.DestroyPortRequest
+	(*SetPortConfRequest)(nil),			// 15: bess.pb.SetPortConfRequest
+	(*GetPortConfRequest)(nil),			// 16: bess.pb.GetPortConfRequest
+	(*GetPortStatsRequest)(nil),			// 17: bess.pb.GetPortStatsRequest
+	(*GetLinkStatusRequest)(nil),			// 18: bess.pb.GetLinkStatusRequest
+	(*GetMclassInfoRequest)(nil),			// 19: bess.pb.GetMclassInfoRequest
+	(*CreateModuleRequest)(nil),			// 20: bess.pb.CreateModuleRequest
+	(*DestroyModuleRequest)(nil),			// 21: bess.pb.DestroyModuleRequest
+	(*GetModuleInfoRequest)(nil),			// 22: bess.pb.GetModuleInfoRequest
+	(*ConnectModulesRequest)(nil),			// 23: bess.pb.ConnectModulesRequest
+	(*DisconnectModulesRequest)(nil),		// 24: bess.pb.DisconnectModulesRequest
+	(*DumpMempoolRequest)(nil),			// 25: bess.pb.DumpMempoolRequest
+	(*CommandRequest)(nil),				// 26: bess.pb.CommandRequest
+	(*GetGateHookClassInfoRequest)(nil),		// 27: bess.pb.GetGateHookClassInfoRequest
+	(*ConfigureGateHookRequest)(nil),		// 28: bess.pb.ConfigureGateHookRequest
+	(*GateHookCommandRequest)(nil),			// 29: bess.pb.GateHookCommandRequest
+	(*ConfigureResumeHookRequest)(nil),		// 30: bess.pb.ConfigureResumeHookRequest
+	(*VersionResponse)(nil),			// 31: bess.pb.VersionResponse
+	(*EmptyResponse)(nil),				// 32: bess.pb.EmptyResponse
+	(*ListPluginsResponse)(nil),			// 33: bess.pb.ListPluginsResponse
+	(*ListWorkersResponse)(nil),			// 34: bess.pb.ListWorkersResponse
+	(*ListTcsResponse)(nil),			// 35: bess.pb.ListTcsResponse
+	(*CheckSchedulingConstraintsResponse)(nil),	// 36: bess.pb.CheckSchedulingConstraintsResponse
+	(*GetTcStatsResponse)(nil),			// 37: bess.pb.GetTcStatsResponse
+	(*ListDriversResponse)(nil),			// 38: bess.pb.ListDriversResponse
+	(*GetDriverInfoResponse)(nil),			// 39: bess.pb.GetDriverInfoResponse
+	(*ListPortsResponse)(nil),			// 40: bess.pb.ListPortsResponse
+	(*CreatePortResponse)(nil),			// 41: bess.pb.CreatePortResponse
+	(*CommandResponse)(nil),			// 42: bess.pb.CommandResponse
+	(*GetPortConfResponse)(nil),			// 43: bess.pb.GetPortConfResponse
+	(*GetPortStatsResponse)(nil),			// 44: bess.pb.GetPortStatsResponse
+	(*GetLinkStatusResponse)(nil),			// 45: bess.pb.GetLinkStatusResponse
+	(*ListMclassResponse)(nil),			// 46: bess.pb.ListMclassResponse
+	(*GetMclassInfoResponse)(nil),			// 47: bess.pb.GetMclassInfoResponse
+	(*ListModulesResponse)(nil),			// 48: bess.pb.ListModulesResponse
+	(*CreateModuleResponse)(nil),			// 49: bess.pb.CreateModuleResponse
+	(*GetModuleInfoResponse)(nil),			// 50: bess.pb.GetModuleInfoResponse
+	(*DumpMempoolResponse)(nil),			// 51: bess.pb.DumpMempoolResponse
+	(*ListGateHookClassResponse)(nil),		// 52: bess.pb.ListGateHookClassResponse
+	(*GetGateHookClassInfoResponse)(nil),		// 53: bess.pb.GetGateHookClassInfoResponse
+	(*ConfigureGateHookResponse)(nil),		// 54: bess.pb.ConfigureGateHookResponse
+	(*ListGateHooksResponse)(nil),			// 55: bess.pb.ListGateHooksResponse
 }
 var file_service_proto_depIdxs = []int32{
-	0,  // 0: bess.pb.BESSControl.GetVersion:input_type -> bess.pb.EmptyRequest
-	0,  // 1: bess.pb.BESSControl.ResetAll:input_type -> bess.pb.EmptyRequest
-	0,  // 2: bess.pb.BESSControl.KillBess:input_type -> bess.pb.EmptyRequest
-	1,  // 3: bess.pb.BESSControl.ImportPlugin:input_type -> bess.pb.ImportPluginRequest
-	2,  // 4: bess.pb.BESSControl.UnloadPlugin:input_type -> bess.pb.UnloadPluginRequest
-	0,  // 5: bess.pb.BESSControl.ListPlugins:input_type -> bess.pb.EmptyRequest
-	0,  // 6: bess.pb.BESSControl.PauseAll:input_type -> bess.pb.EmptyRequest
-	3,  // 7: bess.pb.BESSControl.PauseWorker:input_type -> bess.pb.PauseWorkerRequest
-	4,  // 8: bess.pb.BESSControl.ResumeWorker:input_type -> bess.pb.ResumeWorkerRequest
-	0,  // 9: bess.pb.BESSControl.ResumeAll:input_type -> bess.pb.EmptyRequest
-	0,  // 10: bess.pb.BESSControl.ResetWorkers:input_type -> bess.pb.EmptyRequest
-	0,  // 11: bess.pb.BESSControl.ListWorkers:input_type -> bess.pb.EmptyRequest
-	5,  // 12: bess.pb.BESSControl.AddWorker:input_type -> bess.pb.AddWorkerRequest
-	6,  // 13: bess.pb.BESSControl.DestroyWorker:input_type -> bess.pb.DestroyWorkerRequest
-	0,  // 14: bess.pb.BESSControl.ResetTcs:input_type -> bess.pb.EmptyRequest
-	7,  // 15: bess.pb.BESSControl.ListTcs:input_type -> bess.pb.ListTcsRequest
-	0,  // 16: bess.pb.BESSControl.CheckSchedulingConstraints:input_type -> bess.pb.EmptyRequest
-	8,  // 17: bess.pb.BESSControl.AddTc:input_type -> bess.pb.AddTcRequest
-	9,  // 18: bess.pb.BESSControl.UpdateTcParams:input_type -> bess.pb.UpdateTcParamsRequest
-	10, // 19: bess.pb.BESSControl.UpdateTcParent:input_type -> bess.pb.UpdateTcParentRequest
-	11, // 20: bess.pb.BESSControl.GetTcStats:input_type -> bess.pb.GetTcStatsRequest
-	0,  // 21: bess.pb.BESSControl.ListDrivers:input_type -> bess.pb.EmptyRequest
-	12, // 22: bess.pb.BESSControl.GetDriverInfo:input_type -> bess.pb.GetDriverInfoRequest
-	0,  // 23: bess.pb.BESSControl.ResetPorts:input_type -> bess.pb.EmptyRequest
-	0,  // 24: bess.pb.BESSControl.ListPorts:input_type -> bess.pb.EmptyRequest
-	13, // 25: bess.pb.BESSControl.CreatePort:input_type -> bess.pb.CreatePortRequest
-	14, // 26: bess.pb.BESSControl.DestroyPort:input_type -> bess.pb.DestroyPortRequest
-	15, // 27: bess.pb.BESSControl.SetPortConf:input_type -> bess.pb.SetPortConfRequest
-	16, // 28: bess.pb.BESSControl.GetPortConf:input_type -> bess.pb.GetPortConfRequest
-	17, // 29: bess.pb.BESSControl.GetPortStats:input_type -> bess.pb.GetPortStatsRequest
-	18, // 30: bess.pb.BESSControl.GetLinkStatus:input_type -> bess.pb.GetLinkStatusRequest
-	0,  // 31: bess.pb.BESSControl.ListMclass:input_type -> bess.pb.EmptyRequest
-	19, // 32: bess.pb.BESSControl.GetMclassInfo:input_type -> bess.pb.GetMclassInfoRequest
-	0,  // 33: bess.pb.BESSControl.ResetModules:input_type -> bess.pb.EmptyRequest
-	0,  // 34: bess.pb.BESSControl.ListModules:input_type -> bess.pb.EmptyRequest
-	20, // 35: bess.pb.BESSControl.CreateModule:input_type -> bess.pb.CreateModuleRequest
-	21, // 36: bess.pb.BESSControl.DestroyModule:input_type -> bess.pb.DestroyModuleRequest
-	22, // 37: bess.pb.BESSControl.GetModuleInfo:input_type -> bess.pb.GetModuleInfoRequest
-	23, // 38: bess.pb.BESSControl.ConnectModules:input_type -> bess.pb.ConnectModulesRequest
-	24, // 39: bess.pb.BESSControl.DisconnectModules:input_type -> bess.pb.DisconnectModulesRequest
-	25, // 40: bess.pb.BESSControl.DumpMempool:input_type -> bess.pb.DumpMempoolRequest
-	26, // 41: bess.pb.BESSControl.ModuleCommand:input_type -> bess.pb.CommandRequest
-	0,  // 42: bess.pb.BESSControl.ListGateHookClass:input_type -> bess.pb.EmptyRequest
-	27, // 43: bess.pb.BESSControl.GetGateHookClassInfo:input_type -> bess.pb.GetGateHookClassInfoRequest
-	28, // 44: bess.pb.BESSControl.ConfigureGateHook:input_type -> bess.pb.ConfigureGateHookRequest
-	0,  // 45: bess.pb.BESSControl.ListGateHooks:input_type -> bess.pb.EmptyRequest
-	29, // 46: bess.pb.BESSControl.GateHookCommand:input_type -> bess.pb.GateHookCommandRequest
-	30, // 47: bess.pb.BESSControl.ConfigureResumeHook:input_type -> bess.pb.ConfigureResumeHookRequest
-	31, // 48: bess.pb.BESSControl.GetVersion:output_type -> bess.pb.VersionResponse
-	32, // 49: bess.pb.BESSControl.ResetAll:output_type -> bess.pb.EmptyResponse
-	32, // 50: bess.pb.BESSControl.KillBess:output_type -> bess.pb.EmptyResponse
-	32, // 51: bess.pb.BESSControl.ImportPlugin:output_type -> bess.pb.EmptyResponse
-	32, // 52: bess.pb.BESSControl.UnloadPlugin:output_type -> bess.pb.EmptyResponse
-	33, // 53: bess.pb.BESSControl.ListPlugins:output_type -> bess.pb.ListPluginsResponse
-	32, // 54: bess.pb.BESSControl.PauseAll:output_type -> bess.pb.EmptyResponse
-	32, // 55: bess.pb.BESSControl.PauseWorker:output_type -> bess.pb.EmptyResponse
-	32, // 56: bess.pb.BESSControl.ResumeWorker:output_type -> bess.pb.EmptyResponse
-	32, // 57: bess.pb.BESSControl.ResumeAll:output_type -> bess.pb.EmptyResponse
-	32, // 58: bess.pb.BESSControl.ResetWorkers:output_type -> bess.pb.EmptyResponse
-	34, // 59: bess.pb.BESSControl.ListWorkers:output_type -> bess.pb.ListWorkersResponse
-	32, // 60: bess.pb.BESSControl.AddWorker:output_type -> bess.pb.EmptyResponse
-	32, // 61: bess.pb.BESSControl.DestroyWorker:output_type -> bess.pb.EmptyResponse
-	32, // 62: bess.pb.BESSControl.ResetTcs:output_type -> bess.pb.EmptyResponse
-	35, // 63: bess.pb.BESSControl.ListTcs:output_type -> bess.pb.ListTcsResponse
-	36, // 64: bess.pb.BESSControl.CheckSchedulingConstraints:output_type -> bess.pb.CheckSchedulingConstraintsResponse
-	32, // 65: bess.pb.BESSControl.AddTc:output_type -> bess.pb.EmptyResponse
-	32, // 66: bess.pb.BESSControl.UpdateTcParams:output_type -> bess.pb.EmptyResponse
-	32, // 67: bess.pb.BESSControl.UpdateTcParent:output_type -> bess.pb.EmptyResponse
-	37, // 68: bess.pb.BESSControl.GetTcStats:output_type -> bess.pb.GetTcStatsResponse
-	38, // 69: bess.pb.BESSControl.ListDrivers:output_type -> bess.pb.ListDriversResponse
-	39, // 70: bess.pb.BESSControl.GetDriverInfo:output_type -> bess.pb.GetDriverInfoResponse
-	32, // 71: bess.pb.BESSControl.ResetPorts:output_type -> bess.pb.EmptyResponse
-	40, // 72: bess.pb.BESSControl.ListPorts:output_type -> bess.pb.ListPortsResponse
-	41, // 73: bess.pb.BESSControl.CreatePort:output_type -> bess.pb.CreatePortResponse
-	32, // 74: bess.pb.BESSControl.DestroyPort:output_type -> bess.pb.EmptyResponse
-	42, // 75: bess.pb.BESSControl.SetPortConf:output_type -> bess.pb.CommandResponse
-	43, // 76: bess.pb.BESSControl.GetPortConf:output_type -> bess.pb.GetPortConfResponse
-	44, // 77: bess.pb.BESSControl.GetPortStats:output_type -> bess.pb.GetPortStatsResponse
-	45, // 78: bess.pb.BESSControl.GetLinkStatus:output_type -> bess.pb.GetLinkStatusResponse
-	46, // 79: bess.pb.BESSControl.ListMclass:output_type -> bess.pb.ListMclassResponse
-	47, // 80: bess.pb.BESSControl.GetMclassInfo:output_type -> bess.pb.GetMclassInfoResponse
-	32, // 81: bess.pb.BESSControl.ResetModules:output_type -> bess.pb.EmptyResponse
-	48, // 82: bess.pb.BESSControl.ListModules:output_type -> bess.pb.ListModulesResponse
-	49, // 83: bess.pb.BESSControl.CreateModule:output_type -> bess.pb.CreateModuleResponse
-	32, // 84: bess.pb.BESSControl.DestroyModule:output_type -> bess.pb.EmptyResponse
-	50, // 85: bess.pb.BESSControl.GetModuleInfo:output_type -> bess.pb.GetModuleInfoResponse
-	32, // 86: bess.pb.BESSControl.ConnectModules:output_type -> bess.pb.EmptyResponse
-	32, // 87: bess.pb.BESSControl.DisconnectModules:output_type -> bess.pb.EmptyResponse
-	51, // 88: bess.pb.BESSControl.DumpMempool:output_type -> bess.pb.DumpMempoolResponse
-	42, // 89: bess.pb.BESSControl.ModuleCommand:output_type -> bess.pb.CommandResponse
-	52, // 90: bess.pb.BESSControl.ListGateHookClass:output_type -> bess.pb.ListGateHookClassResponse
-	53, // 91: bess.pb.BESSControl.GetGateHookClassInfo:output_type -> bess.pb.GetGateHookClassInfoResponse
-	54, // 92: bess.pb.BESSControl.ConfigureGateHook:output_type -> bess.pb.ConfigureGateHookResponse
-	55, // 93: bess.pb.BESSControl.ListGateHooks:output_type -> bess.pb.ListGateHooksResponse
-	42, // 94: bess.pb.BESSControl.GateHookCommand:output_type -> bess.pb.CommandResponse
-	42, // 95: bess.pb.BESSControl.ConfigureResumeHook:output_type -> bess.pb.CommandResponse
-	48, // [48:96] is the sub-list for method output_type
-	0,  // [0:48] is the sub-list for method input_type
-	0,  // [0:0] is the sub-list for extension type_name
-	0,  // [0:0] is the sub-list for extension extendee
-	0,  // [0:0] is the sub-list for field type_name
+	0,	// 0: bess.pb.BESSControl.GetVersion:input_type -> bess.pb.EmptyRequest
+	0,	// 1: bess.pb.BESSControl.ResetAll:input_type -> bess.pb.EmptyRequest
+	0,	// 2: bess.pb.BESSControl.KillBess:input_type -> bess.pb.EmptyRequest
+	1,	// 3: bess.pb.BESSControl.ImportPlugin:input_type -> bess.pb.ImportPluginRequest
+	2,	// 4: bess.pb.BESSControl.UnloadPlugin:input_type -> bess.pb.UnloadPluginRequest
+	0,	// 5: bess.pb.BESSControl.ListPlugins:input_type -> bess.pb.EmptyRequest
+	0,	// 6: bess.pb.BESSControl.PauseAll:input_type -> bess.pb.EmptyRequest
+	3,	// 7: bess.pb.BESSControl.PauseWorker:input_type -> bess.pb.PauseWorkerRequest
+	4,	// 8: bess.pb.BESSControl.ResumeWorker:input_type -> bess.pb.ResumeWorkerRequest
+	0,	// 9: bess.pb.BESSControl.ResumeAll:input_type -> bess.pb.EmptyRequest
+	0,	// 10: bess.pb.BESSControl.ResetWorkers:input_type -> bess.pb.EmptyRequest
+	0,	// 11: bess.pb.BESSControl.ListWorkers:input_type -> bess.pb.EmptyRequest
+	5,	// 12: bess.pb.BESSControl.AddWorker:input_type -> bess.pb.AddWorkerRequest
+	6,	// 13: bess.pb.BESSControl.DestroyWorker:input_type -> bess.pb.DestroyWorkerRequest
+	0,	// 14: bess.pb.BESSControl.ResetTcs:input_type -> bess.pb.EmptyRequest
+	7,	// 15: bess.pb.BESSControl.ListTcs:input_type -> bess.pb.ListTcsRequest
+	0,	// 16: bess.pb.BESSControl.CheckSchedulingConstraints:input_type -> bess.pb.EmptyRequest
+	8,	// 17: bess.pb.BESSControl.AddTc:input_type -> bess.pb.AddTcRequest
+	9,	// 18: bess.pb.BESSControl.UpdateTcParams:input_type -> bess.pb.UpdateTcParamsRequest
+	10,	// 19: bess.pb.BESSControl.UpdateTcParent:input_type -> bess.pb.UpdateTcParentRequest
+	11,	// 20: bess.pb.BESSControl.GetTcStats:input_type -> bess.pb.GetTcStatsRequest
+	0,	// 21: bess.pb.BESSControl.ListDrivers:input_type -> bess.pb.EmptyRequest
+	12,	// 22: bess.pb.BESSControl.GetDriverInfo:input_type -> bess.pb.GetDriverInfoRequest
+	0,	// 23: bess.pb.BESSControl.ResetPorts:input_type -> bess.pb.EmptyRequest
+	0,	// 24: bess.pb.BESSControl.ListPorts:input_type -> bess.pb.EmptyRequest
+	13,	// 25: bess.pb.BESSControl.CreatePort:input_type -> bess.pb.CreatePortRequest
+	14,	// 26: bess.pb.BESSControl.DestroyPort:input_type -> bess.pb.DestroyPortRequest
+	15,	// 27: bess.pb.BESSControl.SetPortConf:input_type -> bess.pb.SetPortConfRequest
+	16,	// 28: bess.pb.BESSControl.GetPortConf:input_type -> bess.pb.GetPortConfRequest
+	17,	// 29: bess.pb.BESSControl.GetPortStats:input_type -> bess.pb.GetPortStatsRequest
+	18,	// 30: bess.pb.BESSControl.GetLinkStatus:input_type -> bess.pb.GetLinkStatusRequest
+	0,	// 31: bess.pb.BESSControl.ListMclass:input_type -> bess.pb.EmptyRequest
+	19,	// 32: bess.pb.BESSControl.GetMclassInfo:input_type -> bess.pb.GetMclassInfoRequest
+	0,	// 33: bess.pb.BESSControl.ResetModules:input_type -> bess.pb.EmptyRequest
+	0,	// 34: bess.pb.BESSControl.ListModules:input_type -> bess.pb.EmptyRequest
+	20,	// 35: bess.pb.BESSControl.CreateModule:input_type -> bess.pb.CreateModuleRequest
+	21,	// 36: bess.pb.BESSControl.DestroyModule:input_type -> bess.pb.DestroyModuleRequest
+	22,	// 37: bess.pb.BESSControl.GetModuleInfo:input_type -> bess.pb.GetModuleInfoRequest
+	23,	// 38: bess.pb.BESSControl.ConnectModules:input_type -> bess.pb.ConnectModulesRequest
+	24,	// 39: bess.pb.BESSControl.DisconnectModules:input_type -> bess.pb.DisconnectModulesRequest
+	25,	// 40: bess.pb.BESSControl.DumpMempool:input_type -> bess.pb.DumpMempoolRequest
+	26,	// 41: bess.pb.BESSControl.ModuleCommand:input_type -> bess.pb.CommandRequest
+	0,	// 42: bess.pb.BESSControl.ListGateHookClass:input_type -> bess.pb.EmptyRequest
+	27,	// 43: bess.pb.BESSControl.GetGateHookClassInfo:input_type -> bess.pb.GetGateHookClassInfoRequest
+	28,	// 44: bess.pb.BESSControl.ConfigureGateHook:input_type -> bess.pb.ConfigureGateHookRequest
+	0,	// 45: bess.pb.BESSControl.ListGateHooks:input_type -> bess.pb.EmptyRequest
+	29,	// 46: bess.pb.BESSControl.GateHookCommand:input_type -> bess.pb.GateHookCommandRequest
+	30,	// 47: bess.pb.BESSControl.ConfigureResumeHook:input_type -> bess.pb.ConfigureResumeHookRequest
+	31,	// 48: bess.pb.BESSControl.GetVersion:output_type -> bess.pb.VersionResponse
+	32,	// 49: bess.pb.BESSControl.ResetAll:output_type -> bess.pb.EmptyResponse
+	32,	// 50: bess.pb.BESSControl.KillBess:output_type -> bess.pb.EmptyResponse
+	32,	// 51: bess.pb.BESSControl.ImportPlugin:output_type -> bess.pb.EmptyResponse
+	32,	// 52: bess.pb.BESSControl.UnloadPlugin:output_type -> bess.pb.EmptyResponse
+	33,	// 53: bess.pb.BESSControl.ListPlugins:output_type -> bess.pb.ListPluginsResponse
+	32,	// 54: bess.pb.BESSControl.PauseAll:output_type -> bess.pb.EmptyResponse
+	32,	// 55: bess.pb.BESSControl.PauseWorker:output_type -> bess.pb.EmptyResponse
+	32,	// 56: bess.pb.BESSControl.ResumeWorker:output_type -> bess.pb.EmptyResponse
+	32,	// 57: bess.pb.BESSControl.ResumeAll:output_type -> bess.pb.EmptyResponse
+	32,	// 58: bess.pb.BESSControl.ResetWorkers:output_type -> bess.pb.EmptyResponse
+	34,	// 59: bess.pb.BESSControl.ListWorkers:output_type -> bess.pb.ListWorkersResponse
+	32,	// 60: bess.pb.BESSControl.AddWorker:output_type -> bess.pb.EmptyResponse
+	32,	// 61: bess.pb.BESSControl.DestroyWorker:output_type -> bess.pb.EmptyResponse
+	32,	// 62: bess.pb.BESSControl.ResetTcs:output_type -> bess.pb.EmptyResponse
+	35,	// 63: bess.pb.BESSControl.ListTcs:output_type -> bess.pb.ListTcsResponse
+	36,	// 64: bess.pb.BESSControl.CheckSchedulingConstraints:output_type -> bess.pb.CheckSchedulingConstraintsResponse
+	32,	// 65: bess.pb.BESSControl.AddTc:output_type -> bess.pb.EmptyResponse
+	32,	// 66: bess.pb.BESSControl.UpdateTcParams:output_type -> bess.pb.EmptyResponse
+	32,	// 67: bess.pb.BESSControl.UpdateTcParent:output_type -> bess.pb.EmptyResponse
+	37,	// 68: bess.pb.BESSControl.GetTcStats:output_type -> bess.pb.GetTcStatsResponse
+	38,	// 69: bess.pb.BESSControl.ListDrivers:output_type -> bess.pb.ListDriversResponse
+	39,	// 70: bess.pb.BESSControl.GetDriverInfo:output_type -> bess.pb.GetDriverInfoResponse
+	32,	// 71: bess.pb.BESSControl.ResetPorts:output_type -> bess.pb.EmptyResponse
+	40,	// 72: bess.pb.BESSControl.ListPorts:output_type -> bess.pb.ListPortsResponse
+	41,	// 73: bess.pb.BESSControl.CreatePort:output_type -> bess.pb.CreatePortResponse
+	32,	// 74: bess.pb.BESSControl.DestroyPort:output_type -> bess.pb.EmptyResponse
+	42,	// 75: bess.pb.BESSControl.SetPortConf:output_type -> bess.pb.CommandResponse
+	43,	// 76: bess.pb.BESSControl.GetPortConf:output_type -> bess.pb.GetPortConfResponse
+	44,	// 77: bess.pb.BESSControl.GetPortStats:output_type -> bess.pb.GetPortStatsResponse
+	45,	// 78: bess.pb.BESSControl.GetLinkStatus:output_type -> bess.pb.GetLinkStatusResponse
+	46,	// 79: bess.pb.BESSControl.ListMclass:output_type -> bess.pb.ListMclassResponse
+	47,	// 80: bess.pb.BESSControl.GetMclassInfo:output_type -> bess.pb.GetMclassInfoResponse
+	32,	// 81: bess.pb.BESSControl.ResetModules:output_type -> bess.pb.EmptyResponse
+	48,	// 82: bess.pb.BESSControl.ListModules:output_type -> bess.pb.ListModulesResponse
+	49,	// 83: bess.pb.BESSControl.CreateModule:output_type -> bess.pb.CreateModuleResponse
+	32,	// 84: bess.pb.BESSControl.DestroyModule:output_type -> bess.pb.EmptyResponse
+	50,	// 85: bess.pb.BESSControl.GetModuleInfo:output_type -> bess.pb.GetModuleInfoResponse
+	32,	// 86: bess.pb.BESSControl.ConnectModules:output_type -> bess.pb.EmptyResponse
+	32,	// 87: bess.pb.BESSControl.DisconnectModules:output_type -> bess.pb.EmptyResponse
+	51,	// 88: bess.pb.BESSControl.DumpMempool:output_type -> bess.pb.DumpMempoolResponse
+	42,	// 89: bess.pb.BESSControl.ModuleCommand:output_type -> bess.pb.CommandResponse
+	52,	// 90: bess.pb.BESSControl.ListGateHookClass:output_type -> bess.pb.ListGateHookClassResponse
+	53,	// 91: bess.pb.BESSControl.GetGateHookClassInfo:output_type -> bess.pb.GetGateHookClassInfoResponse
+	54,	// 92: bess.pb.BESSControl.ConfigureGateHook:output_type -> bess.pb.ConfigureGateHookResponse
+	55,	// 93: bess.pb.BESSControl.ListGateHooks:output_type -> bess.pb.ListGateHooksResponse
+	42,	// 94: bess.pb.BESSControl.GateHookCommand:output_type -> bess.pb.CommandResponse
+	42,	// 95: bess.pb.BESSControl.ConfigureResumeHook:output_type -> bess.pb.CommandResponse
+	48,	// [48:96] is the sub-list for method output_type
+	0,	// [0:48] is the sub-list for method input_type
+	0,	// [0:0] is the sub-list for extension type_name
+	0,	// [0:0] is the sub-list for extension extendee
+	0,	// [0:0] is the sub-list for field type_name
 }
 
-func init() { file_service_proto_init() }
+func init()	{ file_service_proto_init() }
 func file_service_proto_init() {
 	if File_service_proto != nil {
 		return
@@ -458,15 +458,15 @@ func file_service_proto_init() {
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
-			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_service_proto_rawDesc,
-			NumEnums:      0,
-			NumMessages:   0,
-			NumExtensions: 0,
-			NumServices:   1,
+			GoPackagePath:	reflect.TypeOf(x{}).PkgPath(),
+			RawDescriptor:	file_service_proto_rawDesc,
+			NumEnums:	0,
+			NumMessages:	0,
+			NumExtensions:	0,
+			NumServices:	1,
 		},
-		GoTypes:           file_service_proto_goTypes,
-		DependencyIndexes: file_service_proto_depIdxs,
+		GoTypes:		file_service_proto_goTypes,
+		DependencyIndexes:	file_service_proto_depIdxs,
 	}.Build()
 	File_service_proto = out.File
 	file_service_proto_rawDesc = nil
@@ -1488,8 +1488,8 @@ func _BESSControl_GetVersion_Handler(srv interface{}, ctx context.Context, dec f
 		return srv.(BESSControlServer).GetVersion(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/GetVersion",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/GetVersion",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).GetVersion(ctx, req.(*EmptyRequest))
@@ -1506,8 +1506,8 @@ func _BESSControl_ResetAll_Handler(srv interface{}, ctx context.Context, dec fun
 		return srv.(BESSControlServer).ResetAll(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/ResetAll",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/ResetAll",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).ResetAll(ctx, req.(*EmptyRequest))
@@ -1524,8 +1524,8 @@ func _BESSControl_KillBess_Handler(srv interface{}, ctx context.Context, dec fun
 		return srv.(BESSControlServer).KillBess(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/KillBess",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/KillBess",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).KillBess(ctx, req.(*EmptyRequest))
@@ -1542,8 +1542,8 @@ func _BESSControl_ImportPlugin_Handler(srv interface{}, ctx context.Context, dec
 		return srv.(BESSControlServer).ImportPlugin(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/ImportPlugin",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/ImportPlugin",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).ImportPlugin(ctx, req.(*ImportPluginRequest))
@@ -1560,8 +1560,8 @@ func _BESSControl_UnloadPlugin_Handler(srv interface{}, ctx context.Context, dec
 		return srv.(BESSControlServer).UnloadPlugin(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/UnloadPlugin",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/UnloadPlugin",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).UnloadPlugin(ctx, req.(*UnloadPluginRequest))
@@ -1578,8 +1578,8 @@ func _BESSControl_ListPlugins_Handler(srv interface{}, ctx context.Context, dec 
 		return srv.(BESSControlServer).ListPlugins(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/ListPlugins",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/ListPlugins",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).ListPlugins(ctx, req.(*EmptyRequest))
@@ -1596,8 +1596,8 @@ func _BESSControl_PauseAll_Handler(srv interface{}, ctx context.Context, dec fun
 		return srv.(BESSControlServer).PauseAll(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/PauseAll",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/PauseAll",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).PauseAll(ctx, req.(*EmptyRequest))
@@ -1614,8 +1614,8 @@ func _BESSControl_PauseWorker_Handler(srv interface{}, ctx context.Context, dec 
 		return srv.(BESSControlServer).PauseWorker(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/PauseWorker",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/PauseWorker",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).PauseWorker(ctx, req.(*PauseWorkerRequest))
@@ -1632,8 +1632,8 @@ func _BESSControl_ResumeWorker_Handler(srv interface{}, ctx context.Context, dec
 		return srv.(BESSControlServer).ResumeWorker(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/ResumeWorker",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/ResumeWorker",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).ResumeWorker(ctx, req.(*ResumeWorkerRequest))
@@ -1650,8 +1650,8 @@ func _BESSControl_ResumeAll_Handler(srv interface{}, ctx context.Context, dec fu
 		return srv.(BESSControlServer).ResumeAll(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/ResumeAll",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/ResumeAll",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).ResumeAll(ctx, req.(*EmptyRequest))
@@ -1668,8 +1668,8 @@ func _BESSControl_ResetWorkers_Handler(srv interface{}, ctx context.Context, dec
 		return srv.(BESSControlServer).ResetWorkers(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/ResetWorkers",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/ResetWorkers",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).ResetWorkers(ctx, req.(*EmptyRequest))
@@ -1686,8 +1686,8 @@ func _BESSControl_ListWorkers_Handler(srv interface{}, ctx context.Context, dec 
 		return srv.(BESSControlServer).ListWorkers(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/ListWorkers",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/ListWorkers",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).ListWorkers(ctx, req.(*EmptyRequest))
@@ -1704,8 +1704,8 @@ func _BESSControl_AddWorker_Handler(srv interface{}, ctx context.Context, dec fu
 		return srv.(BESSControlServer).AddWorker(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/AddWorker",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/AddWorker",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).AddWorker(ctx, req.(*AddWorkerRequest))
@@ -1722,8 +1722,8 @@ func _BESSControl_DestroyWorker_Handler(srv interface{}, ctx context.Context, de
 		return srv.(BESSControlServer).DestroyWorker(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/DestroyWorker",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/DestroyWorker",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).DestroyWorker(ctx, req.(*DestroyWorkerRequest))
@@ -1740,8 +1740,8 @@ func _BESSControl_ResetTcs_Handler(srv interface{}, ctx context.Context, dec fun
 		return srv.(BESSControlServer).ResetTcs(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/ResetTcs",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/ResetTcs",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).ResetTcs(ctx, req.(*EmptyRequest))
@@ -1758,8 +1758,8 @@ func _BESSControl_ListTcs_Handler(srv interface{}, ctx context.Context, dec func
 		return srv.(BESSControlServer).ListTcs(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/ListTcs",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/ListTcs",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).ListTcs(ctx, req.(*ListTcsRequest))
@@ -1776,8 +1776,8 @@ func _BESSControl_CheckSchedulingConstraints_Handler(srv interface{}, ctx contex
 		return srv.(BESSControlServer).CheckSchedulingConstraints(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/CheckSchedulingConstraints",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/CheckSchedulingConstraints",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).CheckSchedulingConstraints(ctx, req.(*EmptyRequest))
@@ -1794,8 +1794,8 @@ func _BESSControl_AddTc_Handler(srv interface{}, ctx context.Context, dec func(i
 		return srv.(BESSControlServer).AddTc(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/AddTc",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/AddTc",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).AddTc(ctx, req.(*AddTcRequest))
@@ -1812,8 +1812,8 @@ func _BESSControl_UpdateTcParams_Handler(srv interface{}, ctx context.Context, d
 		return srv.(BESSControlServer).UpdateTcParams(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/UpdateTcParams",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/UpdateTcParams",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).UpdateTcParams(ctx, req.(*UpdateTcParamsRequest))
@@ -1830,8 +1830,8 @@ func _BESSControl_UpdateTcParent_Handler(srv interface{}, ctx context.Context, d
 		return srv.(BESSControlServer).UpdateTcParent(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/UpdateTcParent",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/UpdateTcParent",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).UpdateTcParent(ctx, req.(*UpdateTcParentRequest))
@@ -1848,8 +1848,8 @@ func _BESSControl_GetTcStats_Handler(srv interface{}, ctx context.Context, dec f
 		return srv.(BESSControlServer).GetTcStats(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/GetTcStats",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/GetTcStats",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).GetTcStats(ctx, req.(*GetTcStatsRequest))
@@ -1866,8 +1866,8 @@ func _BESSControl_ListDrivers_Handler(srv interface{}, ctx context.Context, dec 
 		return srv.(BESSControlServer).ListDrivers(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/ListDrivers",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/ListDrivers",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).ListDrivers(ctx, req.(*EmptyRequest))
@@ -1884,8 +1884,8 @@ func _BESSControl_GetDriverInfo_Handler(srv interface{}, ctx context.Context, de
 		return srv.(BESSControlServer).GetDriverInfo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/GetDriverInfo",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/GetDriverInfo",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).GetDriverInfo(ctx, req.(*GetDriverInfoRequest))
@@ -1902,8 +1902,8 @@ func _BESSControl_ResetPorts_Handler(srv interface{}, ctx context.Context, dec f
 		return srv.(BESSControlServer).ResetPorts(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/ResetPorts",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/ResetPorts",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).ResetPorts(ctx, req.(*EmptyRequest))
@@ -1920,8 +1920,8 @@ func _BESSControl_ListPorts_Handler(srv interface{}, ctx context.Context, dec fu
 		return srv.(BESSControlServer).ListPorts(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/ListPorts",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/ListPorts",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).ListPorts(ctx, req.(*EmptyRequest))
@@ -1938,8 +1938,8 @@ func _BESSControl_CreatePort_Handler(srv interface{}, ctx context.Context, dec f
 		return srv.(BESSControlServer).CreatePort(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/CreatePort",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/CreatePort",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).CreatePort(ctx, req.(*CreatePortRequest))
@@ -1956,8 +1956,8 @@ func _BESSControl_DestroyPort_Handler(srv interface{}, ctx context.Context, dec 
 		return srv.(BESSControlServer).DestroyPort(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/DestroyPort",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/DestroyPort",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).DestroyPort(ctx, req.(*DestroyPortRequest))
@@ -1974,8 +1974,8 @@ func _BESSControl_SetPortConf_Handler(srv interface{}, ctx context.Context, dec 
 		return srv.(BESSControlServer).SetPortConf(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/SetPortConf",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/SetPortConf",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).SetPortConf(ctx, req.(*SetPortConfRequest))
@@ -1992,8 +1992,8 @@ func _BESSControl_GetPortConf_Handler(srv interface{}, ctx context.Context, dec 
 		return srv.(BESSControlServer).GetPortConf(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/GetPortConf",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/GetPortConf",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).GetPortConf(ctx, req.(*GetPortConfRequest))
@@ -2010,8 +2010,8 @@ func _BESSControl_GetPortStats_Handler(srv interface{}, ctx context.Context, dec
 		return srv.(BESSControlServer).GetPortStats(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/GetPortStats",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/GetPortStats",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).GetPortStats(ctx, req.(*GetPortStatsRequest))
@@ -2028,8 +2028,8 @@ func _BESSControl_GetLinkStatus_Handler(srv interface{}, ctx context.Context, de
 		return srv.(BESSControlServer).GetLinkStatus(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/GetLinkStatus",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/GetLinkStatus",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).GetLinkStatus(ctx, req.(*GetLinkStatusRequest))
@@ -2046,8 +2046,8 @@ func _BESSControl_ListMclass_Handler(srv interface{}, ctx context.Context, dec f
 		return srv.(BESSControlServer).ListMclass(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/ListMclass",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/ListMclass",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).ListMclass(ctx, req.(*EmptyRequest))
@@ -2064,8 +2064,8 @@ func _BESSControl_GetMclassInfo_Handler(srv interface{}, ctx context.Context, de
 		return srv.(BESSControlServer).GetMclassInfo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/GetMclassInfo",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/GetMclassInfo",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).GetMclassInfo(ctx, req.(*GetMclassInfoRequest))
@@ -2082,8 +2082,8 @@ func _BESSControl_ResetModules_Handler(srv interface{}, ctx context.Context, dec
 		return srv.(BESSControlServer).ResetModules(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/ResetModules",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/ResetModules",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).ResetModules(ctx, req.(*EmptyRequest))
@@ -2100,8 +2100,8 @@ func _BESSControl_ListModules_Handler(srv interface{}, ctx context.Context, dec 
 		return srv.(BESSControlServer).ListModules(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/ListModules",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/ListModules",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).ListModules(ctx, req.(*EmptyRequest))
@@ -2118,8 +2118,8 @@ func _BESSControl_CreateModule_Handler(srv interface{}, ctx context.Context, dec
 		return srv.(BESSControlServer).CreateModule(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/CreateModule",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/CreateModule",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).CreateModule(ctx, req.(*CreateModuleRequest))
@@ -2136,8 +2136,8 @@ func _BESSControl_DestroyModule_Handler(srv interface{}, ctx context.Context, de
 		return srv.(BESSControlServer).DestroyModule(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/DestroyModule",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/DestroyModule",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).DestroyModule(ctx, req.(*DestroyModuleRequest))
@@ -2154,8 +2154,8 @@ func _BESSControl_GetModuleInfo_Handler(srv interface{}, ctx context.Context, de
 		return srv.(BESSControlServer).GetModuleInfo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/GetModuleInfo",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/GetModuleInfo",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).GetModuleInfo(ctx, req.(*GetModuleInfoRequest))
@@ -2172,8 +2172,8 @@ func _BESSControl_ConnectModules_Handler(srv interface{}, ctx context.Context, d
 		return srv.(BESSControlServer).ConnectModules(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/ConnectModules",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/ConnectModules",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).ConnectModules(ctx, req.(*ConnectModulesRequest))
@@ -2190,8 +2190,8 @@ func _BESSControl_DisconnectModules_Handler(srv interface{}, ctx context.Context
 		return srv.(BESSControlServer).DisconnectModules(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/DisconnectModules",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/DisconnectModules",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).DisconnectModules(ctx, req.(*DisconnectModulesRequest))
@@ -2208,8 +2208,8 @@ func _BESSControl_DumpMempool_Handler(srv interface{}, ctx context.Context, dec 
 		return srv.(BESSControlServer).DumpMempool(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/DumpMempool",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/DumpMempool",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).DumpMempool(ctx, req.(*DumpMempoolRequest))
@@ -2226,8 +2226,8 @@ func _BESSControl_ModuleCommand_Handler(srv interface{}, ctx context.Context, de
 		return srv.(BESSControlServer).ModuleCommand(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/ModuleCommand",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/ModuleCommand",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).ModuleCommand(ctx, req.(*CommandRequest))
@@ -2244,8 +2244,8 @@ func _BESSControl_ListGateHookClass_Handler(srv interface{}, ctx context.Context
 		return srv.(BESSControlServer).ListGateHookClass(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/ListGateHookClass",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/ListGateHookClass",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).ListGateHookClass(ctx, req.(*EmptyRequest))
@@ -2262,8 +2262,8 @@ func _BESSControl_GetGateHookClassInfo_Handler(srv interface{}, ctx context.Cont
 		return srv.(BESSControlServer).GetGateHookClassInfo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/GetGateHookClassInfo",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/GetGateHookClassInfo",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).GetGateHookClassInfo(ctx, req.(*GetGateHookClassInfoRequest))
@@ -2280,8 +2280,8 @@ func _BESSControl_ConfigureGateHook_Handler(srv interface{}, ctx context.Context
 		return srv.(BESSControlServer).ConfigureGateHook(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/ConfigureGateHook",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/ConfigureGateHook",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).ConfigureGateHook(ctx, req.(*ConfigureGateHookRequest))
@@ -2298,8 +2298,8 @@ func _BESSControl_ListGateHooks_Handler(srv interface{}, ctx context.Context, de
 		return srv.(BESSControlServer).ListGateHooks(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/ListGateHooks",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/ListGateHooks",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).ListGateHooks(ctx, req.(*EmptyRequest))
@@ -2316,8 +2316,8 @@ func _BESSControl_GateHookCommand_Handler(srv interface{}, ctx context.Context, 
 		return srv.(BESSControlServer).GateHookCommand(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/GateHookCommand",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/GateHookCommand",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).GateHookCommand(ctx, req.(*GateHookCommandRequest))
@@ -2334,8 +2334,8 @@ func _BESSControl_ConfigureResumeHook_Handler(srv interface{}, ctx context.Conte
 		return srv.(BESSControlServer).ConfigureResumeHook(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/bess.pb.BESSControl/ConfigureResumeHook",
+		Server:		srv,
+		FullMethod:	"/bess.pb.BESSControl/ConfigureResumeHook",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BESSControlServer).ConfigureResumeHook(ctx, req.(*ConfigureResumeHookRequest))
@@ -2344,202 +2344,202 @@ func _BESSControl_ConfigureResumeHook_Handler(srv interface{}, ctx context.Conte
 }
 
 var _BESSControl_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "bess.pb.BESSControl",
-	HandlerType: (*BESSControlServer)(nil),
+	ServiceName:	"bess.pb.BESSControl",
+	HandlerType:	(*BESSControlServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetVersion",
-			Handler:    _BESSControl_GetVersion_Handler,
+			MethodName:	"GetVersion",
+			Handler:	_BESSControl_GetVersion_Handler,
 		},
 		{
-			MethodName: "ResetAll",
-			Handler:    _BESSControl_ResetAll_Handler,
+			MethodName:	"ResetAll",
+			Handler:	_BESSControl_ResetAll_Handler,
 		},
 		{
-			MethodName: "KillBess",
-			Handler:    _BESSControl_KillBess_Handler,
+			MethodName:	"KillBess",
+			Handler:	_BESSControl_KillBess_Handler,
 		},
 		{
-			MethodName: "ImportPlugin",
-			Handler:    _BESSControl_ImportPlugin_Handler,
+			MethodName:	"ImportPlugin",
+			Handler:	_BESSControl_ImportPlugin_Handler,
 		},
 		{
-			MethodName: "UnloadPlugin",
-			Handler:    _BESSControl_UnloadPlugin_Handler,
+			MethodName:	"UnloadPlugin",
+			Handler:	_BESSControl_UnloadPlugin_Handler,
 		},
 		{
-			MethodName: "ListPlugins",
-			Handler:    _BESSControl_ListPlugins_Handler,
+			MethodName:	"ListPlugins",
+			Handler:	_BESSControl_ListPlugins_Handler,
 		},
 		{
-			MethodName: "PauseAll",
-			Handler:    _BESSControl_PauseAll_Handler,
+			MethodName:	"PauseAll",
+			Handler:	_BESSControl_PauseAll_Handler,
 		},
 		{
-			MethodName: "PauseWorker",
-			Handler:    _BESSControl_PauseWorker_Handler,
+			MethodName:	"PauseWorker",
+			Handler:	_BESSControl_PauseWorker_Handler,
 		},
 		{
-			MethodName: "ResumeWorker",
-			Handler:    _BESSControl_ResumeWorker_Handler,
+			MethodName:	"ResumeWorker",
+			Handler:	_BESSControl_ResumeWorker_Handler,
 		},
 		{
-			MethodName: "ResumeAll",
-			Handler:    _BESSControl_ResumeAll_Handler,
+			MethodName:	"ResumeAll",
+			Handler:	_BESSControl_ResumeAll_Handler,
 		},
 		{
-			MethodName: "ResetWorkers",
-			Handler:    _BESSControl_ResetWorkers_Handler,
+			MethodName:	"ResetWorkers",
+			Handler:	_BESSControl_ResetWorkers_Handler,
 		},
 		{
-			MethodName: "ListWorkers",
-			Handler:    _BESSControl_ListWorkers_Handler,
+			MethodName:	"ListWorkers",
+			Handler:	_BESSControl_ListWorkers_Handler,
 		},
 		{
-			MethodName: "AddWorker",
-			Handler:    _BESSControl_AddWorker_Handler,
+			MethodName:	"AddWorker",
+			Handler:	_BESSControl_AddWorker_Handler,
 		},
 		{
-			MethodName: "DestroyWorker",
-			Handler:    _BESSControl_DestroyWorker_Handler,
+			MethodName:	"DestroyWorker",
+			Handler:	_BESSControl_DestroyWorker_Handler,
 		},
 		{
-			MethodName: "ResetTcs",
-			Handler:    _BESSControl_ResetTcs_Handler,
+			MethodName:	"ResetTcs",
+			Handler:	_BESSControl_ResetTcs_Handler,
 		},
 		{
-			MethodName: "ListTcs",
-			Handler:    _BESSControl_ListTcs_Handler,
+			MethodName:	"ListTcs",
+			Handler:	_BESSControl_ListTcs_Handler,
 		},
 		{
-			MethodName: "CheckSchedulingConstraints",
-			Handler:    _BESSControl_CheckSchedulingConstraints_Handler,
+			MethodName:	"CheckSchedulingConstraints",
+			Handler:	_BESSControl_CheckSchedulingConstraints_Handler,
 		},
 		{
-			MethodName: "AddTc",
-			Handler:    _BESSControl_AddTc_Handler,
+			MethodName:	"AddTc",
+			Handler:	_BESSControl_AddTc_Handler,
 		},
 		{
-			MethodName: "UpdateTcParams",
-			Handler:    _BESSControl_UpdateTcParams_Handler,
+			MethodName:	"UpdateTcParams",
+			Handler:	_BESSControl_UpdateTcParams_Handler,
 		},
 		{
-			MethodName: "UpdateTcParent",
-			Handler:    _BESSControl_UpdateTcParent_Handler,
+			MethodName:	"UpdateTcParent",
+			Handler:	_BESSControl_UpdateTcParent_Handler,
 		},
 		{
-			MethodName: "GetTcStats",
-			Handler:    _BESSControl_GetTcStats_Handler,
+			MethodName:	"GetTcStats",
+			Handler:	_BESSControl_GetTcStats_Handler,
 		},
 		{
-			MethodName: "ListDrivers",
-			Handler:    _BESSControl_ListDrivers_Handler,
+			MethodName:	"ListDrivers",
+			Handler:	_BESSControl_ListDrivers_Handler,
 		},
 		{
-			MethodName: "GetDriverInfo",
-			Handler:    _BESSControl_GetDriverInfo_Handler,
+			MethodName:	"GetDriverInfo",
+			Handler:	_BESSControl_GetDriverInfo_Handler,
 		},
 		{
-			MethodName: "ResetPorts",
-			Handler:    _BESSControl_ResetPorts_Handler,
+			MethodName:	"ResetPorts",
+			Handler:	_BESSControl_ResetPorts_Handler,
 		},
 		{
-			MethodName: "ListPorts",
-			Handler:    _BESSControl_ListPorts_Handler,
+			MethodName:	"ListPorts",
+			Handler:	_BESSControl_ListPorts_Handler,
 		},
 		{
-			MethodName: "CreatePort",
-			Handler:    _BESSControl_CreatePort_Handler,
+			MethodName:	"CreatePort",
+			Handler:	_BESSControl_CreatePort_Handler,
 		},
 		{
-			MethodName: "DestroyPort",
-			Handler:    _BESSControl_DestroyPort_Handler,
+			MethodName:	"DestroyPort",
+			Handler:	_BESSControl_DestroyPort_Handler,
 		},
 		{
-			MethodName: "SetPortConf",
-			Handler:    _BESSControl_SetPortConf_Handler,
+			MethodName:	"SetPortConf",
+			Handler:	_BESSControl_SetPortConf_Handler,
 		},
 		{
-			MethodName: "GetPortConf",
-			Handler:    _BESSControl_GetPortConf_Handler,
+			MethodName:	"GetPortConf",
+			Handler:	_BESSControl_GetPortConf_Handler,
 		},
 		{
-			MethodName: "GetPortStats",
-			Handler:    _BESSControl_GetPortStats_Handler,
+			MethodName:	"GetPortStats",
+			Handler:	_BESSControl_GetPortStats_Handler,
 		},
 		{
-			MethodName: "GetLinkStatus",
-			Handler:    _BESSControl_GetLinkStatus_Handler,
+			MethodName:	"GetLinkStatus",
+			Handler:	_BESSControl_GetLinkStatus_Handler,
 		},
 		{
-			MethodName: "ListMclass",
-			Handler:    _BESSControl_ListMclass_Handler,
+			MethodName:	"ListMclass",
+			Handler:	_BESSControl_ListMclass_Handler,
 		},
 		{
-			MethodName: "GetMclassInfo",
-			Handler:    _BESSControl_GetMclassInfo_Handler,
+			MethodName:	"GetMclassInfo",
+			Handler:	_BESSControl_GetMclassInfo_Handler,
 		},
 		{
-			MethodName: "ResetModules",
-			Handler:    _BESSControl_ResetModules_Handler,
+			MethodName:	"ResetModules",
+			Handler:	_BESSControl_ResetModules_Handler,
 		},
 		{
-			MethodName: "ListModules",
-			Handler:    _BESSControl_ListModules_Handler,
+			MethodName:	"ListModules",
+			Handler:	_BESSControl_ListModules_Handler,
 		},
 		{
-			MethodName: "CreateModule",
-			Handler:    _BESSControl_CreateModule_Handler,
+			MethodName:	"CreateModule",
+			Handler:	_BESSControl_CreateModule_Handler,
 		},
 		{
-			MethodName: "DestroyModule",
-			Handler:    _BESSControl_DestroyModule_Handler,
+			MethodName:	"DestroyModule",
+			Handler:	_BESSControl_DestroyModule_Handler,
 		},
 		{
-			MethodName: "GetModuleInfo",
-			Handler:    _BESSControl_GetModuleInfo_Handler,
+			MethodName:	"GetModuleInfo",
+			Handler:	_BESSControl_GetModuleInfo_Handler,
 		},
 		{
-			MethodName: "ConnectModules",
-			Handler:    _BESSControl_ConnectModules_Handler,
+			MethodName:	"ConnectModules",
+			Handler:	_BESSControl_ConnectModules_Handler,
 		},
 		{
-			MethodName: "DisconnectModules",
-			Handler:    _BESSControl_DisconnectModules_Handler,
+			MethodName:	"DisconnectModules",
+			Handler:	_BESSControl_DisconnectModules_Handler,
 		},
 		{
-			MethodName: "DumpMempool",
-			Handler:    _BESSControl_DumpMempool_Handler,
+			MethodName:	"DumpMempool",
+			Handler:	_BESSControl_DumpMempool_Handler,
 		},
 		{
-			MethodName: "ModuleCommand",
-			Handler:    _BESSControl_ModuleCommand_Handler,
+			MethodName:	"ModuleCommand",
+			Handler:	_BESSControl_ModuleCommand_Handler,
 		},
 		{
-			MethodName: "ListGateHookClass",
-			Handler:    _BESSControl_ListGateHookClass_Handler,
+			MethodName:	"ListGateHookClass",
+			Handler:	_BESSControl_ListGateHookClass_Handler,
 		},
 		{
-			MethodName: "GetGateHookClassInfo",
-			Handler:    _BESSControl_GetGateHookClassInfo_Handler,
+			MethodName:	"GetGateHookClassInfo",
+			Handler:	_BESSControl_GetGateHookClassInfo_Handler,
 		},
 		{
-			MethodName: "ConfigureGateHook",
-			Handler:    _BESSControl_ConfigureGateHook_Handler,
+			MethodName:	"ConfigureGateHook",
+			Handler:	_BESSControl_ConfigureGateHook_Handler,
 		},
 		{
-			MethodName: "ListGateHooks",
-			Handler:    _BESSControl_ListGateHooks_Handler,
+			MethodName:	"ListGateHooks",
+			Handler:	_BESSControl_ListGateHooks_Handler,
 		},
 		{
-			MethodName: "GateHookCommand",
-			Handler:    _BESSControl_GateHookCommand_Handler,
+			MethodName:	"GateHookCommand",
+			Handler:	_BESSControl_GateHookCommand_Handler,
 		},
 		{
-			MethodName: "ConfigureResumeHook",
-			Handler:    _BESSControl_ConfigureResumeHook_Handler,
+			MethodName:	"ConfigureResumeHook",
+			Handler:	_BESSControl_ConfigureResumeHook_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "service.proto",
+	Streams:	[]grpc.StreamDesc{},
+	Metadata:	"service.proto",
 }

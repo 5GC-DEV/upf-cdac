@@ -46,17 +46,17 @@ import (
 
 const (
 	// Verify that this generated code is sufficiently up-to-date.
-	_ = protoimpl.EnforceVersion(20 - protoimpl.MinVersion)
+	_	= protoimpl.EnforceVersion(20 - protoimpl.MinVersion)
 	// Verify that runtime/protoimpl is sufficiently up-to-date.
-	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
+	_	= protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
 type PCAPPortArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Dev string `protobuf:"bytes,1,opt,name=dev,proto3" json:"dev,omitempty"`
+	Dev	string	`protobuf:"bytes,1,opt,name=dev,proto3" json:"dev,omitempty"`
 }
 
 func (x *PCAPPortArg) Reset() {
@@ -72,7 +72,8 @@ func (x *PCAPPortArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PCAPPortArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*PCAPPortArg) ProtoMessage()	{}
 
 func (x *PCAPPortArg) ProtoReflect() protoreflect.Message {
 	mi := &file_ports_port_msg_proto_msgTypes[0]
@@ -99,28 +100,28 @@ func (x *PCAPPortArg) GetDev() string {
 }
 
 type PMDPortArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Loopback bool `protobuf:"varint,1,opt,name=loopback,proto3" json:"loopback,omitempty"`
+	Loopback	bool	`protobuf:"varint,1,opt,name=loopback,proto3" json:"loopback,omitempty"`
 	// Types that are assignable to Port:
 	//	*PMDPortArg_PortId
 	//	*PMDPortArg_Pci
 	//	*PMDPortArg_Vdev
-	Port isPMDPortArg_Port `protobuf_oneof:"port"`
+	Port	isPMDPortArg_Port	`protobuf_oneof:"port"`
 	// See http://dpdk.org/doc/dts/test_plans/dual_vlan_test_plan.html
-	VlanOffloadRxStrip  bool `protobuf:"varint,5,opt,name=vlan_offload_rx_strip,json=vlanOffloadRxStrip,proto3" json:"vlan_offload_rx_strip,omitempty"`
-	VlanOffloadRxFilter bool `protobuf:"varint,6,opt,name=vlan_offload_rx_filter,json=vlanOffloadRxFilter,proto3" json:"vlan_offload_rx_filter,omitempty"`
-	VlanOffloadRxQinq   bool `protobuf:"varint,7,opt,name=vlan_offload_rx_qinq,json=vlanOffloadRxQinq,proto3" json:"vlan_offload_rx_qinq,omitempty"`
+	VlanOffloadRxStrip	bool	`protobuf:"varint,5,opt,name=vlan_offload_rx_strip,json=vlanOffloadRxStrip,proto3" json:"vlan_offload_rx_strip,omitempty"`
+	VlanOffloadRxFilter	bool	`protobuf:"varint,6,opt,name=vlan_offload_rx_filter,json=vlanOffloadRxFilter,proto3" json:"vlan_offload_rx_filter,omitempty"`
+	VlanOffloadRxQinq	bool	`protobuf:"varint,7,opt,name=vlan_offload_rx_qinq,json=vlanOffloadRxQinq,proto3" json:"vlan_offload_rx_qinq,omitempty"`
 	// Types that are assignable to Socket:
 	//	*PMDPortArg_SocketId
-	Socket          isPMDPortArg_Socket `protobuf_oneof:"socket"`
-	PromiscuousMode bool                `protobuf:"varint,9,opt,name=promiscuous_mode,json=promiscuousMode,proto3" json:"promiscuous_mode,omitempty"`
-	Hwcksum         bool                `protobuf:"varint,10,opt,name=hwcksum,proto3" json:"hwcksum,omitempty"`
+	Socket		isPMDPortArg_Socket	`protobuf_oneof:"socket"`
+	PromiscuousMode	bool			`protobuf:"varint,9,opt,name=promiscuous_mode,json=promiscuousMode,proto3" json:"promiscuous_mode,omitempty"`
+	Hwcksum		bool			`protobuf:"varint,10,opt,name=hwcksum,proto3" json:"hwcksum,omitempty"`
 	// N3 -> 3; N6 -> 6; N9 -> 9
 	// [3] or [6, 9]
-	FlowProfiles []uint32 `protobuf:"varint,11,rep,packed,name=flow_profiles,json=flowProfiles,proto3" json:"flow_profiles,omitempty"`
+	FlowProfiles	[]uint32	`protobuf:"varint,11,rep,packed,name=flow_profiles,json=flowProfiles,proto3" json:"flow_profiles,omitempty"`
 }
 
 func (x *PMDPortArg) Reset() {
@@ -136,7 +137,8 @@ func (x *PMDPortArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PMDPortArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*PMDPortArg) ProtoMessage()	{}
 
 func (x *PMDPortArg) ProtoReflect() protoreflect.Message {
 	mi := &file_ports_port_msg_proto_msgTypes[1]
@@ -262,11 +264,11 @@ type PMDPortArg_Vdev struct {
 	Vdev string `protobuf:"bytes,4,opt,name=vdev,proto3,oneof"`
 }
 
-func (*PMDPortArg_PortId) isPMDPortArg_Port() {}
+func (*PMDPortArg_PortId) isPMDPortArg_Port()	{}
 
-func (*PMDPortArg_Pci) isPMDPortArg_Port() {}
+func (*PMDPortArg_Pci) isPMDPortArg_Port()	{}
 
-func (*PMDPortArg_Vdev) isPMDPortArg_Port() {}
+func (*PMDPortArg_Vdev) isPMDPortArg_Port()	{}
 
 type isPMDPortArg_Socket interface {
 	isPMDPortArg_Socket()
@@ -276,24 +278,24 @@ type PMDPortArg_SocketId struct {
 	SocketId int32 `protobuf:"varint,8,opt,name=socket_id,json=socketId,proto3,oneof"`
 }
 
-func (*PMDPortArg_SocketId) isPMDPortArg_Socket() {}
+func (*PMDPortArg_SocketId) isPMDPortArg_Socket()	{}
 
 type UnixSocketPortArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
 	/// Set the first character to "@" in place of \0 for abstract path
 	/// See manpage for unix(7).
-	Path string `protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty"`
+	Path	string	`protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty"`
 	/// Minimum RX polling interval for system calls, when *idle*.
 	/// Use a negative number for unthrottled polling. If unspecified or 0,
 	/// it is set to 50,000 (50 microseconds, or 20k polls per second)
-	MinRxIntervalNs int64 `protobuf:"varint,2,opt,name=min_rx_interval_ns,json=minRxIntervalNs,proto3" json:"min_rx_interval_ns,omitempty"`
+	MinRxIntervalNs	int64	`protobuf:"varint,2,opt,name=min_rx_interval_ns,json=minRxIntervalNs,proto3" json:"min_rx_interval_ns,omitempty"`
 	/// If set, the port driver will send a confirmation once
 	/// the port is connected.  This lets pybess avoid a race during
 	/// testing.  See bessctl/test_utils.py for details.
-	ConfirmConnect bool `protobuf:"varint,3,opt,name=confirm_connect,json=confirmConnect,proto3" json:"confirm_connect,omitempty"`
+	ConfirmConnect	bool	`protobuf:"varint,3,opt,name=confirm_connect,json=confirmConnect,proto3" json:"confirm_connect,omitempty"`
 }
 
 func (x *UnixSocketPortArg) Reset() {
@@ -309,7 +311,8 @@ func (x *UnixSocketPortArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UnixSocketPortArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*UnixSocketPortArg) ProtoMessage()	{}
 
 func (x *UnixSocketPortArg) ProtoReflect() protoreflect.Message {
 	mi := &file_ports_port_msg_proto_msgTypes[2]
@@ -350,21 +353,21 @@ func (x *UnixSocketPortArg) GetConfirmConnect() bool {
 }
 
 type VPortArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Ifname string `protobuf:"bytes,1,opt,name=ifname,proto3" json:"ifname,omitempty"`
+	Ifname	string	`protobuf:"bytes,1,opt,name=ifname,proto3" json:"ifname,omitempty"`
 	// Types that are assignable to Cpid:
 	//	*VPortArg_Docker
 	//	*VPortArg_ContainerPid
 	//	*VPortArg_Netns
-	Cpid       isVPortArg_Cpid `protobuf_oneof:"cpid"`
-	RxqCpus    []int64         `protobuf:"varint,5,rep,packed,name=rxq_cpus,json=rxqCpus,proto3" json:"rxq_cpus,omitempty"`
-	TxTci      uint64          `protobuf:"varint,6,opt,name=tx_tci,json=txTci,proto3" json:"tx_tci,omitempty"`
-	TxOuterTci uint64          `protobuf:"varint,7,opt,name=tx_outer_tci,json=txOuterTci,proto3" json:"tx_outer_tci,omitempty"`
-	Loopback   bool            `protobuf:"varint,8,opt,name=loopback,proto3" json:"loopback,omitempty"`
-	IpAddrs    []string        `protobuf:"bytes,9,rep,name=ip_addrs,json=ipAddrs,proto3" json:"ip_addrs,omitempty"`
+	Cpid		isVPortArg_Cpid	`protobuf_oneof:"cpid"`
+	RxqCpus		[]int64		`protobuf:"varint,5,rep,packed,name=rxq_cpus,json=rxqCpus,proto3" json:"rxq_cpus,omitempty"`
+	TxTci		uint64		`protobuf:"varint,6,opt,name=tx_tci,json=txTci,proto3" json:"tx_tci,omitempty"`
+	TxOuterTci	uint64		`protobuf:"varint,7,opt,name=tx_outer_tci,json=txOuterTci,proto3" json:"tx_outer_tci,omitempty"`
+	Loopback	bool		`protobuf:"varint,8,opt,name=loopback,proto3" json:"loopback,omitempty"`
+	IpAddrs		[]string	`protobuf:"bytes,9,rep,name=ip_addrs,json=ipAddrs,proto3" json:"ip_addrs,omitempty"`
 }
 
 func (x *VPortArg) Reset() {
@@ -380,7 +383,8 @@ func (x *VPortArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*VPortArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*VPortArg) ProtoMessage()	{}
 
 func (x *VPortArg) ProtoReflect() protoreflect.Message {
 	mi := &file_ports_port_msg_proto_msgTypes[3]
@@ -485,21 +489,21 @@ type VPortArg_Netns struct {
 	Netns string `protobuf:"bytes,4,opt,name=netns,proto3,oneof"`
 }
 
-func (*VPortArg_Docker) isVPortArg_Cpid() {}
+func (*VPortArg_Docker) isVPortArg_Cpid()	{}
 
-func (*VPortArg_ContainerPid) isVPortArg_Cpid() {}
+func (*VPortArg_ContainerPid) isVPortArg_Cpid()	{}
 
-func (*VPortArg_Netns) isVPortArg_Cpid() {}
+func (*VPortArg_Netns) isVPortArg_Cpid()	{}
 
 type CndpPortArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
 	// / CNDP JSONC configuration absolute file path.
-	JsoncFile string `protobuf:"bytes,1,opt,name=jsonc_file,json=jsoncFile,proto3" json:"jsonc_file,omitempty"`
+	JsoncFile	string	`protobuf:"bytes,1,opt,name=jsonc_file,json=jsoncFile,proto3" json:"jsonc_file,omitempty"`
 	// / lport index.
-	LportIndex uint32 `protobuf:"varint,2,opt,name=lport_index,json=lportIndex,proto3" json:"lport_index,omitempty"`
+	LportIndex	uint32	`protobuf:"varint,2,opt,name=lport_index,json=lportIndex,proto3" json:"lport_index,omitempty"`
 }
 
 func (x *CndpPortArg) Reset() {
@@ -515,7 +519,8 @@ func (x *CndpPortArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CndpPortArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*CndpPortArg) ProtoMessage()	{}
 
 func (x *CndpPortArg) ProtoReflect() protoreflect.Message {
 	mi := &file_ports_port_msg_proto_msgTypes[4]
@@ -618,8 +623,8 @@ var file_ports_port_msg_proto_rawDesc = []byte{
 }
 
 var (
-	file_ports_port_msg_proto_rawDescOnce sync.Once
-	file_ports_port_msg_proto_rawDescData = file_ports_port_msg_proto_rawDesc
+	file_ports_port_msg_proto_rawDescOnce	sync.Once
+	file_ports_port_msg_proto_rawDescData	= file_ports_port_msg_proto_rawDesc
 )
 
 func file_ports_port_msg_proto_rawDescGZIP() []byte {
@@ -631,21 +636,21 @@ func file_ports_port_msg_proto_rawDescGZIP() []byte {
 
 var file_ports_port_msg_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_ports_port_msg_proto_goTypes = []interface{}{
-	(*PCAPPortArg)(nil),       // 0: bess.pb.PCAPPortArg
-	(*PMDPortArg)(nil),        // 1: bess.pb.PMDPortArg
-	(*UnixSocketPortArg)(nil), // 2: bess.pb.UnixSocketPortArg
-	(*VPortArg)(nil),          // 3: bess.pb.VPortArg
-	(*CndpPortArg)(nil),       // 4: bess.pb.CndpPortArg
+	(*PCAPPortArg)(nil),		// 0: bess.pb.PCAPPortArg
+	(*PMDPortArg)(nil),		// 1: bess.pb.PMDPortArg
+	(*UnixSocketPortArg)(nil),	// 2: bess.pb.UnixSocketPortArg
+	(*VPortArg)(nil),		// 3: bess.pb.VPortArg
+	(*CndpPortArg)(nil),		// 4: bess.pb.CndpPortArg
 }
 var file_ports_port_msg_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0,	// [0:0] is the sub-list for method output_type
+	0,	// [0:0] is the sub-list for method input_type
+	0,	// [0:0] is the sub-list for extension type_name
+	0,	// [0:0] is the sub-list for extension extendee
+	0,	// [0:0] is the sub-list for field type_name
 }
 
-func init() { file_ports_port_msg_proto_init() }
+func init()	{ file_ports_port_msg_proto_init() }
 func file_ports_port_msg_proto_init() {
 	if File_ports_port_msg_proto != nil {
 		return
@@ -726,16 +731,16 @@ func file_ports_port_msg_proto_init() {
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
-			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_ports_port_msg_proto_rawDesc,
-			NumEnums:      0,
-			NumMessages:   5,
-			NumExtensions: 0,
-			NumServices:   0,
+			GoPackagePath:	reflect.TypeOf(x{}).PkgPath(),
+			RawDescriptor:	file_ports_port_msg_proto_rawDesc,
+			NumEnums:	0,
+			NumMessages:	5,
+			NumExtensions:	0,
+			NumServices:	0,
 		},
-		GoTypes:           file_ports_port_msg_proto_goTypes,
-		DependencyIndexes: file_ports_port_msg_proto_depIdxs,
-		MessageInfos:      file_ports_port_msg_proto_msgTypes,
+		GoTypes:		file_ports_port_msg_proto_goTypes,
+		DependencyIndexes:	file_ports_port_msg_proto_depIdxs,
+		MessageInfos:		file_ports_port_msg_proto_msgTypes,
 	}.Build()
 	File_ports_port_msg_proto = out.File
 	file_ports_port_msg_proto_rawDesc = nil

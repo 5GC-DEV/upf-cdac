@@ -47,15 +47,15 @@ import (
 
 const (
 	// Verify that this generated code is sufficiently up-to-date.
-	_ = protoimpl.EnforceVersion(20 - protoimpl.MinVersion)
+	_	= protoimpl.EnforceVersion(20 - protoimpl.MinVersion)
 	// Verify that runtime/protoimpl is sufficiently up-to-date.
-	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
+	_	= protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
 type EmptyArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 }
 
 func (x *EmptyArg) Reset() {
@@ -71,7 +71,8 @@ func (x *EmptyArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*EmptyArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*EmptyArg) ProtoMessage()	{}
 
 func (x *EmptyArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[0]
@@ -90,13 +91,13 @@ func (*EmptyArg) Descriptor() ([]byte, []int) {
 	return file_module_msg_proto_rawDescGZIP(), []int{0}
 }
 
-//*
+// *
 // The BPF module has a command `clear()` that takes no parameters.
 // This command removes all filters from the module.
 type BPFCommandClearArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 }
 
 func (x *BPFCommandClearArg) Reset() {
@@ -112,7 +113,8 @@ func (x *BPFCommandClearArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BPFCommandClearArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*BPFCommandClearArg) ProtoMessage()	{}
 
 func (x *BPFCommandClearArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[1]
@@ -131,7 +133,7 @@ func (*BPFCommandClearArg) Descriptor() ([]byte, []int) {
 	return file_module_msg_proto_rawDescGZIP(), []int{1}
 }
 
-//*
+// *
 // The ExactMatch module has a command `add(...)` that takes two parameters.
 // The ExactMatch initializer specifies what fields in a packet to inspect;
 // add() specifies which values to check for over these fields. add() inserts a
@@ -139,13 +141,13 @@ func (*BPFCommandClearArg) Descriptor() ([]byte, []int) {
 // bytestring will be forwarded out a specified gate. Example use:
 // `add(fields=[aton('12.3.4.5'), aton('5.4.3.2')], gate=2)`
 type ExactMatchCommandAddArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Gate   uint64       `protobuf:"varint,1,opt,name=gate,proto3" json:"gate,omitempty"`    /// The gate to forward out packets that mach this rule.
-	Fields []*FieldData `protobuf:"bytes,2,rep,name=fields,proto3" json:"fields,omitempty"` /// The exact match values to check for
-	Values []*FieldData `protobuf:"bytes,3,rep,name=values,proto3" json:"values,omitempty"` /// The exact match values to check for
+	Gate	uint64		`protobuf:"varint,1,opt,name=gate,proto3" json:"gate,omitempty"`	/// The gate to forward out packets that mach this rule.
+	Fields	[]*FieldData	`protobuf:"bytes,2,rep,name=fields,proto3" json:"fields,omitempty"`	/// The exact match values to check for
+	Values	[]*FieldData	`protobuf:"bytes,3,rep,name=values,proto3" json:"values,omitempty"`	/// The exact match values to check for
 }
 
 func (x *ExactMatchCommandAddArg) Reset() {
@@ -161,7 +163,8 @@ func (x *ExactMatchCommandAddArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ExactMatchCommandAddArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*ExactMatchCommandAddArg) ProtoMessage()	{}
 
 func (x *ExactMatchCommandAddArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[2]
@@ -201,15 +204,15 @@ func (x *ExactMatchCommandAddArg) GetValues() []*FieldData {
 	return nil
 }
 
-//*
+// *
 // The ExactMatch module has a command `delete(...)` which deletes an existing
 // rule. Example use: `delete(fields=[aton('12.3.4.5'), aton('5.4.3.2')])`
 type ExactMatchCommandDeleteArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Fields []*FieldData `protobuf:"bytes,2,rep,name=fields,proto3" json:"fields,omitempty"` /// The field values for the rule to be deleted.
+	Fields	[]*FieldData	`protobuf:"bytes,2,rep,name=fields,proto3" json:"fields,omitempty"`	/// The field values for the rule to be deleted.
 }
 
 func (x *ExactMatchCommandDeleteArg) Reset() {
@@ -225,7 +228,8 @@ func (x *ExactMatchCommandDeleteArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ExactMatchCommandDeleteArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*ExactMatchCommandDeleteArg) ProtoMessage()	{}
 
 func (x *ExactMatchCommandDeleteArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[3]
@@ -251,13 +255,13 @@ func (x *ExactMatchCommandDeleteArg) GetFields() []*FieldData {
 	return nil
 }
 
-//*
+// *
 // The ExactMatch module has a command `clear()` which takes no parameters.
 // This command removes all rules from the ExactMatch module.
 type ExactMatchCommandClearArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 }
 
 func (x *ExactMatchCommandClearArg) Reset() {
@@ -273,7 +277,8 @@ func (x *ExactMatchCommandClearArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ExactMatchCommandClearArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*ExactMatchCommandClearArg) ProtoMessage()	{}
 
 func (x *ExactMatchCommandClearArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[4]
@@ -292,16 +297,16 @@ func (*ExactMatchCommandClearArg) Descriptor() ([]byte, []int) {
 	return file_module_msg_proto_rawDescGZIP(), []int{4}
 }
 
-//*
+// *
 // The ExactMatch module has a command `set_default_gate(...)` which takes one
 // parameter. This command routes all traffic which does _not_ match a rule to a
 // specified gate. Example use in bessctl: `setDefaultGate(gate=2)`
 type ExactMatchCommandSetDefaultGateArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Gate uint64 `protobuf:"varint,1,opt,name=gate,proto3" json:"gate,omitempty"` /// The gate number to send the default traffic out.
+	Gate	uint64	`protobuf:"varint,1,opt,name=gate,proto3" json:"gate,omitempty"`	/// The gate number to send the default traffic out.
 }
 
 func (x *ExactMatchCommandSetDefaultGateArg) Reset() {
@@ -317,7 +322,8 @@ func (x *ExactMatchCommandSetDefaultGateArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ExactMatchCommandSetDefaultGateArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*ExactMatchCommandSetDefaultGateArg) ProtoMessage()	{}
 
 func (x *ExactMatchCommandSetDefaultGateArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[5]
@@ -343,16 +349,16 @@ func (x *ExactMatchCommandSetDefaultGateArg) GetGate() uint64 {
 	return 0
 }
 
-//*
+// *
 // The FlowGen module has a command `set_burst(...)` that allows you to specify
 // the maximum number of packets to be stored in a single PacketBatch released
 // by the module.
 type FlowGenCommandSetBurstArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Burst uint64 `protobuf:"varint,1,opt,name=burst,proto3" json:"burst,omitempty"`
+	Burst	uint64	`protobuf:"varint,1,opt,name=burst,proto3" json:"burst,omitempty"`
 }
 
 func (x *FlowGenCommandSetBurstArg) Reset() {
@@ -368,7 +374,8 @@ func (x *FlowGenCommandSetBurstArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*FlowGenCommandSetBurstArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*FlowGenCommandSetBurstArg) ProtoMessage()	{}
 
 func (x *FlowGenCommandSetBurstArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[6]
@@ -394,7 +401,7 @@ func (x *FlowGenCommandSetBurstArg) GetBurst() uint64 {
 	return 0
 }
 
-//*
+// *
 // The HashLB module has a command `set_mode(...)` which takes two parameters.
 // The `mode` parameter specifies whether the load balancer will hash over the
 // src/dest ethernet header (`'l2'`), over the src/dest IP addresses (`'l3'`),
@@ -402,12 +409,12 @@ func (x *FlowGenCommandSetBurstArg) GetBurst() uint64 {
 // is set, the load balancer will hash over the N-tuple with the specified
 // offsets and sizes. Example use in bessctl: `lb.set_mode('l2')`
 type HashLBCommandSetModeArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Mode   string   `protobuf:"bytes,1,opt,name=mode,proto3" json:"mode,omitempty"`     /// What fields to hash over, `'l2'`, `'l3'`, and `'l4'` are only valid values.
-	Fields []*Field `protobuf:"bytes,2,rep,name=fields,proto3" json:"fields,omitempty"` /// A list of fields that define a custom tuple.
+	Mode	string		`protobuf:"bytes,1,opt,name=mode,proto3" json:"mode,omitempty"`		/// What fields to hash over, `'l2'`, `'l3'`, and `'l4'` are only valid values.
+	Fields	[]*Field	`protobuf:"bytes,2,rep,name=fields,proto3" json:"fields,omitempty"`	/// A list of fields that define a custom tuple.
 }
 
 func (x *HashLBCommandSetModeArg) Reset() {
@@ -423,7 +430,8 @@ func (x *HashLBCommandSetModeArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*HashLBCommandSetModeArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*HashLBCommandSetModeArg) ProtoMessage()	{}
 
 func (x *HashLBCommandSetModeArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[7]
@@ -456,16 +464,16 @@ func (x *HashLBCommandSetModeArg) GetFields() []*Field {
 	return nil
 }
 
-//*
+// *
 // The HashLB module has a command `set_gates(...)` which takes one parameter.
 // This function takes in a list of gate numbers to send hashed traffic out
 // over. Example use in bessctl: `lb.setGates(gates=[0,1,2,3])`
 type HashLBCommandSetGatesArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Gates []int64 `protobuf:"varint,1,rep,packed,name=gates,proto3" json:"gates,omitempty"` /// A list of gate numbers to load balance traffic over
+	Gates	[]int64	`protobuf:"varint,1,rep,packed,name=gates,proto3" json:"gates,omitempty"`	/// A list of gate numbers to load balance traffic over
 }
 
 func (x *HashLBCommandSetGatesArg) Reset() {
@@ -481,7 +489,8 @@ func (x *HashLBCommandSetGatesArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*HashLBCommandSetGatesArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*HashLBCommandSetGatesArg) ProtoMessage()	{}
 
 func (x *HashLBCommandSetGatesArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[8]
@@ -507,19 +516,19 @@ func (x *HashLBCommandSetGatesArg) GetGates() []int64 {
 	return nil
 }
 
-//*
+// *
 // The IPLookup module has a command `add(...)` which takes three paramters.
 // This function accepts the routing rules -- CIDR prefix, CIDR prefix length,
 // and what gate to forward matching traffic out on.
 // Example use in bessctl: `table.add(prefix='10.0.0.0', prefix_len=8, gate=2)`
 type IPLookupCommandAddArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Prefix    string `protobuf:"bytes,1,opt,name=prefix,proto3" json:"prefix,omitempty"`                         /// The CIDR IP part of the prefix to match
-	PrefixLen uint64 `protobuf:"varint,2,opt,name=prefix_len,json=prefixLen,proto3" json:"prefix_len,omitempty"` /// The prefix length
-	Gate      uint64 `protobuf:"varint,3,opt,name=gate,proto3" json:"gate,omitempty"`                            /// The number of the gate to forward matching traffic on.
+	Prefix		string	`protobuf:"bytes,1,opt,name=prefix,proto3" json:"prefix,omitempty"`				/// The CIDR IP part of the prefix to match
+	PrefixLen	uint64	`protobuf:"varint,2,opt,name=prefix_len,json=prefixLen,proto3" json:"prefix_len,omitempty"`	/// The prefix length
+	Gate		uint64	`protobuf:"varint,3,opt,name=gate,proto3" json:"gate,omitempty"`				/// The number of the gate to forward matching traffic on.
 }
 
 func (x *IPLookupCommandAddArg) Reset() {
@@ -535,7 +544,8 @@ func (x *IPLookupCommandAddArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*IPLookupCommandAddArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*IPLookupCommandAddArg) ProtoMessage()	{}
 
 func (x *IPLookupCommandAddArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[9]
@@ -575,17 +585,17 @@ func (x *IPLookupCommandAddArg) GetGate() uint64 {
 	return 0
 }
 
-//*
+// *
 // The IPLookup module has a command `delete(...)` which takes two paramters.
 // This function accepts the routing rules -- CIDR prefix, CIDR prefix length,
 // Example use in bessctl: `table.delete(prefix='10.0.0.0', prefix_len=8)`
 type IPLookupCommandDeleteArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Prefix    string `protobuf:"bytes,1,opt,name=prefix,proto3" json:"prefix,omitempty"`                         /// The CIDR IP part of the prefix to match
-	PrefixLen uint64 `protobuf:"varint,2,opt,name=prefix_len,json=prefixLen,proto3" json:"prefix_len,omitempty"` /// The prefix length
+	Prefix		string	`protobuf:"bytes,1,opt,name=prefix,proto3" json:"prefix,omitempty"`				/// The CIDR IP part of the prefix to match
+	PrefixLen	uint64	`protobuf:"varint,2,opt,name=prefix_len,json=prefixLen,proto3" json:"prefix_len,omitempty"`	/// The prefix length
 }
 
 func (x *IPLookupCommandDeleteArg) Reset() {
@@ -601,7 +611,8 @@ func (x *IPLookupCommandDeleteArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*IPLookupCommandDeleteArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*IPLookupCommandDeleteArg) ProtoMessage()	{}
 
 func (x *IPLookupCommandDeleteArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[10]
@@ -634,14 +645,14 @@ func (x *IPLookupCommandDeleteArg) GetPrefixLen() uint64 {
 	return 0
 }
 
-//*
+// *
 // The IPLookup module has a command `clear()` which takes no parameters.
 // This function removes all rules in the IPLookup table.
 // Example use in bessctl: `myiplookuptable.clear()`
 type IPLookupCommandClearArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 }
 
 func (x *IPLookupCommandClearArg) Reset() {
@@ -657,7 +668,8 @@ func (x *IPLookupCommandClearArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*IPLookupCommandClearArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*IPLookupCommandClearArg) ProtoMessage()	{}
 
 func (x *IPLookupCommandClearArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[11]
@@ -676,16 +688,16 @@ func (*IPLookupCommandClearArg) Descriptor() ([]byte, []int) {
 	return file_module_msg_proto_rawDescGZIP(), []int{11}
 }
 
-//*
+// *
 // The L2Forward module forwards traffic via exact match over the Ethernet
 // destination address. The command `add(...)`  allows you to specifiy a
 // MAC address and which gate the L2Forward module should direct it out of.
 type L2ForwardCommandAddArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Entries []*L2ForwardCommandAddArg_Entry `protobuf:"bytes,1,rep,name=entries,proto3" json:"entries,omitempty"` /// A list of L2Forward entries.
+	Entries	[]*L2ForwardCommandAddArg_Entry	`protobuf:"bytes,1,rep,name=entries,proto3" json:"entries,omitempty"`	/// A list of L2Forward entries.
 }
 
 func (x *L2ForwardCommandAddArg) Reset() {
@@ -701,7 +713,8 @@ func (x *L2ForwardCommandAddArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*L2ForwardCommandAddArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*L2ForwardCommandAddArg) ProtoMessage()	{}
 
 func (x *L2ForwardCommandAddArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[12]
@@ -727,15 +740,15 @@ func (x *L2ForwardCommandAddArg) GetEntries() []*L2ForwardCommandAddArg_Entry {
 	return nil
 }
 
-//*
+// *
 // The L2Forward module has a function `delete(...)` to remove a rule
 // from the MAC forwarding table.
 type L2ForwardCommandDeleteArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Addrs []string `protobuf:"bytes,1,rep,name=addrs,proto3" json:"addrs,omitempty"` /// The address to remove from the forwarding table
+	Addrs	[]string	`protobuf:"bytes,1,rep,name=addrs,proto3" json:"addrs,omitempty"`	/// The address to remove from the forwarding table
 }
 
 func (x *L2ForwardCommandDeleteArg) Reset() {
@@ -751,7 +764,8 @@ func (x *L2ForwardCommandDeleteArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*L2ForwardCommandDeleteArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*L2ForwardCommandDeleteArg) ProtoMessage()	{}
 
 func (x *L2ForwardCommandDeleteArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[13]
@@ -777,16 +791,16 @@ func (x *L2ForwardCommandDeleteArg) GetAddrs() []string {
 	return nil
 }
 
-//*
+// *
 // For traffic reaching the L2Forward module which does not match a MAC rule,
 // the function `set_default_gate(...)` allows you to specify a default gate
 // to direct unmatched traffic to.
 type L2ForwardCommandSetDefaultGateArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Gate int64 `protobuf:"varint,1,opt,name=gate,proto3" json:"gate,omitempty"` /// The default gate to forward traffic which matches no entry to.
+	Gate	int64	`protobuf:"varint,1,opt,name=gate,proto3" json:"gate,omitempty"`	/// The default gate to forward traffic which matches no entry to.
 }
 
 func (x *L2ForwardCommandSetDefaultGateArg) Reset() {
@@ -802,7 +816,8 @@ func (x *L2ForwardCommandSetDefaultGateArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*L2ForwardCommandSetDefaultGateArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*L2ForwardCommandSetDefaultGateArg) ProtoMessage()	{}
 
 func (x *L2ForwardCommandSetDefaultGateArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[14]
@@ -828,15 +843,15 @@ func (x *L2ForwardCommandSetDefaultGateArg) GetGate() int64 {
 	return 0
 }
 
-//*
+// *
 // The L2Forward module has a function `lookup(...)` to query what output gate
 // a given MAC address will be forwared to; it returns the gate ID number.
 type L2ForwardCommandLookupArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Addrs []string `protobuf:"bytes,1,rep,name=addrs,proto3" json:"addrs,omitempty"` /// The MAC address to query for
+	Addrs	[]string	`protobuf:"bytes,1,rep,name=addrs,proto3" json:"addrs,omitempty"`	/// The MAC address to query for
 }
 
 func (x *L2ForwardCommandLookupArg) Reset() {
@@ -852,7 +867,8 @@ func (x *L2ForwardCommandLookupArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*L2ForwardCommandLookupArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*L2ForwardCommandLookupArg) ProtoMessage()	{}
 
 func (x *L2ForwardCommandLookupArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[15]
@@ -878,16 +894,16 @@ func (x *L2ForwardCommandLookupArg) GetAddrs() []string {
 	return nil
 }
 
-//*
+// *
 // This message type provides the reponse to the L2Forward function
 // `lookup(..)`. It returns the gate that a requested MAC address is currently
 // assigned to.
 type L2ForwardCommandLookupResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Gates []uint64 `protobuf:"varint,1,rep,packed,name=gates,proto3" json:"gates,omitempty"` /// The gate ID that the requested MAC address maps to
+	Gates	[]uint64	`protobuf:"varint,1,rep,packed,name=gates,proto3" json:"gates,omitempty"`	/// The gate ID that the requested MAC address maps to
 }
 
 func (x *L2ForwardCommandLookupResponse) Reset() {
@@ -903,7 +919,8 @@ func (x *L2ForwardCommandLookupResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*L2ForwardCommandLookupResponse) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*L2ForwardCommandLookupResponse) ProtoMessage()	{}
 
 func (x *L2ForwardCommandLookupResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[16]
@@ -929,7 +946,7 @@ func (x *L2ForwardCommandLookupResponse) GetGates() []uint64 {
 	return nil
 }
 
-//*
+// *
 // The L2Forward module has a command `populate(...)` which allows for fast
 // creation of the forwarding table given a range of MAC addresses. The function
 // takes in a 'base' MAC address, a count (number of MAC addresses), and a
@@ -939,13 +956,13 @@ func (x *L2ForwardCommandLookupResponse) GetGates() []uint64 {
 // would route addresses `11:22:33:44::(00, 02, 04, 06, 08)` out a gate 0 and
 // the odd-suffixed addresses out gate 1.
 type L2ForwardCommandPopulateArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Base      string `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`                             /// The base MAC address
-	Count     int64  `protobuf:"varint,2,opt,name=count,proto3" json:"count,omitempty"`                          /// How many addresses beyond base to populate into the routing table
-	GateCount int64  `protobuf:"varint,3,opt,name=gate_count,json=gateCount,proto3" json:"gate_count,omitempty"` /// How many gates to create in the L2Forward module.
+	Base		string	`protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`					/// The base MAC address
+	Count		int64	`protobuf:"varint,2,opt,name=count,proto3" json:"count,omitempty"`				/// How many addresses beyond base to populate into the routing table
+	GateCount	int64	`protobuf:"varint,3,opt,name=gate_count,json=gateCount,proto3" json:"gate_count,omitempty"`	/// How many gates to create in the L2Forward module.
 }
 
 func (x *L2ForwardCommandPopulateArg) Reset() {
@@ -961,7 +978,8 @@ func (x *L2ForwardCommandPopulateArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*L2ForwardCommandPopulateArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*L2ForwardCommandPopulateArg) ProtoMessage()	{}
 
 func (x *L2ForwardCommandPopulateArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[17]
@@ -1001,7 +1019,7 @@ func (x *L2ForwardCommandPopulateArg) GetGateCount() int64 {
 	return 0
 }
 
-//*
+// *
 // The Measure module measures and collects latency/jitter data for packets
 // annotated by a Timestamp module. Note that Timestamp and Measure module must
 // reside on the server for accurate measurement (as a result, the most typical
@@ -1010,13 +1028,13 @@ func (x *L2ForwardCommandPopulateArg) GetGateCount() int64 {
 // "percentiles" of [50.0, 99.0] will return [median, 99'th %-ile tail latency]
 // in "percentile_values_ns" in the response.
 type MeasureCommandGetSummaryArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Clear              bool      `protobuf:"varint,1,opt,name=clear,proto3" json:"clear,omitempty"`                                                             /// if true, the data will be all cleared after read
-	LatencyPercentiles []float64 `protobuf:"fixed64,2,rep,packed,name=latency_percentiles,json=latencyPercentiles,proto3" json:"latency_percentiles,omitempty"` /// ascending list of real numbers in [0.0, 100.0]
-	JitterPercentiles  []float64 `protobuf:"fixed64,3,rep,packed,name=jitter_percentiles,json=jitterPercentiles,proto3" json:"jitter_percentiles,omitempty"`    /// ascending list of real numbers in [0.0, 100.0]
+	Clear			bool		`protobuf:"varint,1,opt,name=clear,proto3" json:"clear,omitempty"`								/// if true, the data will be all cleared after read
+	LatencyPercentiles	[]float64	`protobuf:"fixed64,2,rep,packed,name=latency_percentiles,json=latencyPercentiles,proto3" json:"latency_percentiles,omitempty"`	/// ascending list of real numbers in [0.0, 100.0]
+	JitterPercentiles	[]float64	`protobuf:"fixed64,3,rep,packed,name=jitter_percentiles,json=jitterPercentiles,proto3" json:"jitter_percentiles,omitempty"`	/// ascending list of real numbers in [0.0, 100.0]
 }
 
 func (x *MeasureCommandGetSummaryArg) Reset() {
@@ -1032,7 +1050,8 @@ func (x *MeasureCommandGetSummaryArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MeasureCommandGetSummaryArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*MeasureCommandGetSummaryArg) ProtoMessage()	{}
 
 func (x *MeasureCommandGetSummaryArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[18]
@@ -1072,7 +1091,7 @@ func (x *MeasureCommandGetSummaryArg) GetJitterPercentiles() []float64 {
 	return nil
 }
 
-//*
+// *
 // The Measure module function `get_summary()` returns the following values.
 // Note that the resolution value tells you how grainy the samples are,
 // e.g., 100 means that anything from 0-99 ns counts as "0",
@@ -1080,15 +1099,15 @@ func (x *MeasureCommandGetSummaryArg) GetJitterPercentiles() []float64 {
 // is of samples using this graininess, but (being a result of division)
 // may not be a multiple of the resolution.
 type MeasureCommandGetSummaryResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Timestamp float64                                     `protobuf:"fixed64,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"` /// Seconds since boot.
-	Packets   uint64                                      `protobuf:"varint,2,opt,name=packets,proto3" json:"packets,omitempty"`      /// Total # of packets seen by this module.
-	Bits      uint64                                      `protobuf:"varint,3,opt,name=bits,proto3" json:"bits,omitempty"`            /// Total # of bits seen by this module.
-	Latency   *MeasureCommandGetSummaryResponse_Histogram `protobuf:"bytes,4,opt,name=latency,proto3" json:"latency,omitempty"`
-	Jitter    *MeasureCommandGetSummaryResponse_Histogram `protobuf:"bytes,5,opt,name=jitter,proto3" json:"jitter,omitempty"`
+	Timestamp	float64						`protobuf:"fixed64,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`	/// Seconds since boot.
+	Packets		uint64						`protobuf:"varint,2,opt,name=packets,proto3" json:"packets,omitempty"`		/// Total # of packets seen by this module.
+	Bits		uint64						`protobuf:"varint,3,opt,name=bits,proto3" json:"bits,omitempty"`		/// Total # of bits seen by this module.
+	Latency		*MeasureCommandGetSummaryResponse_Histogram	`protobuf:"bytes,4,opt,name=latency,proto3" json:"latency,omitempty"`
+	Jitter		*MeasureCommandGetSummaryResponse_Histogram	`protobuf:"bytes,5,opt,name=jitter,proto3" json:"jitter,omitempty"`
 }
 
 func (x *MeasureCommandGetSummaryResponse) Reset() {
@@ -1104,7 +1123,8 @@ func (x *MeasureCommandGetSummaryResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MeasureCommandGetSummaryResponse) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*MeasureCommandGetSummaryResponse) ProtoMessage()	{}
 
 func (x *MeasureCommandGetSummaryResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[19]
@@ -1158,7 +1178,7 @@ func (x *MeasureCommandGetSummaryResponse) GetJitter() *MeasureCommandGetSummary
 	return nil
 }
 
-//*
+// *
 // The Module DRR provides fair scheduling of flows based on a quantum which is
 // number of bytes allocated to each flow on each round of going through all
 // flows. Examples can be found [./bessctl/conf/samples/drr.bess]
@@ -1166,13 +1186,13 @@ func (x *MeasureCommandGetSummaryResponse) GetJitter() *MeasureCommandGetSummary
 // __Input_Gates__: 1
 // __Output_Gates__:  1
 type DRRArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	NumFlows         uint32 `protobuf:"varint,1,opt,name=num_flows,json=numFlows,proto3" json:"num_flows,omitempty"`                             /// Number of flows to handle in module
-	Quantum          uint64 `protobuf:"varint,2,opt,name=quantum,proto3" json:"quantum,omitempty"`                                               /// the number of bytes to allocate to each on every round
-	MaxFlowQueueSize uint32 `protobuf:"varint,3,opt,name=max_flow_queue_size,json=maxFlowQueueSize,proto3" json:"max_flow_queue_size,omitempty"` /// the max size that any Flows queue can get
+	NumFlows		uint32	`protobuf:"varint,1,opt,name=num_flows,json=numFlows,proto3" json:"num_flows,omitempty"`				/// Number of flows to handle in module
+	Quantum			uint64	`protobuf:"varint,2,opt,name=quantum,proto3" json:"quantum,omitempty"`							/// the number of bytes to allocate to each on every round
+	MaxFlowQueueSize	uint32	`protobuf:"varint,3,opt,name=max_flow_queue_size,json=maxFlowQueueSize,proto3" json:"max_flow_queue_size,omitempty"`	/// the max size that any Flows queue can get
 }
 
 func (x *DRRArg) Reset() {
@@ -1188,7 +1208,8 @@ func (x *DRRArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DRRArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*DRRArg) ProtoMessage()	{}
 
 func (x *DRRArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[20]
@@ -1228,14 +1249,14 @@ func (x *DRRArg) GetMaxFlowQueueSize() uint32 {
 	return 0
 }
 
-//*
+// *
 // the SetQuantumSize function sets a new quantum for DRR module to operate on.
 type DRRQuantumArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Quantum uint32 `protobuf:"varint,1,opt,name=quantum,proto3" json:"quantum,omitempty"` /// the number of bytes to allocate to each on every round
+	Quantum	uint32	`protobuf:"varint,1,opt,name=quantum,proto3" json:"quantum,omitempty"`	/// the number of bytes to allocate to each on every round
 }
 
 func (x *DRRQuantumArg) Reset() {
@@ -1251,7 +1272,8 @@ func (x *DRRQuantumArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DRRQuantumArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*DRRQuantumArg) ProtoMessage()	{}
 
 func (x *DRRQuantumArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[21]
@@ -1277,16 +1299,16 @@ func (x *DRRQuantumArg) GetQuantum() uint32 {
 	return 0
 }
 
-//*
+// *
 // The SetMaxQueueSize function sets a new maximum flow queue size for DRR
 // module. If the flow's queue gets to this size, the module starts dropping
 // packets to that flow until the queue is below this size.
 type DRRMaxFlowQueueSizeArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	MaxQueueSize uint32 `protobuf:"varint,1,opt,name=max_queue_size,json=maxQueueSize,proto3" json:"max_queue_size,omitempty"` /// the max size that any Flows queue can get
+	MaxQueueSize	uint32	`protobuf:"varint,1,opt,name=max_queue_size,json=maxQueueSize,proto3" json:"max_queue_size,omitempty"`	/// the max size that any Flows queue can get
 }
 
 func (x *DRRMaxFlowQueueSizeArg) Reset() {
@@ -1302,7 +1324,8 @@ func (x *DRRMaxFlowQueueSizeArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DRRMaxFlowQueueSizeArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*DRRMaxFlowQueueSizeArg) ProtoMessage()	{}
 
 func (x *DRRMaxFlowQueueSizeArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[22]
@@ -1328,16 +1351,16 @@ func (x *DRRMaxFlowQueueSizeArg) GetMaxQueueSize() uint32 {
 	return 0
 }
 
-//*
+// *
 // The module PortInc has a function `set_burst(...)` that allows you to specify
 // the maximum number of packets to be stored in a single PacketBatch released
 // by the module.
 type PortIncCommandSetBurstArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Burst uint64 `protobuf:"varint,1,opt,name=burst,proto3" json:"burst,omitempty"` /// The maximum "burst" of packets (ie, the maximum batch size)
+	Burst	uint64	`protobuf:"varint,1,opt,name=burst,proto3" json:"burst,omitempty"`	/// The maximum "burst" of packets (ie, the maximum batch size)
 }
 
 func (x *PortIncCommandSetBurstArg) Reset() {
@@ -1353,7 +1376,8 @@ func (x *PortIncCommandSetBurstArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PortIncCommandSetBurstArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*PortIncCommandSetBurstArg) ProtoMessage()	{}
 
 func (x *PortIncCommandSetBurstArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[23]
@@ -1379,16 +1403,16 @@ func (x *PortIncCommandSetBurstArg) GetBurst() uint64 {
 	return 0
 }
 
-//*
+// *
 // The module QueueInc has a function `set_burst(...)` that allows you to
 // specify the maximum number of packets to be stored in a single PacketBatch
 // released by the module.
 type QueueIncCommandSetBurstArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Burst uint64 `protobuf:"varint,1,opt,name=burst,proto3" json:"burst,omitempty"` /// The maximum "burst" of packets (ie, the maximum batch size)
+	Burst	uint64	`protobuf:"varint,1,opt,name=burst,proto3" json:"burst,omitempty"`	/// The maximum "burst" of packets (ie, the maximum batch size)
 }
 
 func (x *QueueIncCommandSetBurstArg) Reset() {
@@ -1404,7 +1428,8 @@ func (x *QueueIncCommandSetBurstArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QueueIncCommandSetBurstArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*QueueIncCommandSetBurstArg) ProtoMessage()	{}
 
 func (x *QueueIncCommandSetBurstArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[24]
@@ -1430,16 +1455,16 @@ func (x *QueueIncCommandSetBurstArg) GetBurst() uint64 {
 	return 0
 }
 
-//*
+// *
 // The module Queue has a function `set_burst(...)` that allows you to specify
 // the maximum number of packets to be stored in a single PacketBatch released
 // by the module.
 type QueueCommandSetBurstArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Burst uint64 `protobuf:"varint,1,opt,name=burst,proto3" json:"burst,omitempty"` /// The maximum "burst" of packets (ie, the maximum batch size)
+	Burst	uint64	`protobuf:"varint,1,opt,name=burst,proto3" json:"burst,omitempty"`	/// The maximum "burst" of packets (ie, the maximum batch size)
 }
 
 func (x *QueueCommandSetBurstArg) Reset() {
@@ -1455,7 +1480,8 @@ func (x *QueueCommandSetBurstArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QueueCommandSetBurstArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*QueueCommandSetBurstArg) ProtoMessage()	{}
 
 func (x *QueueCommandSetBurstArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[25]
@@ -1481,15 +1507,15 @@ func (x *QueueCommandSetBurstArg) GetBurst() uint64 {
 	return 0
 }
 
-//*
+// *
 // The module Queue has a function `set_size(...)` that allows specifying the
 // size of the queue in total number of packets.
 type QueueCommandSetSizeArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Size uint64 `protobuf:"varint,1,opt,name=size,proto3" json:"size,omitempty"` /// The maximum number of packets to store in the queue.
+	Size	uint64	`protobuf:"varint,1,opt,name=size,proto3" json:"size,omitempty"`	/// The maximum number of packets to store in the queue.
 }
 
 func (x *QueueCommandSetSizeArg) Reset() {
@@ -1505,7 +1531,8 @@ func (x *QueueCommandSetSizeArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QueueCommandSetSizeArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*QueueCommandSetSizeArg) ProtoMessage()	{}
 
 func (x *QueueCommandSetSizeArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[26]
@@ -1531,13 +1558,13 @@ func (x *QueueCommandSetSizeArg) GetSize() uint64 {
 	return 0
 }
 
-//*
+// *
 // Modules that are queues or contain queues may contain functions
 // `get_status()` that return QueueCommandGetStatusResponse.
 type QueueCommandGetStatusArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 }
 
 func (x *QueueCommandGetStatusArg) Reset() {
@@ -1553,7 +1580,8 @@ func (x *QueueCommandGetStatusArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QueueCommandGetStatusArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*QueueCommandGetStatusArg) ProtoMessage()	{}
 
 func (x *QueueCommandGetStatusArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[27]
@@ -1572,20 +1600,20 @@ func (*QueueCommandGetStatusArg) Descriptor() ([]byte, []int) {
 	return file_module_msg_proto_rawDescGZIP(), []int{27}
 }
 
-//*
+// *
 // Modules that are queues or contain queues may contain functions
 // `get_status()` that take no parameters and returns the queue occupancy and
 // size.
 type QueueCommandGetStatusResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Count    uint64 `protobuf:"varint,1,opt,name=count,proto3" json:"count,omitempty"`       /// The number of packets currently in the queue.
-	Size     uint64 `protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`         /// The maximum number of packets the queue can contain.
-	Enqueued uint64 `protobuf:"varint,3,opt,name=enqueued,proto3" json:"enqueued,omitempty"` /// total enqueued
-	Dequeued uint64 `protobuf:"varint,4,opt,name=dequeued,proto3" json:"dequeued,omitempty"` /// total dequeued
-	Dropped  uint64 `protobuf:"varint,5,opt,name=dropped,proto3" json:"dropped,omitempty"`   /// total dropped
+	Count		uint64	`protobuf:"varint,1,opt,name=count,proto3" json:"count,omitempty"`		/// The number of packets currently in the queue.
+	Size		uint64	`protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`		/// The maximum number of packets the queue can contain.
+	Enqueued	uint64	`protobuf:"varint,3,opt,name=enqueued,proto3" json:"enqueued,omitempty"`	/// total enqueued
+	Dequeued	uint64	`protobuf:"varint,4,opt,name=dequeued,proto3" json:"dequeued,omitempty"`	/// total dequeued
+	Dropped		uint64	`protobuf:"varint,5,opt,name=dropped,proto3" json:"dropped,omitempty"`		/// total dropped
 }
 
 func (x *QueueCommandGetStatusResponse) Reset() {
@@ -1601,7 +1629,8 @@ func (x *QueueCommandGetStatusResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QueueCommandGetStatusResponse) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*QueueCommandGetStatusResponse) ProtoMessage()	{}
 
 func (x *QueueCommandGetStatusResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[28]
@@ -1655,13 +1684,13 @@ func (x *QueueCommandGetStatusResponse) GetDropped() uint64 {
 	return 0
 }
 
-//*
+// *
 // The function `clear()` for RandomUpdate takes no parameters and clears all
 // state in the module.
 type RandomUpdateCommandClearArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 }
 
 func (x *RandomUpdateCommandClearArg) Reset() {
@@ -1677,7 +1706,8 @@ func (x *RandomUpdateCommandClearArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RandomUpdateCommandClearArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*RandomUpdateCommandClearArg) ProtoMessage()	{}
 
 func (x *RandomUpdateCommandClearArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[29]
@@ -1696,13 +1726,13 @@ func (*RandomUpdateCommandClearArg) Descriptor() ([]byte, []int) {
 	return file_module_msg_proto_rawDescGZIP(), []int{29}
 }
 
-//*
+// *
 // The function `clear()` for Rewrite takes no parameters and clears all state
 // in the module.
 type RewriteCommandClearArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 }
 
 func (x *RewriteCommandClearArg) Reset() {
@@ -1718,7 +1748,8 @@ func (x *RewriteCommandClearArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RewriteCommandClearArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*RewriteCommandClearArg) ProtoMessage()	{}
 
 func (x *RewriteCommandClearArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[30]
@@ -1737,13 +1768,13 @@ func (*RewriteCommandClearArg) Descriptor() ([]byte, []int) {
 	return file_module_msg_proto_rawDescGZIP(), []int{30}
 }
 
-//*
+// *
 // The function `clear()` for Update takes no parameters and clears all state in
 // the module.
 type UpdateCommandClearArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 }
 
 func (x *UpdateCommandClearArg) Reset() {
@@ -1759,7 +1790,8 @@ func (x *UpdateCommandClearArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateCommandClearArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*UpdateCommandClearArg) ProtoMessage()	{}
 
 func (x *UpdateCommandClearArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[31]
@@ -1778,20 +1810,20 @@ func (*UpdateCommandClearArg) Descriptor() ([]byte, []int) {
 	return file_module_msg_proto_rawDescGZIP(), []int{31}
 }
 
-//*
+// *
 // The module WildcardMatch has a command `add(...)` which inserts a new rule
 // into the WildcardMatch module. For an example of code using WilcardMatch see
 // `bess/bessctl/conf/samples/wildcardmatch.bess`.
 type WildcardMatchCommandAddArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Gate     uint64       `protobuf:"varint,1,opt,name=gate,proto3" json:"gate,omitempty"`         /// Traffic matching this new rule will be sent to this gate.
-	Priority int64        `protobuf:"varint,2,opt,name=priority,proto3" json:"priority,omitempty"` ///If a packet matches multiple rules, the rule with higher priority will be applied. If priorities are equal behavior is undefined.
-	Values   []*FieldData `protobuf:"bytes,3,rep,name=values,proto3" json:"values,omitempty"`      /// The values to check for in each field.
-	Masks    []*FieldData `protobuf:"bytes,4,rep,name=masks,proto3" json:"masks,omitempty"`        /// The bitmask for each field -- set `0x0` to ignore the field altogether.
-	Valuesv  []*FieldData `protobuf:"bytes,5,rep,name=valuesv,proto3" json:"valuesv,omitempty"`    /// The values to check for in each fieldv.
+	Gate		uint64		`protobuf:"varint,1,opt,name=gate,proto3" json:"gate,omitempty"`		/// Traffic matching this new rule will be sent to this gate.
+	Priority	int64		`protobuf:"varint,2,opt,name=priority,proto3" json:"priority,omitempty"`	///If a packet matches multiple rules, the rule with higher priority will be applied. If priorities are equal behavior is undefined.
+	Values		[]*FieldData	`protobuf:"bytes,3,rep,name=values,proto3" json:"values,omitempty"`		/// The values to check for in each field.
+	Masks		[]*FieldData	`protobuf:"bytes,4,rep,name=masks,proto3" json:"masks,omitempty"`		/// The bitmask for each field -- set `0x0` to ignore the field altogether.
+	Valuesv		[]*FieldData	`protobuf:"bytes,5,rep,name=valuesv,proto3" json:"valuesv,omitempty"`		/// The values to check for in each fieldv.
 }
 
 func (x *WildcardMatchCommandAddArg) Reset() {
@@ -1807,7 +1839,8 @@ func (x *WildcardMatchCommandAddArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*WildcardMatchCommandAddArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*WildcardMatchCommandAddArg) ProtoMessage()	{}
 
 func (x *WildcardMatchCommandAddArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[32]
@@ -1861,17 +1894,17 @@ func (x *WildcardMatchCommandAddArg) GetValuesv() []*FieldData {
 	return nil
 }
 
-//*
+// *
 // The module WildcardMatch has a command `delete(...)` which removes a rule --
 // simply specify the values and masks from the previously inserted rule to
 // remove them.
 type WildcardMatchCommandDeleteArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Values []*FieldData `protobuf:"bytes,1,rep,name=values,proto3" json:"values,omitempty"` /// The values being checked for in the rule
-	Masks  []*FieldData `protobuf:"bytes,2,rep,name=masks,proto3" json:"masks,omitempty"`   /// The bitmask from the rule.
+	Values	[]*FieldData	`protobuf:"bytes,1,rep,name=values,proto3" json:"values,omitempty"`	/// The values being checked for in the rule
+	Masks	[]*FieldData	`protobuf:"bytes,2,rep,name=masks,proto3" json:"masks,omitempty"`	/// The bitmask from the rule.
 }
 
 func (x *WildcardMatchCommandDeleteArg) Reset() {
@@ -1887,7 +1920,8 @@ func (x *WildcardMatchCommandDeleteArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*WildcardMatchCommandDeleteArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*WildcardMatchCommandDeleteArg) ProtoMessage()	{}
 
 func (x *WildcardMatchCommandDeleteArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[33]
@@ -1920,14 +1954,14 @@ func (x *WildcardMatchCommandDeleteArg) GetMasks() []*FieldData {
 	return nil
 }
 
-//*
+// *
 // The function `clear()` for WildcardMatch takes no parameters, it clears
 // all state in the WildcardMatch module (is equivalent to calling delete for
 // all rules)
 type WildcardMatchCommandClearArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 }
 
 func (x *WildcardMatchCommandClearArg) Reset() {
@@ -1943,7 +1977,8 @@ func (x *WildcardMatchCommandClearArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*WildcardMatchCommandClearArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*WildcardMatchCommandClearArg) ProtoMessage()	{}
 
 func (x *WildcardMatchCommandClearArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[34]
@@ -1962,16 +1997,16 @@ func (*WildcardMatchCommandClearArg) Descriptor() ([]byte, []int) {
 	return file_module_msg_proto_rawDescGZIP(), []int{34}
 }
 
-//*
+// *
 // For traffic which does not match any rule in the WildcardMatch module,
 // the `set_default_gate(...)` function specifies which gate to send this extra
 // traffic to.
 type WildcardMatchCommandSetDefaultGateArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Gate uint64 `protobuf:"varint,1,opt,name=gate,proto3" json:"gate,omitempty"`
+	Gate	uint64	`protobuf:"varint,1,opt,name=gate,proto3" json:"gate,omitempty"`
 }
 
 func (x *WildcardMatchCommandSetDefaultGateArg) Reset() {
@@ -1987,7 +2022,8 @@ func (x *WildcardMatchCommandSetDefaultGateArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*WildcardMatchCommandSetDefaultGateArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*WildcardMatchCommandSetDefaultGateArg) ProtoMessage()	{}
 
 func (x *WildcardMatchCommandSetDefaultGateArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[35]
@@ -2013,7 +2049,7 @@ func (x *WildcardMatchCommandSetDefaultGateArg) GetGate() uint64 {
 	return 0
 }
 
-//*
+// *
 // The module ACL creates an access control module which by default blocks all
 // traffic, unless it contains a rule which specifies otherwise. Examples of ACL
 // can be found in
@@ -2022,11 +2058,11 @@ func (x *WildcardMatchCommandSetDefaultGateArg) GetGate() uint64 {
 // __Input Gates__: 1
 // __Output Gates__: 1
 type ACLArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Rules []*ACLArg_Rule `protobuf:"bytes,1,rep,name=rules,proto3" json:"rules,omitempty"` /// A list of ACL rules.
+	Rules	[]*ACLArg_Rule	`protobuf:"bytes,1,rep,name=rules,proto3" json:"rules,omitempty"`	/// A list of ACL rules.
 }
 
 func (x *ACLArg) Reset() {
@@ -2042,7 +2078,8 @@ func (x *ACLArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ACLArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*ACLArg) ProtoMessage()	{}
 
 func (x *ACLArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[36]
@@ -2068,18 +2105,18 @@ func (x *ACLArg) GetRules() []*ACLArg_Rule {
 	return nil
 }
 
-//*
+// *
 // The BPF module is an access control module that sends packets out on a
 // particular gate based on whether they match a BPF filter.
 //
 // __Input Gates__: 1
 // __Output Gates__: many (configurable)
 type BPFArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Filters []*BPFArg_Filter `protobuf:"bytes,1,rep,name=filters,proto3" json:"filters,omitempty"` /// The BPF initialized function takes a list of BPF filters.
+	Filters	[]*BPFArg_Filter	`protobuf:"bytes,1,rep,name=filters,proto3" json:"filters,omitempty"`	/// The BPF initialized function takes a list of BPF filters.
 }
 
 func (x *BPFArg) Reset() {
@@ -2095,7 +2132,8 @@ func (x *BPFArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BPFArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*BPFArg) ProtoMessage()	{}
 
 func (x *BPFArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[37]
@@ -2121,7 +2159,7 @@ func (x *BPFArg) GetFilters() []*BPFArg_Filter {
 	return nil
 }
 
-//*
+// *
 // The Buffer module takes no parameters to initialize (ie, `Buffer()` is
 // sufficient to create one). Buffer accepts packets and stores them; it may
 // forward them to the next module only after it has received enough packets to
@@ -2130,9 +2168,9 @@ func (x *BPFArg) GetFilters() []*BPFArg_Filter {
 // __Input Gates__: 1
 // __Output Gates__: 1
 type BufferArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 }
 
 func (x *BufferArg) Reset() {
@@ -2148,7 +2186,8 @@ func (x *BufferArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BufferArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*BufferArg) ProtoMessage()	{}
 
 func (x *BufferArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[38]
@@ -2167,7 +2206,7 @@ func (*BufferArg) Descriptor() ([]byte, []int) {
 	return file_module_msg_proto_rawDescGZIP(), []int{38}
 }
 
-//*
+// *
 // The Bypass module forwards packets by emulating pre-defined packet processing
 // overhead. It burns cpu cycles per_batch, per_packet, and per-bytes. Bypass is
 // useful primarily for testing and performance evaluation.
@@ -2175,13 +2214,13 @@ func (*BufferArg) Descriptor() ([]byte, []int) {
 // __Input Gates__: 1
 // __Output Gates__: 1
 type BypassArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	CyclesPerBatch  uint32 `protobuf:"varint,1,opt,name=cycles_per_batch,json=cyclesPerBatch,proto3" json:"cycles_per_batch,omitempty"`
-	CyclesPerPacket uint32 `protobuf:"varint,2,opt,name=cycles_per_packet,json=cyclesPerPacket,proto3" json:"cycles_per_packet,omitempty"`
-	CyclesPerByte   uint32 `protobuf:"varint,3,opt,name=cycles_per_byte,json=cyclesPerByte,proto3" json:"cycles_per_byte,omitempty"`
+	CyclesPerBatch	uint32	`protobuf:"varint,1,opt,name=cycles_per_batch,json=cyclesPerBatch,proto3" json:"cycles_per_batch,omitempty"`
+	CyclesPerPacket	uint32	`protobuf:"varint,2,opt,name=cycles_per_packet,json=cyclesPerPacket,proto3" json:"cycles_per_packet,omitempty"`
+	CyclesPerByte	uint32	`protobuf:"varint,3,opt,name=cycles_per_byte,json=cyclesPerByte,proto3" json:"cycles_per_byte,omitempty"`
 }
 
 func (x *BypassArg) Reset() {
@@ -2197,7 +2236,8 @@ func (x *BypassArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BypassArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*BypassArg) ProtoMessage()	{}
 
 func (x *BypassArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[39]
@@ -2237,7 +2277,7 @@ func (x *BypassArg) GetCyclesPerByte() uint32 {
 	return 0
 }
 
-//*
+// *
 // The Dump module blindly forwards packets without modifying them. It
 // periodically samples a packet and prints out out to the BESS log (by default
 // stored in `/tmp/bessd.INFO`).
@@ -2245,11 +2285,11 @@ func (x *BypassArg) GetCyclesPerByte() uint32 {
 // __Input Gates__: 1
 // __Output Gates__: 1
 type DumpArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Interval float64 `protobuf:"fixed64,1,opt,name=interval,proto3" json:"interval,omitempty"` /// How frequently to sample and print a packet, in seconds.
+	Interval	float64	`protobuf:"fixed64,1,opt,name=interval,proto3" json:"interval,omitempty"`	/// How frequently to sample and print a packet, in seconds.
 }
 
 func (x *DumpArg) Reset() {
@@ -2265,7 +2305,8 @@ func (x *DumpArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DumpArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*DumpArg) ProtoMessage()	{}
 
 func (x *DumpArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[40]
@@ -2291,7 +2332,7 @@ func (x *DumpArg) GetInterval() float64 {
 	return 0
 }
 
-//*
+// *
 // The EtherEncap module wraps packets in an Ethernet header, but it takes no
 // parameters. Instead, Ethernet source, destination, and type are pulled from a
 // packet's metadata attributes. For example: `SetMetadata('dst_mac',
@@ -2301,9 +2342,9 @@ func (x *DumpArg) GetInterval() float64 {
 // __Input Gates__: 1
 // __Output Gates__: 1
 type EtherEncapArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 }
 
 func (x *EtherEncapArg) Reset() {
@@ -2319,7 +2360,8 @@ func (x *EtherEncapArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*EtherEncapArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*EtherEncapArg) ProtoMessage()	{}
 
 func (x *EtherEncapArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[41]
@@ -2338,7 +2380,7 @@ func (*EtherEncapArg) Descriptor() ([]byte, []int) {
 	return file_module_msg_proto_rawDescGZIP(), []int{41}
 }
 
-//*
+// *
 // The ExactMatch module splits packets along output gates according to exact
 // match values in arbitrary packet fields. To instantiate an ExactMatch module,
 // you must specify which fields in the packet to match over. You can add rules
@@ -2350,15 +2392,15 @@ func (*EtherEncapArg) Descriptor() ([]byte, []int) {
 // __Input Gates__: 1
 // __Output Gates__: many (configurable)
 type ExactMatchArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Fields  []*Field     `protobuf:"bytes,1,rep,name=fields,proto3" json:"fields,omitempty"` /// A list of ExactMatch Fields
-	Masks   []*FieldData `protobuf:"bytes,2,rep,name=masks,proto3" json:"masks,omitempty"`   /// mask(i) corresponds to the mask for field(i)
-	Values  []*Field     `protobuf:"bytes,3,rep,name=values,proto3" json:"values,omitempty"` /// A list of ExactMatch Values
-	Masksv  []*FieldData `protobuf:"bytes,4,rep,name=masksv,proto3" json:"masksv,omitempty"` /// mask(i) corresponds to the mask for value(i)
-	Entries uint64       `protobuf:"varint,5,opt,name=entries,proto3" json:"entries,omitempty"`
+	Fields	[]*Field	`protobuf:"bytes,1,rep,name=fields,proto3" json:"fields,omitempty"`	/// A list of ExactMatch Fields
+	Masks	[]*FieldData	`protobuf:"bytes,2,rep,name=masks,proto3" json:"masks,omitempty"`	/// mask(i) corresponds to the mask for field(i)
+	Values	[]*Field	`protobuf:"bytes,3,rep,name=values,proto3" json:"values,omitempty"`	/// A list of ExactMatch Values
+	Masksv	[]*FieldData	`protobuf:"bytes,4,rep,name=masksv,proto3" json:"masksv,omitempty"`	/// mask(i) corresponds to the mask for value(i)
+	Entries	uint64		`protobuf:"varint,5,opt,name=entries,proto3" json:"entries,omitempty"`
 }
 
 func (x *ExactMatchArg) Reset() {
@@ -2374,7 +2416,8 @@ func (x *ExactMatchArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ExactMatchArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*ExactMatchArg) ProtoMessage()	{}
 
 func (x *ExactMatchArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[42]
@@ -2428,17 +2471,17 @@ func (x *ExactMatchArg) GetEntries() uint64 {
 	return 0
 }
 
-//*
+// *
 // ExactMatchConfig represents the current runtime configuration
 // of an ExactMatch module, as returned by get_runtime_config and
 // set by set_runtime_config.
 type ExactMatchConfig struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	DefaultGate uint64                     `protobuf:"varint,1,opt,name=default_gate,json=defaultGate,proto3" json:"default_gate,omitempty"`
-	Rules       []*ExactMatchCommandAddArg `protobuf:"bytes,2,rep,name=rules,proto3" json:"rules,omitempty"`
+	DefaultGate	uint64				`protobuf:"varint,1,opt,name=default_gate,json=defaultGate,proto3" json:"default_gate,omitempty"`
+	Rules		[]*ExactMatchCommandAddArg	`protobuf:"bytes,2,rep,name=rules,proto3" json:"rules,omitempty"`
 }
 
 func (x *ExactMatchConfig) Reset() {
@@ -2454,7 +2497,8 @@ func (x *ExactMatchConfig) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ExactMatchConfig) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*ExactMatchConfig) ProtoMessage()	{}
 
 func (x *ExactMatchConfig) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[43]
@@ -2487,7 +2531,7 @@ func (x *ExactMatchConfig) GetRules() []*ExactMatchCommandAddArg {
 	return nil
 }
 
-//*
+// *
 // The FlowGen module generates simulated TCP flows of packets with correct
 // SYN/FIN flags and sequence numbers. This module is useful for testing, e.g.,
 // a NAT module or other flow-aware code. Packets are generated off a base,
@@ -2498,21 +2542,21 @@ func (x *ExactMatchConfig) GetRules() []*ExactMatchCommandAddArg {
 // __Input Gates__: 0
 // __Output Gates__: 1
 type FlowGenArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Template     []byte  `protobuf:"bytes,1,opt,name=template,proto3" json:"template,omitempty"`                                 /// The packet "template". All data packets are derived from this template and contain the same payload.
-	Pps          float64 `protobuf:"fixed64,2,opt,name=pps,proto3" json:"pps,omitempty"`                                         /// The total number of packets per second to generate.
-	FlowRate     float64 `protobuf:"fixed64,3,opt,name=flow_rate,json=flowRate,proto3" json:"flow_rate,omitempty"`               /// The number of new flows to create every second. flow_rate must be <= pps.
-	FlowDuration float64 `protobuf:"fixed64,4,opt,name=flow_duration,json=flowDuration,proto3" json:"flow_duration,omitempty"`   /// The lifetime of a flow in seconds.
-	Arrival      string  `protobuf:"bytes,5,opt,name=arrival,proto3" json:"arrival,omitempty"`                                   /// The packet arrival distribution -- must be either "uniform" or "exponential"
-	Duration     string  `protobuf:"bytes,6,opt,name=duration,proto3" json:"duration,omitempty"`                                 /// The flow duration distribution -- must be either "uniform" or "pareto"
-	QuickRampup  bool    `protobuf:"varint,7,opt,name=quick_rampup,json=quickRampup,proto3" json:"quick_rampup,omitempty"`       /// Whether or not to populate the flowgenerator with initial flows (start generating full pps rate immediately) or to wait for new flows to be generated naturally (all flows have a SYN packet).
-	IpSrcRange   uint32  `protobuf:"varint,8,opt,name=ip_src_range,json=ipSrcRange,proto3" json:"ip_src_range,omitempty"`        /// When generating new flows, FlowGen modifies the template packet by changing the IP src, incrementing it by at most ip_src_range (e.g., if the base packet is 10.0.0.1 and range is 5, it will generate packets with IPs 10.0.0.1-10.0.0.6).
-	IpDstRange   uint32  `protobuf:"varint,9,opt,name=ip_dst_range,json=ipDstRange,proto3" json:"ip_dst_range,omitempty"`        /// When generating new flows, FlowGen modifies the template packet by changing the IP dst, incrementing it by at most ip_dst_range.
-	PortSrcRange uint32  `protobuf:"varint,10,opt,name=port_src_range,json=portSrcRange,proto3" json:"port_src_range,omitempty"` /// When generating new flows, FlowGen modifies the template packet by changing the TCP port, incrementing it by at most port_src_range.
-	PortDstRange uint32  `protobuf:"varint,11,opt,name=port_dst_range,json=portDstRange,proto3" json:"port_dst_range,omitempty"` /// When generating new flows, FlowGen modifies the template packet by changing the TCP dst port, incrementing it by at most port_dst_range.
+	Template	[]byte	`protobuf:"bytes,1,opt,name=template,proto3" json:"template,omitempty"`					/// The packet "template". All data packets are derived from this template and contain the same payload.
+	Pps		float64	`protobuf:"fixed64,2,opt,name=pps,proto3" json:"pps,omitempty"`						/// The total number of packets per second to generate.
+	FlowRate	float64	`protobuf:"fixed64,3,opt,name=flow_rate,json=flowRate,proto3" json:"flow_rate,omitempty"`		/// The number of new flows to create every second. flow_rate must be <= pps.
+	FlowDuration	float64	`protobuf:"fixed64,4,opt,name=flow_duration,json=flowDuration,proto3" json:"flow_duration,omitempty"`	/// The lifetime of a flow in seconds.
+	Arrival		string	`protobuf:"bytes,5,opt,name=arrival,proto3" json:"arrival,omitempty"`					/// The packet arrival distribution -- must be either "uniform" or "exponential"
+	Duration	string	`protobuf:"bytes,6,opt,name=duration,proto3" json:"duration,omitempty"`					/// The flow duration distribution -- must be either "uniform" or "pareto"
+	QuickRampup	bool	`protobuf:"varint,7,opt,name=quick_rampup,json=quickRampup,proto3" json:"quick_rampup,omitempty"`	/// Whether or not to populate the flowgenerator with initial flows (start generating full pps rate immediately) or to wait for new flows to be generated naturally (all flows have a SYN packet).
+	IpSrcRange	uint32	`protobuf:"varint,8,opt,name=ip_src_range,json=ipSrcRange,proto3" json:"ip_src_range,omitempty"`	/// When generating new flows, FlowGen modifies the template packet by changing the IP src, incrementing it by at most ip_src_range (e.g., if the base packet is 10.0.0.1 and range is 5, it will generate packets with IPs 10.0.0.1-10.0.0.6).
+	IpDstRange	uint32	`protobuf:"varint,9,opt,name=ip_dst_range,json=ipDstRange,proto3" json:"ip_dst_range,omitempty"`	/// When generating new flows, FlowGen modifies the template packet by changing the IP dst, incrementing it by at most ip_dst_range.
+	PortSrcRange	uint32	`protobuf:"varint,10,opt,name=port_src_range,json=portSrcRange,proto3" json:"port_src_range,omitempty"`	/// When generating new flows, FlowGen modifies the template packet by changing the TCP port, incrementing it by at most port_src_range.
+	PortDstRange	uint32	`protobuf:"varint,11,opt,name=port_dst_range,json=portDstRange,proto3" json:"port_dst_range,omitempty"`	/// When generating new flows, FlowGen modifies the template packet by changing the TCP dst port, incrementing it by at most port_dst_range.
 }
 
 func (x *FlowGenArg) Reset() {
@@ -2528,7 +2572,8 @@ func (x *FlowGenArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*FlowGenArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*FlowGenArg) ProtoMessage()	{}
 
 func (x *FlowGenArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[44]
@@ -2624,17 +2669,17 @@ func (x *FlowGenArg) GetPortDstRange() uint32 {
 	return 0
 }
 
-//*
+// *
 // The GenericDecap module strips off the first few bytes of data from a packet.
 //
 // __Input Gates__: 1
 // __Ouptut Gates__: 1
 type GenericDecapArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Bytes uint64 `protobuf:"varint,1,opt,name=bytes,proto3" json:"bytes,omitempty"` /// The number of bytes to strip off.
+	Bytes	uint64	`protobuf:"varint,1,opt,name=bytes,proto3" json:"bytes,omitempty"`	/// The number of bytes to strip off.
 }
 
 func (x *GenericDecapArg) Reset() {
@@ -2650,7 +2695,8 @@ func (x *GenericDecapArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GenericDecapArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*GenericDecapArg) ProtoMessage()	{}
 
 func (x *GenericDecapArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[45]
@@ -2676,7 +2722,7 @@ func (x *GenericDecapArg) GetBytes() uint64 {
 	return 0
 }
 
-//*
+// *
 // The GenericEncap module adds a header to packets passing through it.
 // Takes a list of fields. Each field is either:
 //
@@ -2684,8 +2730,10 @@ func (x *GenericDecapArg) GetBytes() uint64 {
 //  2. {'size': X, 'attribute': Y}      (for metadata attributes)
 //
 // e.g.: `GenericEncap([{'size': 4, 'value': 0xdeadbeef},
-//                      {'size': 2, 'attribute': 'foo'},
-//                      {'size': 2, 'value': 0x1234}])`
+//
+//	{'size': 2, 'attribute': 'foo'},
+//	{'size': 2, 'value': 0x1234}])`
+//
 // will prepend a 8-byte header:
 // `de ad be ef <xx> <xx> 12 34`
 //
@@ -2696,11 +2744,11 @@ func (x *GenericDecapArg) GetBytes() uint64 {
 // __Input Gates__: 1
 // __Output Gates__: 1
 type GenericEncapArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Fields []*GenericEncapArg_EncapField `protobuf:"bytes,1,rep,name=fields,proto3" json:"fields,omitempty"`
+	Fields	[]*GenericEncapArg_EncapField	`protobuf:"bytes,1,rep,name=fields,proto3" json:"fields,omitempty"`
 }
 
 func (x *GenericEncapArg) Reset() {
@@ -2716,7 +2764,8 @@ func (x *GenericEncapArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GenericEncapArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*GenericEncapArg) ProtoMessage()	{}
 
 func (x *GenericEncapArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[46]
@@ -2742,7 +2791,7 @@ func (x *GenericEncapArg) GetFields() []*GenericEncapArg_EncapField {
 	return nil
 }
 
-//*
+// *
 // The HashLB module partitions packets between output gates according to either
 // a hash over their MAC src/dst (`mode='l2'`), their IP src/dst (`mode='l3'`),
 // the full IP/TCP 5-tuple (`mode='l4'`), or the N-tuple defined by `fields`.
@@ -2750,13 +2799,13 @@ func (x *GenericEncapArg) GetFields() []*GenericEncapArg_EncapField {
 // __Input Gates__: 1
 // __Output Gates__: many (configurable)
 type HashLBArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Gates  []int64  `protobuf:"varint,1,rep,packed,name=gates,proto3" json:"gates,omitempty"` /// A list of gate numbers over which to partition packets
-	Mode   string   `protobuf:"bytes,2,opt,name=mode,proto3" json:"mode,omitempty"`           /// The mode (`'l2'`, `'l3'`, or `'l4'`) for the hash function.
-	Fields []*Field `protobuf:"bytes,3,rep,name=fields,proto3" json:"fields,omitempty"`       /// A list of fields that define a custom tuple.
+	Gates	[]int64		`protobuf:"varint,1,rep,packed,name=gates,proto3" json:"gates,omitempty"`	/// A list of gate numbers over which to partition packets
+	Mode	string		`protobuf:"bytes,2,opt,name=mode,proto3" json:"mode,omitempty"`			/// The mode (`'l2'`, `'l3'`, or `'l4'`) for the hash function.
+	Fields	[]*Field	`protobuf:"bytes,3,rep,name=fields,proto3" json:"fields,omitempty"`		/// A list of fields that define a custom tuple.
 }
 
 func (x *HashLBArg) Reset() {
@@ -2772,7 +2821,8 @@ func (x *HashLBArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*HashLBArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*HashLBArg) ProtoMessage()	{}
 
 func (x *HashLBArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[47]
@@ -2812,7 +2862,7 @@ func (x *HashLBArg) GetFields() []*Field {
 	return nil
 }
 
-//*
+// *
 // Encapsulates a packet with an IP header, where IP src, dst, and proto are
 // filled in by metadata values carried with the packet. Metadata attributes
 // must include: ip_src, ip_dst, ip_proto, ip_nexthop, and ether_type.
@@ -2820,9 +2870,9 @@ func (x *HashLBArg) GetFields() []*Field {
 // __Input Gates__: 1
 // __Output Gates__: 1
 type IPEncapArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 }
 
 func (x *IPEncapArg) Reset() {
@@ -2838,7 +2888,8 @@ func (x *IPEncapArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*IPEncapArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*IPEncapArg) ProtoMessage()	{}
 
 func (x *IPEncapArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[48]
@@ -2857,7 +2908,7 @@ func (*IPEncapArg) Descriptor() ([]byte, []int) {
 	return file_module_msg_proto_rawDescGZIP(), []int{48}
 }
 
-//*
+// *
 // An IPLookup module perfroms LPM lookups over a packet destination.
 // IPLookup takes no parameters to instantiate.
 // To add rules to the IPLookup table, use `IPLookup.add()`
@@ -2865,12 +2916,12 @@ func (*IPEncapArg) Descriptor() ([]byte, []int) {
 // __Input Gates__: 1
 // __Output Gates__: many (configurable, depending on rule values)
 type IPLookupArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	MaxRules uint32 `protobuf:"varint,1,opt,name=max_rules,json=maxRules,proto3" json:"max_rules,omitempty"` /// Maximum number of rules (default: 1024)
-	MaxTbl8S uint32 `protobuf:"varint,2,opt,name=max_tbl8s,json=maxTbl8s,proto3" json:"max_tbl8s,omitempty"` /// Maximum number of IP prefixes with smaller than /24 (default: 128)
+	MaxRules	uint32	`protobuf:"varint,1,opt,name=max_rules,json=maxRules,proto3" json:"max_rules,omitempty"`	/// Maximum number of rules (default: 1024)
+	MaxTbl8S	uint32	`protobuf:"varint,2,opt,name=max_tbl8s,json=maxTbl8s,proto3" json:"max_tbl8s,omitempty"`	/// Maximum number of IP prefixes with smaller than /24 (default: 128)
 }
 
 func (x *IPLookupArg) Reset() {
@@ -2886,7 +2937,8 @@ func (x *IPLookupArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*IPLookupArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*IPLookupArg) ProtoMessage()	{}
 
 func (x *IPLookupArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[49]
@@ -2919,7 +2971,7 @@ func (x *IPLookupArg) GetMaxTbl8S() uint32 {
 	return 0
 }
 
-//*
+// *
 // An L2Forward module forwards packets to an output gate according to
 // exact-match rules over an Ethernet destination. Note that this is _not_ a
 // learning switch -- forwards according to fixed routes specified by `add(..)`.
@@ -2927,12 +2979,12 @@ func (x *IPLookupArg) GetMaxTbl8S() uint32 {
 // __Input Gates__: 1
 // __Ouput Gates__: many (configurable, depending on rules)
 type L2ForwardArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Size   int64 `protobuf:"varint,1,opt,name=size,proto3" json:"size,omitempty"`     /// Configures the forwarding hash table -- total number of hash table entries.
-	Bucket int64 `protobuf:"varint,2,opt,name=bucket,proto3" json:"bucket,omitempty"` /// Configures the forwarding hash table -- total number of slots per hash value.
+	Size	int64	`protobuf:"varint,1,opt,name=size,proto3" json:"size,omitempty"`	/// Configures the forwarding hash table -- total number of hash table entries.
+	Bucket	int64	`protobuf:"varint,2,opt,name=bucket,proto3" json:"bucket,omitempty"`	/// Configures the forwarding hash table -- total number of slots per hash value.
 }
 
 func (x *L2ForwardArg) Reset() {
@@ -2948,7 +3000,8 @@ func (x *L2ForwardArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*L2ForwardArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*L2ForwardArg) ProtoMessage()	{}
 
 func (x *L2ForwardArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[50]
@@ -2981,16 +3034,16 @@ func (x *L2ForwardArg) GetBucket() int64 {
 	return 0
 }
 
-//*
+// *
 // The MACSwap module takes no arguments. It swaps the src/destination MAC
 // addresses within a packet.
 //
 // __Input Gates__: 1
 // __Output Gates__: 1
 type MACSwapArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 }
 
 func (x *MACSwapArg) Reset() {
@@ -3006,7 +3059,8 @@ func (x *MACSwapArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MACSwapArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*MACSwapArg) ProtoMessage()	{}
 
 func (x *MACSwapArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[51]
@@ -3025,7 +3079,7 @@ func (*MACSwapArg) Descriptor() ([]byte, []int) {
 	return file_module_msg_proto_rawDescGZIP(), []int{51}
 }
 
-//*
+// *
 // The measure module tracks latencies, packets per second, and other
 // statistics. It should be paired with a Timestamp module, which attaches a
 // timestamp to packets. The measure module will log how long (in nanoseconds)
@@ -3037,19 +3091,19 @@ func (*MACSwapArg) Descriptor() ([]byte, []int) {
 // __Input Gates__: 1
 // __Output Gates__: 1
 type MeasureArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
 	// int64 warmup = 1; /// removed: instead of warmup delay, user should Clear()
 	//
 	// Types that are assignable to Type:
 	//	*MeasureArg_Offset
 	//	*MeasureArg_AttrName
-	Type                isMeasureArg_Type `protobuf_oneof:"type"`
-	JitterSampleProb    float64           `protobuf:"fixed64,3,opt,name=jitter_sample_prob,json=jitterSampleProb,proto3" json:"jitter_sample_prob,omitempty"`         /// How often the module should sample packets for inter-packet arrival measurements (to measure jitter).
-	LatencyNsMax        uint64            `protobuf:"varint,4,opt,name=latency_ns_max,json=latencyNsMax,proto3" json:"latency_ns_max,omitempty"`                      /// maximum latency expected, in ns (default 0.1 s)
-	LatencyNsResolution uint32            `protobuf:"varint,5,opt,name=latency_ns_resolution,json=latencyNsResolution,proto3" json:"latency_ns_resolution,omitempty"` /// resolution, in ns (default 100)
+	Type			isMeasureArg_Type	`protobuf_oneof:"type"`
+	JitterSampleProb	float64			`protobuf:"fixed64,3,opt,name=jitter_sample_prob,json=jitterSampleProb,proto3" json:"jitter_sample_prob,omitempty"`		/// How often the module should sample packets for inter-packet arrival measurements (to measure jitter).
+	LatencyNsMax		uint64			`protobuf:"varint,4,opt,name=latency_ns_max,json=latencyNsMax,proto3" json:"latency_ns_max,omitempty"`				/// maximum latency expected, in ns (default 0.1 s)
+	LatencyNsResolution	uint32			`protobuf:"varint,5,opt,name=latency_ns_resolution,json=latencyNsResolution,proto3" json:"latency_ns_resolution,omitempty"`	/// resolution, in ns (default 100)
 }
 
 func (x *MeasureArg) Reset() {
@@ -3065,7 +3119,8 @@ func (x *MeasureArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MeasureArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*MeasureArg) ProtoMessage()	{}
 
 func (x *MeasureArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[52]
@@ -3131,27 +3186,27 @@ type isMeasureArg_Type interface {
 }
 
 type MeasureArg_Offset struct {
-	Offset uint64 `protobuf:"varint,2,opt,name=offset,proto3,oneof"` /// Where to store the current time within the packet, offset in bytes.
+	Offset uint64 `protobuf:"varint,2,opt,name=offset,proto3,oneof"`	/// Where to store the current time within the packet, offset in bytes.
 }
 
 type MeasureArg_AttrName struct {
-	AttrName string `protobuf:"bytes,6,opt,name=attr_name,json=attrName,proto3,oneof"` /// Where to store the current time as attribute
+	AttrName string `protobuf:"bytes,6,opt,name=attr_name,json=attrName,proto3,oneof"`	/// Where to store the current time as attribute
 }
 
-func (*MeasureArg_Offset) isMeasureArg_Type() {}
+func (*MeasureArg_Offset) isMeasureArg_Type()	{}
 
-func (*MeasureArg_AttrName) isMeasureArg_Type() {}
+func (*MeasureArg_AttrName) isMeasureArg_Type()	{}
 
-//*
+// *
 // The merge module takes no parameters. It has multiple input gates,
 // and passes out all packets from a single output gate.
 //
 // __Input Gates__: many (configurable)
 // __Output Gates__: 1
 type MergeArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 }
 
 func (x *MergeArg) Reset() {
@@ -3167,7 +3222,8 @@ func (x *MergeArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MergeArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*MergeArg) ProtoMessage()	{}
 
 func (x *MergeArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[53]
@@ -3186,16 +3242,16 @@ func (*MergeArg) Descriptor() ([]byte, []int) {
 	return file_module_msg_proto_rawDescGZIP(), []int{53}
 }
 
-//*
+// *
 // The MetadataTest module is used for internal testing purposes.
 type MetadataTestArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Read   map[string]int64 `protobuf:"bytes,1,rep,name=read,proto3" json:"read,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
-	Write  map[string]int64 `protobuf:"bytes,2,rep,name=write,proto3" json:"write,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
-	Update map[string]int64 `protobuf:"bytes,3,rep,name=update,proto3" json:"update,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
+	Read	map[string]int64	`protobuf:"bytes,1,rep,name=read,proto3" json:"read,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
+	Write	map[string]int64	`protobuf:"bytes,2,rep,name=write,proto3" json:"write,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
+	Update	map[string]int64	`protobuf:"bytes,3,rep,name=update,proto3" json:"update,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
 }
 
 func (x *MetadataTestArg) Reset() {
@@ -3211,7 +3267,8 @@ func (x *MetadataTestArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MetadataTestArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*MetadataTestArg) ProtoMessage()	{}
 
 func (x *MetadataTestArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[54]
@@ -3251,7 +3308,7 @@ func (x *MetadataTestArg) GetUpdate() map[string]int64 {
 	return nil
 }
 
-//*
+// *
 // The NAT module implements Dynamic IPv4 address/port translation,
 // rewriting packet source addresses with external addresses as specified,
 // and destination addresses for packets on the reverse direction.
@@ -3266,11 +3323,11 @@ func (x *MetadataTestArg) GetUpdate() map[string]int64 {
 // direction)
 // __Output Gates__: 2 (same as the input gate)
 type NATArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	ExtAddrs []*NATArg_ExternalAddress `protobuf:"bytes,1,rep,name=ext_addrs,json=extAddrs,proto3" json:"ext_addrs,omitempty"` /// list of external IP addresses
+	ExtAddrs	[]*NATArg_ExternalAddress	`protobuf:"bytes,1,rep,name=ext_addrs,json=extAddrs,proto3" json:"ext_addrs,omitempty"`	/// list of external IP addresses
 }
 
 func (x *NATArg) Reset() {
@@ -3286,7 +3343,8 @@ func (x *NATArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*NATArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*NATArg) ProtoMessage()	{}
 
 func (x *NATArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[55]
@@ -3312,7 +3370,7 @@ func (x *NATArg) GetExtAddrs() []*NATArg_ExternalAddress {
 	return nil
 }
 
-//*
+// *
 // Static NAT module implements one-to-one translation of source/destination
 // IPv4 addresses. No port number is translated.
 // L3/L4 checksums are updated correspondingly.
@@ -3334,11 +3392,11 @@ func (x *NATArg) GetExtAddrs() []*NATArg_ExternalAddress {
 // direction)
 // __Output Gates__: 2 (same as the input gate)
 type StaticNATArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Pairs []*StaticNATArg_AddressRangePair `protobuf:"bytes,1,rep,name=pairs,proto3" json:"pairs,omitempty"`
+	Pairs	[]*StaticNATArg_AddressRangePair	`protobuf:"bytes,1,rep,name=pairs,proto3" json:"pairs,omitempty"`
 }
 
 func (x *StaticNATArg) Reset() {
@@ -3354,7 +3412,8 @@ func (x *StaticNATArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*StaticNATArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*StaticNATArg) ProtoMessage()	{}
 
 func (x *StaticNATArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[56]
@@ -3380,12 +3439,12 @@ func (x *StaticNATArg) GetPairs() []*StaticNATArg_AddressRangePair {
 	return nil
 }
 
-//*
+// *
 // This module is used for testing purposes.
 type NoOpArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 }
 
 func (x *NoOpArg) Reset() {
@@ -3401,7 +3460,8 @@ func (x *NoOpArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*NoOpArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*NoOpArg) ProtoMessage()	{}
 
 func (x *NoOpArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[57]
@@ -3420,7 +3480,7 @@ func (*NoOpArg) Descriptor() ([]byte, []int) {
 	return file_module_msg_proto_rawDescGZIP(), []int{57}
 }
 
-//*
+// *
 // The PortInc module connects a physical or virtual port and releases
 // packets from it. PortInc does not support multiqueueing.
 // For details on how to configure PortInc using DPDK, virtual ports,
@@ -3429,12 +3489,12 @@ func (*NoOpArg) Descriptor() ([]byte, []int) {
 // __Input Gates__: 0
 // __Output Gates__: 1
 type PortIncArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Port     string `protobuf:"bytes,1,opt,name=port,proto3" json:"port,omitempty"`          /// The portname to connect to.
-	Prefetch bool   `protobuf:"varint,2,opt,name=prefetch,proto3" json:"prefetch,omitempty"` /// Whether or not to prefetch packets from the port.
+	Port		string	`protobuf:"bytes,1,opt,name=port,proto3" json:"port,omitempty"`			/// The portname to connect to.
+	Prefetch	bool	`protobuf:"varint,2,opt,name=prefetch,proto3" json:"prefetch,omitempty"`	/// Whether or not to prefetch packets from the port.
 }
 
 func (x *PortIncArg) Reset() {
@@ -3450,7 +3510,8 @@ func (x *PortIncArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PortIncArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*PortIncArg) ProtoMessage()	{}
 
 func (x *PortIncArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[58]
@@ -3483,7 +3544,7 @@ func (x *PortIncArg) GetPrefetch() bool {
 	return false
 }
 
-//*
+// *
 // The PortOut module connects to a physical or virtual port and pushes
 // packets to it. For details on how to configure PortOut with DPDK,
 // virtual ports, libpcap, etc, see the sidebar in the wiki.
@@ -3491,11 +3552,11 @@ func (x *PortIncArg) GetPrefetch() bool {
 // __Input Gates__: 1
 // __Output Gates__: 0
 type PortOutArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Port string `protobuf:"bytes,1,opt,name=port,proto3" json:"port,omitempty"` /// The portname to connect to.
+	Port	string	`protobuf:"bytes,1,opt,name=port,proto3" json:"port,omitempty"`	/// The portname to connect to.
 }
 
 func (x *PortOutArg) Reset() {
@@ -3511,7 +3572,8 @@ func (x *PortOutArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PortOutArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*PortOutArg) ProtoMessage()	{}
 
 func (x *PortOutArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[59]
@@ -3537,7 +3599,7 @@ func (x *PortOutArg) GetPort() string {
 	return ""
 }
 
-//*
+// *
 // The module QueueInc produces input packets from a physical or virtual port.
 // Unlike PortInc, it supports multiqueue ports.
 // For details on how to configure QueueInc with DPDK, virtualports,
@@ -3546,13 +3608,13 @@ func (x *PortOutArg) GetPort() string {
 // __Input Gates__: 0
 // __Output Gates__: 1
 type QueueIncArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Port     string `protobuf:"bytes,1,opt,name=port,proto3" json:"port,omitempty"`          /// The portname to connect to (read from).
-	Qid      uint64 `protobuf:"varint,2,opt,name=qid,proto3" json:"qid,omitempty"`           /// The queue on that port to read from. qid starts from 0.
-	Prefetch bool   `protobuf:"varint,3,opt,name=prefetch,proto3" json:"prefetch,omitempty"` /// When prefetch is enabled, the module will perform CPU prefetch on the first 64B of each packet onto CPU L1 cache. Default value is false.
+	Port		string	`protobuf:"bytes,1,opt,name=port,proto3" json:"port,omitempty"`			/// The portname to connect to (read from).
+	Qid		uint64	`protobuf:"varint,2,opt,name=qid,proto3" json:"qid,omitempty"`			/// The queue on that port to read from. qid starts from 0.
+	Prefetch	bool	`protobuf:"varint,3,opt,name=prefetch,proto3" json:"prefetch,omitempty"`	/// When prefetch is enabled, the module will perform CPU prefetch on the first 64B of each packet onto CPU L1 cache. Default value is false.
 }
 
 func (x *QueueIncArg) Reset() {
@@ -3568,7 +3630,8 @@ func (x *QueueIncArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QueueIncArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*QueueIncArg) ProtoMessage()	{}
 
 func (x *QueueIncArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[60]
@@ -3608,7 +3671,7 @@ func (x *QueueIncArg) GetPrefetch() bool {
 	return false
 }
 
-//*
+// *
 // The QueueOut module releases packets to a physical or virtual port.
 // Unlike PortOut, it supports multiqueue ports.
 // For details on how to configure QueueOut with DPDK, virtualports,
@@ -3617,12 +3680,12 @@ func (x *QueueIncArg) GetPrefetch() bool {
 // __Input Gates__: 1
 // __Output Gates__: 0
 type QueueOutArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Port string `protobuf:"bytes,1,opt,name=port,proto3" json:"port,omitempty"` /// The portname to connect to.
-	Qid  uint64 `protobuf:"varint,2,opt,name=qid,proto3" json:"qid,omitempty"`  /// The queue on that port to write out to.
+	Port	string	`protobuf:"bytes,1,opt,name=port,proto3" json:"port,omitempty"`	/// The portname to connect to.
+	Qid	uint64	`protobuf:"varint,2,opt,name=qid,proto3" json:"qid,omitempty"`	/// The queue on that port to write out to.
 }
 
 func (x *QueueOutArg) Reset() {
@@ -3638,7 +3701,8 @@ func (x *QueueOutArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QueueOutArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*QueueOutArg) ProtoMessage()	{}
 
 func (x *QueueOutArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[61]
@@ -3671,19 +3735,19 @@ func (x *QueueOutArg) GetQid() uint64 {
 	return 0
 }
 
-//*
+// *
 // The Queue module implements a simple packet queue.
 //
 // __Input Gates__: 1
 // __Output Gates__: 1
 type QueueArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Size         uint64 `protobuf:"varint,1,opt,name=size,proto3" json:"size,omitempty"`                 /// The maximum number of packets to store in the queue.
-	Prefetch     bool   `protobuf:"varint,2,opt,name=prefetch,proto3" json:"prefetch,omitempty"`         /// When prefetch is enabled, the module will perform CPU prefetch on the first 64B of each packet onto CPU L1 cache. Default value is false.
-	Backpressure bool   `protobuf:"varint,3,opt,name=backpressure,proto3" json:"backpressure,omitempty"` // When backpressure is enabled, the module will notify upstream if it is overloaded.
+	Size		uint64	`protobuf:"varint,1,opt,name=size,proto3" json:"size,omitempty"`			/// The maximum number of packets to store in the queue.
+	Prefetch	bool	`protobuf:"varint,2,opt,name=prefetch,proto3" json:"prefetch,omitempty"`		/// When prefetch is enabled, the module will perform CPU prefetch on the first 64B of each packet onto CPU L1 cache. Default value is false.
+	Backpressure	bool	`protobuf:"varint,3,opt,name=backpressure,proto3" json:"backpressure,omitempty"`	// When backpressure is enabled, the module will notify upstream if it is overloaded.
 }
 
 func (x *QueueArg) Reset() {
@@ -3699,7 +3763,8 @@ func (x *QueueArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QueueArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*QueueArg) ProtoMessage()	{}
 
 func (x *QueueArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[62]
@@ -3739,18 +3804,18 @@ func (x *QueueArg) GetBackpressure() bool {
 	return false
 }
 
-//*
+// *
 // The RandomSplit module randomly split/drop packets
 //
 // __InputGates__: 1
 // __Output Gates__: many (configurable)
 type RandomSplitArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	DropRate float64 `protobuf:"fixed64,1,opt,name=drop_rate,json=dropRate,proto3" json:"drop_rate,omitempty"` /// Probability of dropping packet.
-	Gates    []int64 `protobuf:"varint,2,rep,packed,name=gates,proto3" json:"gates,omitempty"`                 /// A list of gate numbers to split the traffic.
+	DropRate	float64	`protobuf:"fixed64,1,opt,name=drop_rate,json=dropRate,proto3" json:"drop_rate,omitempty"`	/// Probability of dropping packet.
+	Gates		[]int64	`protobuf:"varint,2,rep,packed,name=gates,proto3" json:"gates,omitempty"`			/// A list of gate numbers to split the traffic.
 }
 
 func (x *RandomSplitArg) Reset() {
@@ -3766,7 +3831,8 @@ func (x *RandomSplitArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RandomSplitArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*RandomSplitArg) ProtoMessage()	{}
 
 func (x *RandomSplitArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[63]
@@ -3799,15 +3865,15 @@ func (x *RandomSplitArg) GetGates() []int64 {
 	return nil
 }
 
-//*
+// *
 // The RandomSplit module has a function `set_droprate(...)` which specifies
 // the probability of dropping packets
 type RandomSplitCommandSetDroprateArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	DropRate float64 `protobuf:"fixed64,1,opt,name=drop_rate,json=dropRate,proto3" json:"drop_rate,omitempty"` /// Probability of dropping packet.
+	DropRate	float64	`protobuf:"fixed64,1,opt,name=drop_rate,json=dropRate,proto3" json:"drop_rate,omitempty"`	/// Probability of dropping packet.
 }
 
 func (x *RandomSplitCommandSetDroprateArg) Reset() {
@@ -3823,7 +3889,8 @@ func (x *RandomSplitCommandSetDroprateArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RandomSplitCommandSetDroprateArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*RandomSplitCommandSetDroprateArg) ProtoMessage()	{}
 
 func (x *RandomSplitCommandSetDroprateArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[64]
@@ -3849,15 +3916,15 @@ func (x *RandomSplitCommandSetDroprateArg) GetDropRate() float64 {
 	return 0
 }
 
-//*
+// *
 // The RandomSplit module has a function `set_gates(...)` which changes
 // the total number of output gates in the module.
 type RandomSplitCommandSetGatesArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Gates []int64 `protobuf:"varint,1,rep,packed,name=gates,proto3" json:"gates,omitempty"` /// A list of gate numbers to split the traffic.
+	Gates	[]int64	`protobuf:"varint,1,rep,packed,name=gates,proto3" json:"gates,omitempty"`	/// A list of gate numbers to split the traffic.
 }
 
 func (x *RandomSplitCommandSetGatesArg) Reset() {
@@ -3873,7 +3940,8 @@ func (x *RandomSplitCommandSetGatesArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RandomSplitCommandSetGatesArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*RandomSplitCommandSetGatesArg) ProtoMessage()	{}
 
 func (x *RandomSplitCommandSetGatesArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[65]
@@ -3899,18 +3967,18 @@ func (x *RandomSplitCommandSetGatesArg) GetGates() []int64 {
 	return nil
 }
 
-//*
+// *
 // The RandomUpdate module rewrites a specified field (`offset` and `size`) in a
 // packet with a random value between a specified min and max values.
 //
 // __Input Gates__: 1
 // __Output Gates__: 1
 type RandomUpdateArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Fields []*RandomUpdateArg_Field `protobuf:"bytes,1,rep,name=fields,proto3" json:"fields,omitempty"` /// A list of Random Update Fields.
+	Fields	[]*RandomUpdateArg_Field	`protobuf:"bytes,1,rep,name=fields,proto3" json:"fields,omitempty"`	/// A list of Random Update Fields.
 }
 
 func (x *RandomUpdateArg) Reset() {
@@ -3926,7 +3994,8 @@ func (x *RandomUpdateArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RandomUpdateArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*RandomUpdateArg) ProtoMessage()	{}
 
 func (x *RandomUpdateArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[66]
@@ -3952,7 +4021,7 @@ func (x *RandomUpdateArg) GetFields() []*RandomUpdateArg_Field {
 	return nil
 }
 
-//*
+// *
 // The Rewrite module replaces an entire packet body with a packet "template"
 // converting all packets that pass through to copies of the of one of
 // the templates.
@@ -3960,11 +4029,11 @@ func (x *RandomUpdateArg) GetFields() []*RandomUpdateArg_Field {
 // __Input Gates__: 1
 // __Output Gates__: 1
 type RewriteArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Templates [][]byte `protobuf:"bytes,1,rep,name=templates,proto3" json:"templates,omitempty"` /// A list of bytestrings representing packet templates.
+	Templates	[][]byte	`protobuf:"bytes,1,rep,name=templates,proto3" json:"templates,omitempty"`	/// A list of bytestrings representing packet templates.
 }
 
 func (x *RewriteArg) Reset() {
@@ -3980,7 +4049,8 @@ func (x *RewriteArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RewriteArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*RewriteArg) ProtoMessage()	{}
 
 func (x *RewriteArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[67]
@@ -4006,15 +4076,15 @@ func (x *RewriteArg) GetTemplates() [][]byte {
 	return nil
 }
 
-//*
+// *
 // The RoundRobin module has a function `set_gates(...)` which changes
 // the total number of output gates in the module.
 type RoundRobinCommandSetGatesArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Gates []int64 `protobuf:"varint,1,rep,packed,name=gates,proto3" json:"gates,omitempty"` /// A list of gate numbers to round-robin the traffic over.
+	Gates	[]int64	`protobuf:"varint,1,rep,packed,name=gates,proto3" json:"gates,omitempty"`	/// A list of gate numbers to round-robin the traffic over.
 }
 
 func (x *RoundRobinCommandSetGatesArg) Reset() {
@@ -4030,7 +4100,8 @@ func (x *RoundRobinCommandSetGatesArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RoundRobinCommandSetGatesArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*RoundRobinCommandSetGatesArg) ProtoMessage()	{}
 
 func (x *RoundRobinCommandSetGatesArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[68]
@@ -4056,15 +4127,15 @@ func (x *RoundRobinCommandSetGatesArg) GetGates() []int64 {
 	return nil
 }
 
-//*
+// *
 // The RoundRobin module has a function `set_mode(...)` which specifies whether
 // to balance traffic across gates per-packet or per-batch.
 type RoundRobinCommandSetModeArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Mode string `protobuf:"bytes,1,opt,name=mode,proto3" json:"mode,omitempty"` /// whether to perform `'packet'` or `'batch'` round robin partitioning.
+	Mode	string	`protobuf:"bytes,1,opt,name=mode,proto3" json:"mode,omitempty"`	/// whether to perform `'packet'` or `'batch'` round robin partitioning.
 }
 
 func (x *RoundRobinCommandSetModeArg) Reset() {
@@ -4080,7 +4151,8 @@ func (x *RoundRobinCommandSetModeArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RoundRobinCommandSetModeArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*RoundRobinCommandSetModeArg) ProtoMessage()	{}
 
 func (x *RoundRobinCommandSetModeArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[69]
@@ -4106,19 +4178,19 @@ func (x *RoundRobinCommandSetModeArg) GetMode() string {
 	return ""
 }
 
-//*
+// *
 // The RoundRobin module splits packets from one input gate across multiple
 // output gates.
 //
 // __Input Gates__: 1
 // __Output Gates__: many (configurable)
 type RoundRobinArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Gates []int64 `protobuf:"varint,1,rep,packed,name=gates,proto3" json:"gates,omitempty"` /// A list of gate numbers to split packets across.
-	Mode  string  `protobuf:"bytes,2,opt,name=mode,proto3" json:"mode,omitempty"`           /// Whether to split across gate with every `'packet'` or every `'batch'`.
+	Gates	[]int64	`protobuf:"varint,1,rep,packed,name=gates,proto3" json:"gates,omitempty"`	/// A list of gate numbers to split packets across.
+	Mode	string	`protobuf:"bytes,2,opt,name=mode,proto3" json:"mode,omitempty"`			/// Whether to split across gate with every `'packet'` or every `'batch'`.
 }
 
 func (x *RoundRobinArg) Reset() {
@@ -4134,7 +4206,8 @@ func (x *RoundRobinArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RoundRobinArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*RoundRobinArg) ProtoMessage()	{}
 
 func (x *RoundRobinArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[70]
@@ -4167,18 +4240,18 @@ func (x *RoundRobinArg) GetMode() string {
 	return ""
 }
 
-//*
+// *
 // The Replicate module makes copies of a packet sending one copy out over each
 // of n output gates.
 //
 // __Input Gates__: 1
 // __Output Gates__: many (configurable)
 type ReplicateArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Gates []int64 `protobuf:"varint,1,rep,packed,name=gates,proto3" json:"gates,omitempty"` /// A list of gate numbers to send packet copies to.
+	Gates	[]int64	`protobuf:"varint,1,rep,packed,name=gates,proto3" json:"gates,omitempty"`	/// A list of gate numbers to send packet copies to.
 }
 
 func (x *ReplicateArg) Reset() {
@@ -4194,7 +4267,8 @@ func (x *ReplicateArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ReplicateArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*ReplicateArg) ProtoMessage()	{}
 
 func (x *ReplicateArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[71]
@@ -4220,15 +4294,15 @@ func (x *ReplicateArg) GetGates() []int64 {
 	return nil
 }
 
-//*
+// *
 // The Replicate module has a function `set_gates(...)` which changes
 // the total number of output gates in the module.
 type ReplicateCommandSetGatesArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Gates []int64 `protobuf:"varint,1,rep,packed,name=gates,proto3" json:"gates,omitempty"` /// A list of gate numbers to replicate the traffic over.
+	Gates	[]int64	`protobuf:"varint,1,rep,packed,name=gates,proto3" json:"gates,omitempty"`	/// A list of gate numbers to replicate the traffic over.
 }
 
 func (x *ReplicateCommandSetGatesArg) Reset() {
@@ -4244,7 +4318,8 @@ func (x *ReplicateCommandSetGatesArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ReplicateCommandSetGatesArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*ReplicateCommandSetGatesArg) ProtoMessage()	{}
 
 func (x *ReplicateCommandSetGatesArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[72]
@@ -4270,7 +4345,7 @@ func (x *ReplicateCommandSetGatesArg) GetGates() []int64 {
 	return nil
 }
 
-//*
+// *
 // The SetMetadata module adds metadata attributes to packets, which are not
 // stored or sent out with packet data. For examples of SetMetadata use, see
 // [`bess/bessctl/conf/attr_match.bess`](https://github.com/omec-project/bess/blob/master/bessctl/conf/metadata/attr_match.bess)
@@ -4278,11 +4353,11 @@ func (x *ReplicateCommandSetGatesArg) GetGates() []int64 {
 // __Input Gates__: 1
 // __Output Gates__: 1
 type SetMetadataArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Attrs []*SetMetadataArg_Attribute `protobuf:"bytes,1,rep,name=attrs,proto3" json:"attrs,omitempty"` /// A list of attributes to attach to the packet.
+	Attrs	[]*SetMetadataArg_Attribute	`protobuf:"bytes,1,rep,name=attrs,proto3" json:"attrs,omitempty"`	/// A list of attributes to attach to the packet.
 }
 
 func (x *SetMetadataArg) Reset() {
@@ -4298,7 +4373,8 @@ func (x *SetMetadataArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SetMetadataArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*SetMetadataArg) ProtoMessage()	{}
 
 func (x *SetMetadataArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[73]
@@ -4324,15 +4400,15 @@ func (x *SetMetadataArg) GetAttrs() []*SetMetadataArg_Attribute {
 	return nil
 }
 
-//*
+// *
 // The sink module drops all packets that are sent to it.
 //
 // __Input Gates__: 1
 // __Output Gates__: 0
 type SinkArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 }
 
 func (x *SinkArg) Reset() {
@@ -4348,7 +4424,8 @@ func (x *SinkArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SinkArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*SinkArg) ProtoMessage()	{}
 
 func (x *SinkArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[74]
@@ -4367,16 +4444,16 @@ func (*SinkArg) Descriptor() ([]byte, []int) {
 	return file_module_msg_proto_rawDescGZIP(), []int{74}
 }
 
-//*
+// *
 // The Source module has a function `set_burst(...)` which
 // specifies the maximum number of packets to release in a single packetbatch
 // from the module.
 type SourceCommandSetBurstArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Burst uint64 `protobuf:"varint,1,opt,name=burst,proto3" json:"burst,omitempty"` /// The maximum number of packets to release in a packetbatch from the module.
+	Burst	uint64	`protobuf:"varint,1,opt,name=burst,proto3" json:"burst,omitempty"`	/// The maximum number of packets to release in a packetbatch from the module.
 }
 
 func (x *SourceCommandSetBurstArg) Reset() {
@@ -4392,7 +4469,8 @@ func (x *SourceCommandSetBurstArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SourceCommandSetBurstArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*SourceCommandSetBurstArg) ProtoMessage()	{}
 
 func (x *SourceCommandSetBurstArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[75]
@@ -4418,15 +4496,15 @@ func (x *SourceCommandSetBurstArg) GetBurst() uint64 {
 	return 0
 }
 
-//*
+// *
 // The Source module has a function `set_pkt_size(...)` which specifies the size
 // of packets to be produced by the Source module.
 type SourceCommandSetPktSizeArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	PktSize uint64 `protobuf:"varint,1,opt,name=pkt_size,json=pktSize,proto3" json:"pkt_size,omitempty"` /// The size (in bytes) of the packets for Source to create.
+	PktSize	uint64	`protobuf:"varint,1,opt,name=pkt_size,json=pktSize,proto3" json:"pkt_size,omitempty"`	/// The size (in bytes) of the packets for Source to create.
 }
 
 func (x *SourceCommandSetPktSizeArg) Reset() {
@@ -4442,7 +4520,8 @@ func (x *SourceCommandSetPktSizeArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SourceCommandSetPktSizeArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*SourceCommandSetPktSizeArg) ProtoMessage()	{}
 
 func (x *SourceCommandSetPktSizeArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[76]
@@ -4468,17 +4547,17 @@ func (x *SourceCommandSetPktSizeArg) GetPktSize() uint64 {
 	return 0
 }
 
-//*
+// *
 // The Source module generates packets with no payload contents.
 //
 // __Input Gates__: 0
 // __Output Gates__: 1
 type SourceArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	PktSize uint64 `protobuf:"varint,1,opt,name=pkt_size,json=pktSize,proto3" json:"pkt_size,omitempty"` /// The size (in bytes) of packet data to produce.
+	PktSize	uint64	`protobuf:"varint,1,opt,name=pkt_size,json=pktSize,proto3" json:"pkt_size,omitempty"`	/// The size (in bytes) of packet data to produce.
 }
 
 func (x *SourceArg) Reset() {
@@ -4494,7 +4573,8 @@ func (x *SourceArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SourceArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*SourceArg) ProtoMessage()	{}
 
 func (x *SourceArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[77]
@@ -4520,7 +4600,7 @@ func (x *SourceArg) GetPktSize() uint64 {
 	return 0
 }
 
-//*
+// *
 // The IPChecksum module calculates the IPv4 checksum of packets. If
 // verify is set to true, the module can be used to validate the checksum
 // of the IPv4 packet. All non-IPv4 packets are forwarded without
@@ -4529,12 +4609,12 @@ func (x *SourceArg) GetPktSize() uint64 {
 // __Input Gates__: 1
 // __Output Gates__: 2
 type IPChecksumArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Verify bool `protobuf:"varint,1,opt,name=verify,proto3" json:"verify,omitempty"` /// check checksum
-	Hw     bool `protobuf:"varint,2,opt,name=hw,proto3" json:"hw,omitempty"`         /// enable hardware offload
+	Verify	bool	`protobuf:"varint,1,opt,name=verify,proto3" json:"verify,omitempty"`	/// check checksum
+	Hw	bool	`protobuf:"varint,2,opt,name=hw,proto3" json:"hw,omitempty"`		/// enable hardware offload
 }
 
 func (x *IPChecksumArg) Reset() {
@@ -4550,7 +4630,8 @@ func (x *IPChecksumArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*IPChecksumArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*IPChecksumArg) ProtoMessage()	{}
 
 func (x *IPChecksumArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[78]
@@ -4583,7 +4664,7 @@ func (x *IPChecksumArg) GetHw() bool {
 	return false
 }
 
-//*
+// *
 // The L4Checksum module calculates the UDP/IPv4 checksum of packets. If
 // verify is set to true, the module can be used to validate the checksum
 // of the UDP/IPv4 packet. All non-IPv4 packets are forwarded without
@@ -4592,12 +4673,12 @@ func (x *IPChecksumArg) GetHw() bool {
 // __Input Gates__: MAX_GATES
 // __Output Gates__: 2
 type L4ChecksumArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Verify bool `protobuf:"varint,1,opt,name=verify,proto3" json:"verify,omitempty"` /// check checksum
-	Hw     bool `protobuf:"varint,2,opt,name=hw,proto3" json:"hw,omitempty"`         /// enable hardware offload
+	Verify	bool	`protobuf:"varint,1,opt,name=verify,proto3" json:"verify,omitempty"`	/// check checksum
+	Hw	bool	`protobuf:"varint,2,opt,name=hw,proto3" json:"hw,omitempty"`		/// enable hardware offload
 }
 
 func (x *L4ChecksumArg) Reset() {
@@ -4613,7 +4694,8 @@ func (x *L4ChecksumArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*L4ChecksumArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*L4ChecksumArg) ProtoMessage()	{}
 
 func (x *L4ChecksumArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[79]
@@ -4646,7 +4728,7 @@ func (x *L4ChecksumArg) GetHw() bool {
 	return false
 }
 
-//*
+// *
 // The GtpuEcho module processes the GTPv1 echo packet and prepares
 // corresponding IP packet containing GTP echo response. It assumes
 // Recovery IE is always zero.
@@ -4654,11 +4736,11 @@ func (x *L4ChecksumArg) GetHw() bool {
 // __Input Gates__: 1
 // __Output Gates__: 1
 type GtpuEchoArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	S1USgwIp uint32 `protobuf:"varint,1,opt,name=s1u_sgw_ip,json=s1uSgwIp,proto3" json:"s1u_sgw_ip,omitempty"` /// IP address of S1U interface
+	S1USgwIp	uint32	`protobuf:"varint,1,opt,name=s1u_sgw_ip,json=s1uSgwIp,proto3" json:"s1u_sgw_ip,omitempty"`	/// IP address of S1U interface
 }
 
 func (x *GtpuEchoArg) Reset() {
@@ -4674,7 +4756,8 @@ func (x *GtpuEchoArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GtpuEchoArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*GtpuEchoArg) ProtoMessage()	{}
 
 func (x *GtpuEchoArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[80]
@@ -4700,7 +4783,7 @@ func (x *GtpuEchoArg) GetS1USgwIp() uint32 {
 	return 0
 }
 
-//*
+// *
 // The IPDefrag module scans the IP datagram and checks whether
 // it is fragmented. It returns a fully reassembled datagram or
 // an unfragmented IP datagram
@@ -4708,12 +4791,12 @@ func (x *GtpuEchoArg) GetS1USgwIp() uint32 {
 // __Input Gates__: 1
 // __Output Gates__: 1
 type IPDefragArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	NumFlows uint32 `protobuf:"varint,1,opt,name=num_flows,json=numFlows,proto3" json:"num_flows,omitempty"` /// max number of flows the module can handle
-	Numa     int32  `protobuf:"varint,2,opt,name=numa,proto3" json:"numa,omitempty"`                         /// numa placement for ip frags memory management
+	NumFlows	uint32	`protobuf:"varint,1,opt,name=num_flows,json=numFlows,proto3" json:"num_flows,omitempty"`	/// max number of flows the module can handle
+	Numa		int32	`protobuf:"varint,2,opt,name=numa,proto3" json:"numa,omitempty"`				/// numa placement for ip frags memory management
 }
 
 func (x *IPDefragArg) Reset() {
@@ -4729,7 +4812,8 @@ func (x *IPDefragArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*IPDefragArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*IPDefragArg) ProtoMessage()	{}
 
 func (x *IPDefragArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[81]
@@ -4762,18 +4846,18 @@ func (x *IPDefragArg) GetNuma() int32 {
 	return 0
 }
 
-//*
+// *
 // The IPDFrag module scans the IP datagram and checks whether
 // it needs to be fragmented.
 //
 // __Input Gates__: 1
 // __Output Gates__: 1
 type IPFragArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Mtu int32 `protobuf:"varint,1,opt,name=mtu,proto3" json:"mtu,omitempty"` /// full Ethernet frame size (including CRC) for encapsulated ipv4 frag datagrams
+	Mtu	int32	`protobuf:"varint,1,opt,name=mtu,proto3" json:"mtu,omitempty"`	/// full Ethernet frame size (including CRC) for encapsulated ipv4 frag datagrams
 }
 
 func (x *IPFragArg) Reset() {
@@ -4789,7 +4873,8 @@ func (x *IPFragArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*IPFragArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*IPFragArg) ProtoMessage()	{}
 
 func (x *IPFragArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[82]
@@ -4815,17 +4900,17 @@ func (x *IPFragArg) GetMtu() int32 {
 	return 0
 }
 
-//*
+// *
 // The Counter module has a command `add(...)` which takes one
 // parameters.  This function accepts the counter id of a
 // session record.
 // Example use in bessctl: `counter.add(ctr_id=0x1)`
 type CounterAddArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	CtrId uint32 `protobuf:"varint,1,opt,name=ctr_id,json=ctrId,proto3" json:"ctr_id,omitempty"` /// counter id
+	CtrId	uint32	`protobuf:"varint,1,opt,name=ctr_id,json=ctrId,proto3" json:"ctr_id,omitempty"`	/// counter id
 }
 
 func (x *CounterAddArg) Reset() {
@@ -4841,7 +4926,8 @@ func (x *CounterAddArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CounterAddArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*CounterAddArg) ProtoMessage()	{}
 
 func (x *CounterAddArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[83]
@@ -4867,17 +4953,17 @@ func (x *CounterAddArg) GetCtrId() uint32 {
 	return 0
 }
 
-//*
+// *
 // The Counter module has a command `remove(...)` which takes one
 // parameter.  This function accepts ctr_id, and removes the
 // respective counter.
 // Example use in bessctl: `counter.remove(ctr_id=0x1)`
 type CounterRemoveArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	CtrId uint32 `protobuf:"varint,1,opt,name=ctr_id,json=ctrId,proto3" json:"ctr_id,omitempty"` /// counter id
+	CtrId	uint32	`protobuf:"varint,1,opt,name=ctr_id,json=ctrId,proto3" json:"ctr_id,omitempty"`	/// counter id
 }
 
 func (x *CounterRemoveArg) Reset() {
@@ -4893,7 +4979,8 @@ func (x *CounterRemoveArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CounterRemoveArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*CounterRemoveArg) ProtoMessage()	{}
 
 func (x *CounterRemoveArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[84]
@@ -4919,19 +5006,19 @@ func (x *CounterRemoveArg) GetCtrId() uint32 {
 	return 0
 }
 
-//*
+// *
 // The Counter module counts the number of packets and bytes it passes
 //
 // __Input Gates__: 1
 // __Output Gates__: 1
 type CounterArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	NameId     string `protobuf:"bytes,1,opt,name=name_id,json=nameId,proto3" json:"name_id,omitempty"`              /// Name of the counter_id
-	CheckExist bool   `protobuf:"varint,2,opt,name=check_exist,json=checkExist,proto3" json:"check_exist,omitempty"` /// verify each counter pre-exists before any operation (default = False)
-	Total      uint32 `protobuf:"varint,3,opt,name=total,proto3" json:"total,omitempty"`                             /// Total number of entries it can support
+	NameId		string	`protobuf:"bytes,1,opt,name=name_id,json=nameId,proto3" json:"name_id,omitempty"`		/// Name of the counter_id
+	CheckExist	bool	`protobuf:"varint,2,opt,name=check_exist,json=checkExist,proto3" json:"check_exist,omitempty"`	/// verify each counter pre-exists before any operation (default = False)
+	Total		uint32	`protobuf:"varint,3,opt,name=total,proto3" json:"total,omitempty"`				/// Total number of entries it can support
 }
 
 func (x *CounterArg) Reset() {
@@ -4947,7 +5034,8 @@ func (x *CounterArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CounterArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*CounterArg) ProtoMessage()	{}
 
 func (x *CounterArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[85]
@@ -4987,17 +5075,17 @@ func (x *CounterArg) GetTotal() uint32 {
 	return 0
 }
 
-//*
+// *
 // The GtpuEncap module inserts GTP header in an ethernet frame
 //
 // __Input Gates__: 1
 // __Output Gates__: 1
 type GtpuEncapArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	AddPsc bool `protobuf:"varint,1,opt,name=add_psc,json=addPsc,proto3" json:"add_psc,omitempty"` /// Add PDU session container in encap (default = False)
+	AddPsc	bool	`protobuf:"varint,1,opt,name=add_psc,json=addPsc,proto3" json:"add_psc,omitempty"`	/// Add PDU session container in encap (default = False)
 }
 
 func (x *GtpuEncapArg) Reset() {
@@ -5013,7 +5101,8 @@ func (x *GtpuEncapArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GtpuEncapArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*GtpuEncapArg) ProtoMessage()	{}
 
 func (x *GtpuEncapArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[86]
@@ -5039,7 +5128,7 @@ func (x *GtpuEncapArg) GetAddPsc() bool {
 	return false
 }
 
-//*
+// *
 // The Split module is a basic classifier which directs packets out a gate
 // based on data in the packet (e.g., if the read in value is 3, the packet
 // is directed out output gate 3).
@@ -5047,15 +5136,15 @@ func (x *GtpuEncapArg) GetAddPsc() bool {
 // __Input Gates__: 1
 // __Output Gates__: many (up to 2^(size * 8))
 type SplitArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Size uint64 `protobuf:"varint,1,opt,name=size,proto3" json:"size,omitempty"` /// The size of the value to read in bytes
+	Size	uint64	`protobuf:"varint,1,opt,name=size,proto3" json:"size,omitempty"`	/// The size of the value to read in bytes
 	// Types that are assignable to Type:
 	//	*SplitArg_Attribute
 	//	*SplitArg_Offset
-	Type isSplitArg_Type `protobuf_oneof:"type"`
+	Type	isSplitArg_Type	`protobuf_oneof:"type"`
 }
 
 func (x *SplitArg) Reset() {
@@ -5071,7 +5160,8 @@ func (x *SplitArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SplitArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*SplitArg) ProtoMessage()	{}
 
 func (x *SplitArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[87]
@@ -5123,18 +5213,18 @@ type isSplitArg_Type interface {
 }
 
 type SplitArg_Attribute struct {
-	Attribute string `protobuf:"bytes,2,opt,name=attribute,proto3,oneof"` /// The name of the metadata field to read.
+	Attribute string `protobuf:"bytes,2,opt,name=attribute,proto3,oneof"`	/// The name of the metadata field to read.
 }
 
 type SplitArg_Offset struct {
-	Offset int64 `protobuf:"varint,3,opt,name=offset,proto3,oneof"` /// The offset (in bytes) of the data field to read.
+	Offset int64 `protobuf:"varint,3,opt,name=offset,proto3,oneof"`	/// The offset (in bytes) of the data field to read.
 }
 
-func (*SplitArg_Attribute) isSplitArg_Type() {}
+func (*SplitArg_Attribute) isSplitArg_Type()	{}
 
-func (*SplitArg_Offset) isSplitArg_Type() {}
+func (*SplitArg_Offset) isSplitArg_Type()	{}
 
-//*
+// *
 // The timestamp module takes an offset parameter. It inserts the current
 // time in nanoseconds into the packet, to be used for latency measurements
 // alongside the Measure module.  The default offset is after an IPv4 UDP
@@ -5143,14 +5233,14 @@ func (*SplitArg_Offset) isSplitArg_Type() {}
 // __Input Gates__: 1
 // __Output Gates__: 1
 type TimestampArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
 	// Types that are assignable to Type:
 	//	*TimestampArg_Offset
 	//	*TimestampArg_AttrName
-	Type isTimestampArg_Type `protobuf_oneof:"type"`
+	Type	isTimestampArg_Type	`protobuf_oneof:"type"`
 }
 
 func (x *TimestampArg) Reset() {
@@ -5166,7 +5256,8 @@ func (x *TimestampArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*TimestampArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*TimestampArg) ProtoMessage()	{}
 
 func (x *TimestampArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[88]
@@ -5218,21 +5309,21 @@ type TimestampArg_AttrName struct {
 	AttrName string `protobuf:"bytes,2,opt,name=attr_name,json=attrName,proto3,oneof"`
 }
 
-func (*TimestampArg_Offset) isTimestampArg_Type() {}
+func (*TimestampArg_Offset) isTimestampArg_Type()	{}
 
-func (*TimestampArg_AttrName) isTimestampArg_Type() {}
+func (*TimestampArg_AttrName) isTimestampArg_Type()	{}
 
-//*
+// *
 // The Update module rewrites a field in a packet's data with a specific value.
 //
 // __Input Gates__: 1
 // __Output Gates__: 1
 type UpdateArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Fields []*UpdateArg_Field `protobuf:"bytes,1,rep,name=fields,proto3" json:"fields,omitempty"` /// A list of Update Fields.
+	Fields	[]*UpdateArg_Field	`protobuf:"bytes,1,rep,name=fields,proto3" json:"fields,omitempty"`	/// A list of Update Fields.
 }
 
 func (x *UpdateArg) Reset() {
@@ -5248,7 +5339,8 @@ func (x *UpdateArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*UpdateArg) ProtoMessage()	{}
 
 func (x *UpdateArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[89]
@@ -5274,7 +5366,7 @@ func (x *UpdateArg) GetFields() []*UpdateArg_Field {
 	return nil
 }
 
-//*
+// *
 // The URLFilter performs TCP reconstruction over a flow and blocks
 // connections which mention a banned URL.
 //
@@ -5284,11 +5376,11 @@ func (x *UpdateArg) GetFields() []*UpdateArg_Field {
 // Note that the add() command takes this same argument, and the
 // clear() command takes an empty argument.
 type UrlFilterArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Blacklist []*UrlFilterArg_Url `protobuf:"bytes,1,rep,name=blacklist,proto3" json:"blacklist,omitempty"` /// A list of Urls to block.
+	Blacklist	[]*UrlFilterArg_Url	`protobuf:"bytes,1,rep,name=blacklist,proto3" json:"blacklist,omitempty"`	/// A list of Urls to block.
 }
 
 func (x *UrlFilterArg) Reset() {
@@ -5304,7 +5396,8 @@ func (x *UrlFilterArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UrlFilterArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*UrlFilterArg) ProtoMessage()	{}
 
 func (x *UrlFilterArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[90]
@@ -5330,17 +5423,17 @@ func (x *UrlFilterArg) GetBlacklist() []*UrlFilterArg_Url {
 	return nil
 }
 
-//*
+// *
 // The runtime configuration of a URLFilter is the current
 // blacklist.  This means that getting the Arg gets an *empty*
 // list: we assume anyone using get_initial_arg is also using
 // get_runtime_config.
 type UrlFilterConfig struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Blacklist []*UrlFilterArg_Url `protobuf:"bytes,1,rep,name=blacklist,proto3" json:"blacklist,omitempty"`
+	Blacklist	[]*UrlFilterArg_Url	`protobuf:"bytes,1,rep,name=blacklist,proto3" json:"blacklist,omitempty"`
 }
 
 func (x *UrlFilterConfig) Reset() {
@@ -5356,7 +5449,8 @@ func (x *UrlFilterConfig) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UrlFilterConfig) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*UrlFilterConfig) ProtoMessage()	{}
 
 func (x *UrlFilterConfig) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[91]
@@ -5382,15 +5476,15 @@ func (x *UrlFilterConfig) GetBlacklist() []*UrlFilterArg_Url {
 	return nil
 }
 
-//*
+// *
 // VLANPop removes the VLAN tag.
 //
 // __Input Gates__: 1
 // __Output Gates__: 1
 type VLANPopArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 }
 
 func (x *VLANPopArg) Reset() {
@@ -5406,7 +5500,8 @@ func (x *VLANPopArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*VLANPopArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*VLANPopArg) ProtoMessage()	{}
 
 func (x *VLANPopArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[92]
@@ -5425,17 +5520,17 @@ func (*VLANPopArg) Descriptor() ([]byte, []int) {
 	return file_module_msg_proto_rawDescGZIP(), []int{92}
 }
 
-//*
+// *
 // VLANPush appends a VLAN tag with a specified TCI value.
 //
 // __Input Gates__: 1
 // __Output Gates__: 1
 type VLANPushArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Tci uint64 `protobuf:"varint,1,opt,name=tci,proto3" json:"tci,omitempty"` /// The TCI value to insert in the VLAN tag.
+	Tci	uint64	`protobuf:"varint,1,opt,name=tci,proto3" json:"tci,omitempty"`	/// The TCI value to insert in the VLAN tag.
 }
 
 func (x *VLANPushArg) Reset() {
@@ -5451,7 +5546,8 @@ func (x *VLANPushArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*VLANPushArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*VLANPushArg) ProtoMessage()	{}
 
 func (x *VLANPushArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[93]
@@ -5477,16 +5573,16 @@ func (x *VLANPushArg) GetTci() uint64 {
 	return 0
 }
 
-//*
+// *
 // Splits packets across output gates according to VLAN id (e.g., id 3 goes out
 // gate 3).
 //
 // __Input Gates__: 1
 // __Output Gates__: many
 type VLANSplitArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 }
 
 func (x *VLANSplitArg) Reset() {
@@ -5502,7 +5598,8 @@ func (x *VLANSplitArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*VLANSplitArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*VLANSplitArg) ProtoMessage()	{}
 
 func (x *VLANSplitArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[94]
@@ -5521,15 +5618,15 @@ func (*VLANSplitArg) Descriptor() ([]byte, []int) {
 	return file_module_msg_proto_rawDescGZIP(), []int{94}
 }
 
-//*
+// *
 // VXLANDecap module decapsulates a VXLAN header on a packet.
 //
 // __Input Gates__: 1
 // __Output Gates__: 1
 type VXLANDecapArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 }
 
 func (x *VXLANDecapArg) Reset() {
@@ -5545,7 +5642,8 @@ func (x *VXLANDecapArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*VXLANDecapArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*VXLANDecapArg) ProtoMessage()	{}
 
 func (x *VXLANDecapArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[95]
@@ -5564,18 +5662,18 @@ func (*VXLANDecapArg) Descriptor() ([]byte, []int) {
 	return file_module_msg_proto_rawDescGZIP(), []int{95}
 }
 
-//*
+// *
 // VXLANEncap module wraps a packet in a VXLAN header with a specified
 // destination port.
 //
 // __Input Gates__: 1
 // __Output Gates__: 1
 type VXLANEncapArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Dstport uint64 `protobuf:"varint,1,opt,name=dstport,proto3" json:"dstport,omitempty"` /// The destination UDP port
+	Dstport	uint64	`protobuf:"varint,1,opt,name=dstport,proto3" json:"dstport,omitempty"`	/// The destination UDP port
 }
 
 func (x *VXLANEncapArg) Reset() {
@@ -5591,7 +5689,8 @@ func (x *VXLANEncapArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*VXLANEncapArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*VXLANEncapArg) ProtoMessage()	{}
 
 func (x *VXLANEncapArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[96]
@@ -5617,7 +5716,7 @@ func (x *VXLANEncapArg) GetDstport() uint64 {
 	return 0
 }
 
-//*
+// *
 // The WildcardMatch module matches over multiple fields in a packet and
 // pushes packets that do match out a specified gate, and those that don't out a
 // default gate. WildcardMatch is initialized with the fields it should inspect
@@ -5628,13 +5727,13 @@ func (x *VXLANEncapArg) GetDstport() uint64 {
 // __Input Gates__: 1
 // __Output Gates__: many (configurable)
 type WildcardMatchArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Fields  []*Field `protobuf:"bytes,1,rep,name=fields,proto3" json:"fields,omitempty"` /// A list of WildcardMatch fields.
-	Values  []*Field `protobuf:"bytes,2,rep,name=values,proto3" json:"values,omitempty"` /// A list of WildcardMatch values.
-	Entries uint64   `protobuf:"varint,3,opt,name=entries,proto3" json:"entries,omitempty"`
+	Fields	[]*Field	`protobuf:"bytes,1,rep,name=fields,proto3" json:"fields,omitempty"`	/// A list of WildcardMatch fields.
+	Values	[]*Field	`protobuf:"bytes,2,rep,name=values,proto3" json:"values,omitempty"`	/// A list of WildcardMatch values.
+	Entries	uint64		`protobuf:"varint,3,opt,name=entries,proto3" json:"entries,omitempty"`
 }
 
 func (x *WildcardMatchArg) Reset() {
@@ -5650,7 +5749,8 @@ func (x *WildcardMatchArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*WildcardMatchArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*WildcardMatchArg) ProtoMessage()	{}
 
 func (x *WildcardMatchArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[97]
@@ -5690,17 +5790,17 @@ func (x *WildcardMatchArg) GetEntries() uint64 {
 	return 0
 }
 
-//*
+// *
 // WildcardMatchConfig represents the current runtime configuration
 // of a WildcardMatch module, as returned by get_runtime_config and
 // set by set_runtime_config.
 type WildcardMatchConfig struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	DefaultGate uint64                        `protobuf:"varint,1,opt,name=default_gate,json=defaultGate,proto3" json:"default_gate,omitempty"`
-	Rules       []*WildcardMatchCommandAddArg `protobuf:"bytes,2,rep,name=rules,proto3" json:"rules,omitempty"`
+	DefaultGate	uint64				`protobuf:"varint,1,opt,name=default_gate,json=defaultGate,proto3" json:"default_gate,omitempty"`
+	Rules		[]*WildcardMatchCommandAddArg	`protobuf:"bytes,2,rep,name=rules,proto3" json:"rules,omitempty"`
 }
 
 func (x *WildcardMatchConfig) Reset() {
@@ -5716,7 +5816,8 @@ func (x *WildcardMatchConfig) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*WildcardMatchConfig) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*WildcardMatchConfig) ProtoMessage()	{}
 
 func (x *WildcardMatchConfig) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[98]
@@ -5749,7 +5850,7 @@ func (x *WildcardMatchConfig) GetRules() []*WildcardMatchCommandAddArg {
 	return nil
 }
 
-//*
+// *
 // The ARP Responder module is responding to ARP requests.
 // It has a function `add(...)` which adds one IP-MAC mapping.
 //
@@ -5758,12 +5859,12 @@ func (x *WildcardMatchConfig) GetRules() []*WildcardMatchCommandAddArg {
 // __Input Gates__: 1
 // __Output Gates__: 1
 type ArpResponderArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Ip      string `protobuf:"bytes,1,opt,name=ip,proto3" json:"ip,omitempty"`                          /// The IP
-	MacAddr string `protobuf:"bytes,2,opt,name=mac_addr,json=macAddr,proto3" json:"mac_addr,omitempty"` /// The MAC address
+	Ip	string	`protobuf:"bytes,1,opt,name=ip,proto3" json:"ip,omitempty"`				/// The IP
+	MacAddr	string	`protobuf:"bytes,2,opt,name=mac_addr,json=macAddr,proto3" json:"mac_addr,omitempty"`	/// The MAC address
 }
 
 func (x *ArpResponderArg) Reset() {
@@ -5779,7 +5880,8 @@ func (x *ArpResponderArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ArpResponderArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*ArpResponderArg) ProtoMessage()	{}
 
 func (x *ArpResponderArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[99]
@@ -5812,18 +5914,18 @@ func (x *ArpResponderArg) GetMacAddr() string {
 	return ""
 }
 
-//*
+// *
 // The MPLS pop module removes MPLS labels
 //
 // __Input Gates__: 1
 // __Output Gates__: 2
 type MplsPopArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	RemoveEthHeader bool   `protobuf:"varint,1,opt,name=remove_eth_header,json=removeEthHeader,proto3" json:"remove_eth_header,omitempty"` /// Remove ETH header with the pop
-	NextEthType     uint32 `protobuf:"varint,2,opt,name=next_eth_type,json=nextEthType,proto3" json:"next_eth_type,omitempty"`             /// The next ETH type to set
+	RemoveEthHeader	bool	`protobuf:"varint,1,opt,name=remove_eth_header,json=removeEthHeader,proto3" json:"remove_eth_header,omitempty"`	/// Remove ETH header with the pop
+	NextEthType	uint32	`protobuf:"varint,2,opt,name=next_eth_type,json=nextEthType,proto3" json:"next_eth_type,omitempty"`		/// The next ETH type to set
 }
 
 func (x *MplsPopArg) Reset() {
@@ -5839,7 +5941,8 @@ func (x *MplsPopArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MplsPopArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*MplsPopArg) ProtoMessage()	{}
 
 func (x *MplsPopArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[100]
@@ -5872,7 +5975,7 @@ func (x *MplsPopArg) GetNextEthType() uint32 {
 	return 0
 }
 
-//*
+// *
 // WorkerSplit splits packets based on the worker calling ProcessBatch(). It has
 // two modes.
 //  1. Packets from worker `x` are mapped to output gate `x`. This is the default
@@ -5887,11 +5990,11 @@ func (x *MplsPopArg) GetNextEthType() uint32 {
 // __Input Gates__: 1
 // __Output Gates__: many
 type WorkerSplitArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	WorkerGates map[uint32]uint32 `protobuf:"bytes,1,rep,name=worker_gates,json=workerGates,proto3" json:"worker_gates,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"` // ogate -> worker mask
+	WorkerGates	map[uint32]uint32	`protobuf:"bytes,1,rep,name=worker_gates,json=workerGates,proto3" json:"worker_gates,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`	// ogate -> worker mask
 }
 
 func (x *WorkerSplitArg) Reset() {
@@ -5907,7 +6010,8 @@ func (x *WorkerSplitArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*WorkerSplitArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*WorkerSplitArg) ProtoMessage()	{}
 
 func (x *WorkerSplitArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[101]
@@ -5934,13 +6038,13 @@ func (x *WorkerSplitArg) GetWorkerGates() map[uint32]uint32 {
 }
 
 type QosArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Fields  []*Field `protobuf:"bytes,1,rep,name=fields,proto3" json:"fields,omitempty"`
-	Values  []*Field `protobuf:"bytes,2,rep,name=values,proto3" json:"values,omitempty"`
-	Entries uint64   `protobuf:"varint,3,opt,name=entries,proto3" json:"entries,omitempty"`
+	Fields	[]*Field	`protobuf:"bytes,1,rep,name=fields,proto3" json:"fields,omitempty"`
+	Values	[]*Field	`protobuf:"bytes,2,rep,name=values,proto3" json:"values,omitempty"`
+	Entries	uint64		`protobuf:"varint,3,opt,name=entries,proto3" json:"entries,omitempty"`
 }
 
 func (x *QosArg) Reset() {
@@ -5956,7 +6060,8 @@ func (x *QosArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QosArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*QosArg) ProtoMessage()	{}
 
 func (x *QosArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[102]
@@ -5997,21 +6102,21 @@ func (x *QosArg) GetEntries() uint64 {
 }
 
 type QosCommandAddArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Gate uint64 `protobuf:"varint,1,opt,name=gate,proto3" json:"gate,omitempty"`
-	Cir  uint64 `protobuf:"varint,2,opt,name=cir,proto3" json:"cir,omitempty"`
-	Pir  uint64 `protobuf:"varint,3,opt,name=pir,proto3" json:"pir,omitempty"`
-	Cbs  uint64 `protobuf:"varint,4,opt,name=cbs,proto3" json:"cbs,omitempty"`
-	Pbs  uint64 `protobuf:"varint,5,opt,name=pbs,proto3" json:"pbs,omitempty"`
-	Ebs  uint64 `protobuf:"varint,6,opt,name=ebs,proto3" json:"ebs,omitempty"`
+	Gate	uint64	`protobuf:"varint,1,opt,name=gate,proto3" json:"gate,omitempty"`
+	Cir	uint64	`protobuf:"varint,2,opt,name=cir,proto3" json:"cir,omitempty"`
+	Pir	uint64	`protobuf:"varint,3,opt,name=pir,proto3" json:"pir,omitempty"`
+	Cbs	uint64	`protobuf:"varint,4,opt,name=cbs,proto3" json:"cbs,omitempty"`
+	Pbs	uint64	`protobuf:"varint,5,opt,name=pbs,proto3" json:"pbs,omitempty"`
+	Ebs	uint64	`protobuf:"varint,6,opt,name=ebs,proto3" json:"ebs,omitempty"`
 	// Types that are assignable to OptionalDeductLen:
 	//	*QosCommandAddArg_DeductLen
-	OptionalDeductLen isQosCommandAddArg_OptionalDeductLen `protobuf_oneof:"optional_deduct_len"`
-	Fields            []*FieldData                         `protobuf:"bytes,7,rep,name=fields,proto3" json:"fields,omitempty"`
-	Values            []*FieldData                         `protobuf:"bytes,8,rep,name=values,proto3" json:"values,omitempty"`
+	OptionalDeductLen	isQosCommandAddArg_OptionalDeductLen	`protobuf_oneof:"optional_deduct_len"`
+	Fields			[]*FieldData				`protobuf:"bytes,7,rep,name=fields,proto3" json:"fields,omitempty"`
+	Values			[]*FieldData				`protobuf:"bytes,8,rep,name=values,proto3" json:"values,omitempty"`
 }
 
 func (x *QosCommandAddArg) Reset() {
@@ -6027,7 +6132,8 @@ func (x *QosCommandAddArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QosCommandAddArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*QosCommandAddArg) ProtoMessage()	{}
 
 func (x *QosCommandAddArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[103]
@@ -6124,14 +6230,14 @@ type QosCommandAddArg_DeductLen struct {
 	DeductLen int64 `protobuf:"varint,9,opt,name=deduct_len,json=deductLen,proto3,oneof"`
 }
 
-func (*QosCommandAddArg_DeductLen) isQosCommandAddArg_OptionalDeductLen() {}
+func (*QosCommandAddArg_DeductLen) isQosCommandAddArg_OptionalDeductLen()	{}
 
 type QosCommandDeleteArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Fields []*FieldData `protobuf:"bytes,2,rep,name=fields,proto3" json:"fields,omitempty"`
+	Fields	[]*FieldData	`protobuf:"bytes,2,rep,name=fields,proto3" json:"fields,omitempty"`
 }
 
 func (x *QosCommandDeleteArg) Reset() {
@@ -6147,7 +6253,8 @@ func (x *QosCommandDeleteArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QosCommandDeleteArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*QosCommandDeleteArg) ProtoMessage()	{}
 
 func (x *QosCommandDeleteArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[104]
@@ -6173,14 +6280,14 @@ func (x *QosCommandDeleteArg) GetFields() []*FieldData {
 	return nil
 }
 
-//*
+// *
 // The function `clear()` for WildcardMatch takes no parameters, it clears
 // all state in the WildcardMatch module (is equivalent to calling delete for
 // all rules)
 type QosCommandClearArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 }
 
 func (x *QosCommandClearArg) Reset() {
@@ -6196,7 +6303,8 @@ func (x *QosCommandClearArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QosCommandClearArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*QosCommandClearArg) ProtoMessage()	{}
 
 func (x *QosCommandClearArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[105]
@@ -6215,16 +6323,16 @@ func (*QosCommandClearArg) Descriptor() ([]byte, []int) {
 	return file_module_msg_proto_rawDescGZIP(), []int{105}
 }
 
-//*
+// *
 // For traffic which does not match any rule in the WildcardMatch module,
 // the `set_default_gate(...)` function specifies which gate to send this extra
 // traffic to.
 type QosCommandSetDefaultGateArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Gate uint64 `protobuf:"varint,1,opt,name=gate,proto3" json:"gate,omitempty"`
+	Gate	uint64	`protobuf:"varint,1,opt,name=gate,proto3" json:"gate,omitempty"`
 }
 
 func (x *QosCommandSetDefaultGateArg) Reset() {
@@ -6240,7 +6348,8 @@ func (x *QosCommandSetDefaultGateArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QosCommandSetDefaultGateArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*QosCommandSetDefaultGateArg) ProtoMessage()	{}
 
 func (x *QosCommandSetDefaultGateArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[106]
@@ -6267,13 +6376,13 @@ func (x *QosCommandSetDefaultGateArg) GetGate() uint64 {
 }
 
 type FlowMeasureArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	FlagAttrName string `protobuf:"bytes,1,opt,name=flag_attr_name,json=flagAttrName,proto3" json:"flag_attr_name,omitempty"`
-	Entries      uint64 `protobuf:"varint,2,opt,name=entries,proto3" json:"entries,omitempty"`
-	Leader       bool   `protobuf:"varint,3,opt,name=leader,proto3" json:"leader,omitempty"` // If true, this module will decide the buffer side
+	FlagAttrName	string	`protobuf:"bytes,1,opt,name=flag_attr_name,json=flagAttrName,proto3" json:"flag_attr_name,omitempty"`
+	Entries		uint64	`protobuf:"varint,2,opt,name=entries,proto3" json:"entries,omitempty"`
+	Leader		bool	`protobuf:"varint,3,opt,name=leader,proto3" json:"leader,omitempty"`	// If true, this module will decide the buffer side
 }
 
 func (x *FlowMeasureArg) Reset() {
@@ -6289,7 +6398,8 @@ func (x *FlowMeasureArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*FlowMeasureArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*FlowMeasureArg) ProtoMessage()	{}
 
 func (x *FlowMeasureArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[107]
@@ -6330,14 +6440,14 @@ func (x *FlowMeasureArg) GetLeader() bool {
 }
 
 type FlowMeasureCommandReadArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Clear              bool      `protobuf:"varint,1,opt,name=clear,proto3" json:"clear,omitempty"`                                                             // If true, the data will be all cleared after read
-	LatencyPercentiles []float64 `protobuf:"fixed64,2,rep,packed,name=latency_percentiles,json=latencyPercentiles,proto3" json:"latency_percentiles,omitempty"` /// ascending list of real numbers in [0.0, 100.0]
-	JitterPercentiles  []float64 `protobuf:"fixed64,3,rep,packed,name=jitter_percentiles,json=jitterPercentiles,proto3" json:"jitter_percentiles,omitempty"`    /// ascending list of real numbers in [0.0, 100.0]
-	FlagToRead         uint64    `protobuf:"varint,4,opt,name=flag_to_read,json=flagToRead,proto3" json:"flag_to_read,omitempty"`                               /// Which buffer to read from
+	Clear			bool		`protobuf:"varint,1,opt,name=clear,proto3" json:"clear,omitempty"`								// If true, the data will be all cleared after read
+	LatencyPercentiles	[]float64	`protobuf:"fixed64,2,rep,packed,name=latency_percentiles,json=latencyPercentiles,proto3" json:"latency_percentiles,omitempty"`	/// ascending list of real numbers in [0.0, 100.0]
+	JitterPercentiles	[]float64	`protobuf:"fixed64,3,rep,packed,name=jitter_percentiles,json=jitterPercentiles,proto3" json:"jitter_percentiles,omitempty"`	/// ascending list of real numbers in [0.0, 100.0]
+	FlagToRead		uint64		`protobuf:"varint,4,opt,name=flag_to_read,json=flagToRead,proto3" json:"flag_to_read,omitempty"`				/// Which buffer to read from
 }
 
 func (x *FlowMeasureCommandReadArg) Reset() {
@@ -6353,7 +6463,8 @@ func (x *FlowMeasureCommandReadArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*FlowMeasureCommandReadArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*FlowMeasureCommandReadArg) ProtoMessage()	{}
 
 func (x *FlowMeasureCommandReadArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[108]
@@ -6401,11 +6512,11 @@ func (x *FlowMeasureCommandReadArg) GetFlagToRead() uint64 {
 }
 
 type FlowMeasureReadResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Statistics []*FlowMeasureReadResponse_Statistic `protobuf:"bytes,1,rep,name=statistics,proto3" json:"statistics,omitempty"`
+	Statistics	[]*FlowMeasureReadResponse_Statistic	`protobuf:"bytes,1,rep,name=statistics,proto3" json:"statistics,omitempty"`
 }
 
 func (x *FlowMeasureReadResponse) Reset() {
@@ -6421,7 +6532,8 @@ func (x *FlowMeasureReadResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*FlowMeasureReadResponse) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*FlowMeasureReadResponse) ProtoMessage()	{}
 
 func (x *FlowMeasureReadResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[109]
@@ -6448,9 +6560,9 @@ func (x *FlowMeasureReadResponse) GetStatistics() []*FlowMeasureReadResponse_Sta
 }
 
 type FlowMeasureCommandFlipArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 }
 
 func (x *FlowMeasureCommandFlipArg) Reset() {
@@ -6466,7 +6578,8 @@ func (x *FlowMeasureCommandFlipArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*FlowMeasureCommandFlipArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*FlowMeasureCommandFlipArg) ProtoMessage()	{}
 
 func (x *FlowMeasureCommandFlipArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[110]
@@ -6486,11 +6599,11 @@ func (*FlowMeasureCommandFlipArg) Descriptor() ([]byte, []int) {
 }
 
 type FlowMeasureFlipResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	OldFlag uint64 `protobuf:"varint,1,opt,name=old_flag,json=oldFlag,proto3" json:"old_flag,omitempty"`
+	OldFlag	uint64	`protobuf:"varint,1,opt,name=old_flag,json=oldFlag,proto3" json:"old_flag,omitempty"`
 }
 
 func (x *FlowMeasureFlipResponse) Reset() {
@@ -6506,7 +6619,8 @@ func (x *FlowMeasureFlipResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*FlowMeasureFlipResponse) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*FlowMeasureFlipResponse) ProtoMessage()	{}
 
 func (x *FlowMeasureFlipResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[111]
@@ -6532,15 +6646,15 @@ func (x *FlowMeasureFlipResponse) GetOldFlag() uint64 {
 	return 0
 }
 
-//*
+// *
 // The GtpuPathMonitoring module has a command `add()` and `delete().
 // This command add or deletes an IP address from the GtpuPathMonitoring module.
 type GtpuPathMonitoringCommandAddDeleteArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	GnbIp uint32 `protobuf:"varint,1,opt,name=gnb_ip,json=gnbIp,proto3" json:"gnb_ip,omitempty"` // The destination/gNB IP address.
+	GnbIp	uint32	`protobuf:"varint,1,opt,name=gnb_ip,json=gnbIp,proto3" json:"gnb_ip,omitempty"`	// The destination/gNB IP address.
 }
 
 func (x *GtpuPathMonitoringCommandAddDeleteArg) Reset() {
@@ -6556,7 +6670,8 @@ func (x *GtpuPathMonitoringCommandAddDeleteArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GtpuPathMonitoringCommandAddDeleteArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*GtpuPathMonitoringCommandAddDeleteArg) ProtoMessage()	{}
 
 func (x *GtpuPathMonitoringCommandAddDeleteArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[112]
@@ -6582,13 +6697,13 @@ func (x *GtpuPathMonitoringCommandAddDeleteArg) GetGnbIp() uint32 {
 	return 0
 }
 
-//*
+// *
 // The GtpuPathMonitoring module has a command `clear()` which takes no parameters.
 // This command removes all IP addresses from the GtpuPathMonitoring module.
 type GtpuPathMonitoringCommandClearArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 }
 
 func (x *GtpuPathMonitoringCommandClearArg) Reset() {
@@ -6604,7 +6719,8 @@ func (x *GtpuPathMonitoringCommandClearArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GtpuPathMonitoringCommandClearArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*GtpuPathMonitoringCommandClearArg) ProtoMessage()	{}
 
 func (x *GtpuPathMonitoringCommandClearArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[113]
@@ -6623,16 +6739,16 @@ func (*GtpuPathMonitoringCommandClearArg) Descriptor() ([]byte, []int) {
 	return file_module_msg_proto_rawDescGZIP(), []int{113}
 }
 
-//*
+// *
 // The GtpuPathMonitoring module has a command `read()`.
 // This command requests to read the stats from the GtpuPathMonitoring module.
 // It can also clear the stats
 type GtpuPathMonitoringCommandReadArg struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Clear bool `protobuf:"varint,1,opt,name=clear,proto3" json:"clear,omitempty"` // If true, the data will be all cleared after read
+	Clear	bool	`protobuf:"varint,1,opt,name=clear,proto3" json:"clear,omitempty"`	// If true, the data will be all cleared after read
 }
 
 func (x *GtpuPathMonitoringCommandReadArg) Reset() {
@@ -6648,7 +6764,8 @@ func (x *GtpuPathMonitoringCommandReadArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GtpuPathMonitoringCommandReadArg) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*GtpuPathMonitoringCommandReadArg) ProtoMessage()	{}
 
 func (x *GtpuPathMonitoringCommandReadArg) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[114]
@@ -6674,15 +6791,15 @@ func (x *GtpuPathMonitoringCommandReadArg) GetClear() bool {
 	return false
 }
 
-//*
+// *
 // The GtpuPathMonitoring module has a command `readResponse()`.
 // This command reads the stats from the GtpuPathMonitoring module.
 type GtpuPathMonitoringCommandReadResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Statistics []*GtpuPathMonitoringCommandReadResponse_Statistic `protobuf:"bytes,1,rep,name=statistics,proto3" json:"statistics,omitempty"`
+	Statistics	[]*GtpuPathMonitoringCommandReadResponse_Statistic	`protobuf:"bytes,1,rep,name=statistics,proto3" json:"statistics,omitempty"`
 }
 
 func (x *GtpuPathMonitoringCommandReadResponse) Reset() {
@@ -6698,7 +6815,8 @@ func (x *GtpuPathMonitoringCommandReadResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GtpuPathMonitoringCommandReadResponse) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*GtpuPathMonitoringCommandReadResponse) ProtoMessage()	{}
 
 func (x *GtpuPathMonitoringCommandReadResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[115]
@@ -6725,12 +6843,12 @@ func (x *GtpuPathMonitoringCommandReadResponse) GetStatistics() []*GtpuPathMonit
 }
 
 type L2ForwardCommandAddArg_Entry struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Addr string `protobuf:"bytes,1,opt,name=addr,proto3" json:"addr,omitempty"`  /// The MAC address to match
-	Gate int64  `protobuf:"varint,2,opt,name=gate,proto3" json:"gate,omitempty"` /// Which gate to send out traffic matching this address.
+	Addr	string	`protobuf:"bytes,1,opt,name=addr,proto3" json:"addr,omitempty"`		/// The MAC address to match
+	Gate	int64	`protobuf:"varint,2,opt,name=gate,proto3" json:"gate,omitempty"`	/// Which gate to send out traffic matching this address.
 }
 
 func (x *L2ForwardCommandAddArg_Entry) Reset() {
@@ -6746,7 +6864,8 @@ func (x *L2ForwardCommandAddArg_Entry) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*L2ForwardCommandAddArg_Entry) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*L2ForwardCommandAddArg_Entry) ProtoMessage()	{}
 
 func (x *L2ForwardCommandAddArg_Entry) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[116]
@@ -6780,18 +6899,18 @@ func (x *L2ForwardCommandAddArg_Entry) GetGate() int64 {
 }
 
 type MeasureCommandGetSummaryResponse_Histogram struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Count              uint64   `protobuf:"varint,1,opt,name=count,proto3" json:"count,omitempty"`                                   /// Total # of measured data points, including above_range
-	AboveRange         uint64   `protobuf:"varint,2,opt,name=above_range,json=aboveRange,proto3" json:"above_range,omitempty"`       /// # of data points for the "too large value" bucket
-	ResolutionNs       uint64   `protobuf:"varint,8,opt,name=resolution_ns,json=resolutionNs,proto3" json:"resolution_ns,omitempty"` /// resolution of measured data
-	MinNs              uint64   `protobuf:"varint,3,opt,name=min_ns,json=minNs,proto3" json:"min_ns,omitempty"`
-	AvgNs              uint64   `protobuf:"varint,4,opt,name=avg_ns,json=avgNs,proto3" json:"avg_ns,omitempty"`
-	MaxNs              uint64   `protobuf:"varint,5,opt,name=max_ns,json=maxNs,proto3" json:"max_ns,omitempty"`
-	TotalNs            uint64   `protobuf:"varint,6,opt,name=total_ns,json=totalNs,proto3" json:"total_ns,omitempty"`
-	PercentileValuesNs []uint64 `protobuf:"varint,7,rep,packed,name=percentile_values_ns,json=percentileValuesNs,proto3" json:"percentile_values_ns,omitempty"`
+	Count			uint64		`protobuf:"varint,1,opt,name=count,proto3" json:"count,omitempty"`					/// Total # of measured data points, including above_range
+	AboveRange		uint64		`protobuf:"varint,2,opt,name=above_range,json=aboveRange,proto3" json:"above_range,omitempty"`		/// # of data points for the "too large value" bucket
+	ResolutionNs		uint64		`protobuf:"varint,8,opt,name=resolution_ns,json=resolutionNs,proto3" json:"resolution_ns,omitempty"`	/// resolution of measured data
+	MinNs			uint64		`protobuf:"varint,3,opt,name=min_ns,json=minNs,proto3" json:"min_ns,omitempty"`
+	AvgNs			uint64		`protobuf:"varint,4,opt,name=avg_ns,json=avgNs,proto3" json:"avg_ns,omitempty"`
+	MaxNs			uint64		`protobuf:"varint,5,opt,name=max_ns,json=maxNs,proto3" json:"max_ns,omitempty"`
+	TotalNs			uint64		`protobuf:"varint,6,opt,name=total_ns,json=totalNs,proto3" json:"total_ns,omitempty"`
+	PercentileValuesNs	[]uint64	`protobuf:"varint,7,rep,packed,name=percentile_values_ns,json=percentileValuesNs,proto3" json:"percentile_values_ns,omitempty"`
 }
 
 func (x *MeasureCommandGetSummaryResponse_Histogram) Reset() {
@@ -6807,7 +6926,8 @@ func (x *MeasureCommandGetSummaryResponse_Histogram) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MeasureCommandGetSummaryResponse_Histogram) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*MeasureCommandGetSummaryResponse_Histogram) ProtoMessage()	{}
 
 func (x *MeasureCommandGetSummaryResponse_Histogram) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[117]
@@ -6882,19 +7002,19 @@ func (x *MeasureCommandGetSummaryResponse_Histogram) GetPercentileValuesNs() []u
 	return nil
 }
 
-//*
+// *
 // One ACL rule is represented by the following 6-tuple.
 type ACLArg_Rule struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	SrcIp       string `protobuf:"bytes,1,opt,name=src_ip,json=srcIp,proto3" json:"src_ip,omitempty"`        /// Source IP block in CIDR. Wildcard if "".
-	DstIp       string `protobuf:"bytes,2,opt,name=dst_ip,json=dstIp,proto3" json:"dst_ip,omitempty"`        /// Destination IP block in CIDR. Wildcard if "".
-	SrcPort     uint32 `protobuf:"varint,3,opt,name=src_port,json=srcPort,proto3" json:"src_port,omitempty"` /// TCP/UDP source port. Wildcard if 0.
-	DstPort     uint32 `protobuf:"varint,4,opt,name=dst_port,json=dstPort,proto3" json:"dst_port,omitempty"` /// TCP/UDP Destination port. Wildcard if 0.
-	Established bool   `protobuf:"varint,5,opt,name=established,proto3" json:"established,omitempty"`        /// Not implemented
-	Drop        bool   `protobuf:"varint,6,opt,name=drop,proto3" json:"drop,omitempty"`                      /// Drop matched packets if true, forward if false. By default ACL drops all traffic.
+	SrcIp		string	`protobuf:"bytes,1,opt,name=src_ip,json=srcIp,proto3" json:"src_ip,omitempty"`		/// Source IP block in CIDR. Wildcard if "".
+	DstIp		string	`protobuf:"bytes,2,opt,name=dst_ip,json=dstIp,proto3" json:"dst_ip,omitempty"`		/// Destination IP block in CIDR. Wildcard if "".
+	SrcPort		uint32	`protobuf:"varint,3,opt,name=src_port,json=srcPort,proto3" json:"src_port,omitempty"`	/// TCP/UDP source port. Wildcard if 0.
+	DstPort		uint32	`protobuf:"varint,4,opt,name=dst_port,json=dstPort,proto3" json:"dst_port,omitempty"`	/// TCP/UDP Destination port. Wildcard if 0.
+	Established	bool	`protobuf:"varint,5,opt,name=established,proto3" json:"established,omitempty"`		/// Not implemented
+	Drop		bool	`protobuf:"varint,6,opt,name=drop,proto3" json:"drop,omitempty"`			/// Drop matched packets if true, forward if false. By default ACL drops all traffic.
 }
 
 func (x *ACLArg_Rule) Reset() {
@@ -6910,7 +7030,8 @@ func (x *ACLArg_Rule) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ACLArg_Rule) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*ACLArg_Rule) ProtoMessage()	{}
 
 func (x *ACLArg_Rule) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[118]
@@ -6971,16 +7092,16 @@ func (x *ACLArg_Rule) GetDrop() bool {
 	return false
 }
 
-//*
+// *
 // One BPF filter is represented by the following 3-tuple.
 type BPFArg_Filter struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Priority int64  `protobuf:"varint,1,opt,name=priority,proto3" json:"priority,omitempty"` /// The priority level for this rule. If a packet matches multiple rules, it will be forwarded out the gate with the highest priority. If a packet matches multiple rules with the same priority, the behavior is undefined.
-	Filter   string `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`      /// The actual BPF string.
-	Gate     int64  `protobuf:"varint,3,opt,name=gate,proto3" json:"gate,omitempty"`         ///What gate to forward packets that match this BPF to.
+	Priority	int64	`protobuf:"varint,1,opt,name=priority,proto3" json:"priority,omitempty"`	/// The priority level for this rule. If a packet matches multiple rules, it will be forwarded out the gate with the highest priority. If a packet matches multiple rules with the same priority, the behavior is undefined.
+	Filter		string	`protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`		/// The actual BPF string.
+	Gate		int64	`protobuf:"varint,3,opt,name=gate,proto3" json:"gate,omitempty"`		///What gate to forward packets that match this BPF to.
 }
 
 func (x *BPFArg_Filter) Reset() {
@@ -6996,7 +7117,8 @@ func (x *BPFArg_Filter) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BPFArg_Filter) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*BPFArg_Filter) ProtoMessage()	{}
 
 func (x *BPFArg_Filter) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[119]
@@ -7036,18 +7158,18 @@ func (x *BPFArg_Filter) GetGate() int64 {
 	return 0
 }
 
-//*
+// *
 // An EncapField represents one field in the new packet header.
 type GenericEncapArg_EncapField struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Size uint64 `protobuf:"varint,1,opt,name=size,proto3" json:"size,omitempty"` /// The length of the field.
+	Size	uint64	`protobuf:"varint,1,opt,name=size,proto3" json:"size,omitempty"`	/// The length of the field.
 	// Types that are assignable to Insertion:
 	//	*GenericEncapArg_EncapField_Attribute
 	//	*GenericEncapArg_EncapField_Value
-	Insertion isGenericEncapArg_EncapField_Insertion `protobuf_oneof:"insertion"`
+	Insertion	isGenericEncapArg_EncapField_Insertion	`protobuf_oneof:"insertion"`
 }
 
 func (x *GenericEncapArg_EncapField) Reset() {
@@ -7063,7 +7185,8 @@ func (x *GenericEncapArg_EncapField) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GenericEncapArg_EncapField) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*GenericEncapArg_EncapField) ProtoMessage()	{}
 
 func (x *GenericEncapArg_EncapField) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[120]
@@ -7115,25 +7238,25 @@ type isGenericEncapArg_EncapField_Insertion interface {
 }
 
 type GenericEncapArg_EncapField_Attribute struct {
-	Attribute string `protobuf:"bytes,2,opt,name=attribute,proto3,oneof"` /// The metadata attribute name to pull the field value from
+	Attribute string `protobuf:"bytes,2,opt,name=attribute,proto3,oneof"`	/// The metadata attribute name to pull the field value from
 }
 
 type GenericEncapArg_EncapField_Value struct {
-	Value *FieldData `protobuf:"bytes,3,opt,name=value,proto3,oneof"` /// Or, the fixed value to insert into the packet.
+	Value *FieldData `protobuf:"bytes,3,opt,name=value,proto3,oneof"`	/// Or, the fixed value to insert into the packet.
 }
 
-func (*GenericEncapArg_EncapField_Attribute) isGenericEncapArg_EncapField_Insertion() {}
+func (*GenericEncapArg_EncapField_Attribute) isGenericEncapArg_EncapField_Insertion()	{}
 
-func (*GenericEncapArg_EncapField_Value) isGenericEncapArg_EncapField_Insertion() {}
+func (*GenericEncapArg_EncapField_Value) isGenericEncapArg_EncapField_Insertion()	{}
 
 type NATArg_PortRange struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Begin     uint32 `protobuf:"varint,1,opt,name=begin,proto3" json:"begin,omitempty"`
-	End       uint32 `protobuf:"varint,2,opt,name=end,proto3" json:"end,omitempty"`
-	Suspended bool   `protobuf:"varint,3,opt,name=suspended,proto3" json:"suspended,omitempty"`
+	Begin		uint32	`protobuf:"varint,1,opt,name=begin,proto3" json:"begin,omitempty"`
+	End		uint32	`protobuf:"varint,2,opt,name=end,proto3" json:"end,omitempty"`
+	Suspended	bool	`protobuf:"varint,3,opt,name=suspended,proto3" json:"suspended,omitempty"`
 }
 
 func (x *NATArg_PortRange) Reset() {
@@ -7149,7 +7272,8 @@ func (x *NATArg_PortRange) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*NATArg_PortRange) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*NATArg_PortRange) ProtoMessage()	{}
 
 func (x *NATArg_PortRange) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[124]
@@ -7190,12 +7314,12 @@ func (x *NATArg_PortRange) GetSuspended() bool {
 }
 
 type NATArg_ExternalAddress struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	ExtAddr    string              `protobuf:"bytes,1,opt,name=ext_addr,json=extAddr,proto3" json:"ext_addr,omitempty"`
-	PortRanges []*NATArg_PortRange `protobuf:"bytes,2,rep,name=port_ranges,json=portRanges,proto3" json:"port_ranges,omitempty"`
+	ExtAddr		string			`protobuf:"bytes,1,opt,name=ext_addr,json=extAddr,proto3" json:"ext_addr,omitempty"`
+	PortRanges	[]*NATArg_PortRange	`protobuf:"bytes,2,rep,name=port_ranges,json=portRanges,proto3" json:"port_ranges,omitempty"`
 }
 
 func (x *NATArg_ExternalAddress) Reset() {
@@ -7211,7 +7335,8 @@ func (x *NATArg_ExternalAddress) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*NATArg_ExternalAddress) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*NATArg_ExternalAddress) ProtoMessage()	{}
 
 func (x *NATArg_ExternalAddress) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[125]
@@ -7245,12 +7370,12 @@ func (x *NATArg_ExternalAddress) GetPortRanges() []*NATArg_PortRange {
 }
 
 type StaticNATArg_AddressRange struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Start string `protobuf:"bytes,1,opt,name=start,proto3" json:"start,omitempty"` /// first IP address to use
-	End   string `protobuf:"bytes,2,opt,name=end,proto3" json:"end,omitempty"`     /// last IP address to use
+	Start	string	`protobuf:"bytes,1,opt,name=start,proto3" json:"start,omitempty"`	/// first IP address to use
+	End	string	`protobuf:"bytes,2,opt,name=end,proto3" json:"end,omitempty"`		/// last IP address to use
 }
 
 func (x *StaticNATArg_AddressRange) Reset() {
@@ -7266,7 +7391,8 @@ func (x *StaticNATArg_AddressRange) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*StaticNATArg_AddressRange) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*StaticNATArg_AddressRange) ProtoMessage()	{}
 
 func (x *StaticNATArg_AddressRange) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[126]
@@ -7300,12 +7426,12 @@ func (x *StaticNATArg_AddressRange) GetEnd() string {
 }
 
 type StaticNATArg_AddressRangePair struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	IntRange *StaticNATArg_AddressRange `protobuf:"bytes,1,opt,name=int_range,json=intRange,proto3" json:"int_range,omitempty"`
-	ExtRange *StaticNATArg_AddressRange `protobuf:"bytes,2,opt,name=ext_range,json=extRange,proto3" json:"ext_range,omitempty"` /// should be the same size as int_range
+	IntRange	*StaticNATArg_AddressRange	`protobuf:"bytes,1,opt,name=int_range,json=intRange,proto3" json:"int_range,omitempty"`
+	ExtRange	*StaticNATArg_AddressRange	`protobuf:"bytes,2,opt,name=ext_range,json=extRange,proto3" json:"ext_range,omitempty"`	/// should be the same size as int_range
 }
 
 func (x *StaticNATArg_AddressRangePair) Reset() {
@@ -7321,7 +7447,8 @@ func (x *StaticNATArg_AddressRangePair) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*StaticNATArg_AddressRangePair) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*StaticNATArg_AddressRangePair) ProtoMessage()	{}
 
 func (x *StaticNATArg_AddressRangePair) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[127]
@@ -7354,18 +7481,18 @@ func (x *StaticNATArg_AddressRangePair) GetExtRange() *StaticNATArg_AddressRange
 	return nil
 }
 
-//*
+// *
 // RandomUpdate's Field specifies where to rewrite, and what values to rewrite
 // in each packet processed.
 type RandomUpdateArg_Field struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Offset int64  `protobuf:"varint,1,opt,name=offset,proto3" json:"offset,omitempty"` /// Offset in bytes of where to rewrite.
-	Size   uint64 `protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`     /// The number of bytes to write.
-	Min    uint64 `protobuf:"varint,3,opt,name=min,proto3" json:"min,omitempty"`       /// The minimum value to insert into the packet.
-	Max    uint64 `protobuf:"varint,4,opt,name=max,proto3" json:"max,omitempty"`       /// The maximum value to insert into the packet.
+	Offset	int64	`protobuf:"varint,1,opt,name=offset,proto3" json:"offset,omitempty"`	/// Offset in bytes of where to rewrite.
+	Size	uint64	`protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`	/// The number of bytes to write.
+	Min	uint64	`protobuf:"varint,3,opt,name=min,proto3" json:"min,omitempty"`		/// The minimum value to insert into the packet.
+	Max	uint64	`protobuf:"varint,4,opt,name=max,proto3" json:"max,omitempty"`		/// The maximum value to insert into the packet.
 }
 
 func (x *RandomUpdateArg_Field) Reset() {
@@ -7381,7 +7508,8 @@ func (x *RandomUpdateArg_Field) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RandomUpdateArg_Field) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*RandomUpdateArg_Field) ProtoMessage()	{}
 
 func (x *RandomUpdateArg_Field) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[128]
@@ -7428,25 +7556,25 @@ func (x *RandomUpdateArg_Field) GetMax() uint64 {
 	return 0
 }
 
-//*
+// *
 // SetMetadata Attribute describes a metadata attribute and value to attach to
 // every packet. If copying data from a packet buffer, SetMetadata can also
 // logically shift then mask the value before storing it as metadata, i.e.,
 // metadata_value = (packet_value >> `rshift_bits`) & `mask`.
 type SetMetadataArg_Attribute struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`  /// The metadata attribute name.
-	Size uint64 `protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"` /// The size of values stored in this attribute in bytes.
+	Name	string	`protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`		/// The metadata attribute name.
+	Size	uint64	`protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`	/// The size of values stored in this attribute in bytes.
 	// Types that are assignable to Value:
 	//	*SetMetadataArg_Attribute_ValueInt
 	//	*SetMetadataArg_Attribute_ValueBin
-	Value      isSetMetadataArg_Attribute_Value `protobuf_oneof:"value"`
-	Offset     int32                            `protobuf:"varint,5,opt,name=offset,proto3" json:"offset,omitempty"`                           /// An index in the packet data to store copy into the metadata attribute.
-	Mask       []byte                           `protobuf:"bytes,6,opt,name=mask,proto3" json:"mask,omitempty"`                                /// An array of bit masks to apply to each of the bytes copied starting from `offset`. If empty, the mask `[0xFF,....,0xFF]` will be used.
-	RshiftBits int32                            `protobuf:"varint,7,opt,name=rshift_bits,json=rshiftBits,proto3" json:"rshift_bits,omitempty"` /// The number of bits to shift the value at `offset` by before masking. Must be a multiple of 8. Positive and negative values represent right and left shifts respectively.
+	Value		isSetMetadataArg_Attribute_Value	`protobuf_oneof:"value"`
+	Offset		int32					`protobuf:"varint,5,opt,name=offset,proto3" json:"offset,omitempty"`				/// An index in the packet data to store copy into the metadata attribute.
+	Mask		[]byte					`protobuf:"bytes,6,opt,name=mask,proto3" json:"mask,omitempty"`					/// An array of bit masks to apply to each of the bytes copied starting from `offset`. If empty, the mask `[0xFF,....,0xFF]` will be used.
+	RshiftBits	int32					`protobuf:"varint,7,opt,name=rshift_bits,json=rshiftBits,proto3" json:"rshift_bits,omitempty"`	/// The number of bits to shift the value at `offset` by before masking. Must be a multiple of 8. Positive and negative values represent right and left shifts respectively.
 }
 
 func (x *SetMetadataArg_Attribute) Reset() {
@@ -7462,7 +7590,8 @@ func (x *SetMetadataArg_Attribute) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SetMetadataArg_Attribute) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*SetMetadataArg_Attribute) ProtoMessage()	{}
 
 func (x *SetMetadataArg_Attribute) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[129]
@@ -7542,28 +7671,28 @@ type isSetMetadataArg_Attribute_Value interface {
 }
 
 type SetMetadataArg_Attribute_ValueInt struct {
-	ValueInt uint64 `protobuf:"varint,3,opt,name=value_int,json=valueInt,proto3,oneof"` /// An integer value to store in the packet (host-order).
+	ValueInt uint64 `protobuf:"varint,3,opt,name=value_int,json=valueInt,proto3,oneof"`	/// An integer value to store in the packet (host-order).
 }
 
 type SetMetadataArg_Attribute_ValueBin struct {
-	ValueBin []byte `protobuf:"bytes,4,opt,name=value_bin,json=valueBin,proto3,oneof"` /// A binary value to store in the packet (host-order).
+	ValueBin []byte `protobuf:"bytes,4,opt,name=value_bin,json=valueBin,proto3,oneof"`	/// A binary value to store in the packet (host-order).
 }
 
-func (*SetMetadataArg_Attribute_ValueInt) isSetMetadataArg_Attribute_Value() {}
+func (*SetMetadataArg_Attribute_ValueInt) isSetMetadataArg_Attribute_Value()	{}
 
-func (*SetMetadataArg_Attribute_ValueBin) isSetMetadataArg_Attribute_Value() {}
+func (*SetMetadataArg_Attribute_ValueBin) isSetMetadataArg_Attribute_Value()	{}
 
-//*
+// *
 // Update Field describes where in a packet's data to rewrite, and with what
 // value.
 type UpdateArg_Field struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Offset int64  `protobuf:"varint,1,opt,name=offset,proto3" json:"offset,omitempty"` /// The offset in the packet in bytes to rewrite at.
-	Size   uint64 `protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`     /// The number of bytes to rewrite (max 8 bytes).
-	Value  uint64 `protobuf:"varint,3,opt,name=value,proto3" json:"value,omitempty"`   /// The value to write into the packet, max 8 bytes.
+	Offset	int64	`protobuf:"varint,1,opt,name=offset,proto3" json:"offset,omitempty"`	/// The offset in the packet in bytes to rewrite at.
+	Size	uint64	`protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`	/// The number of bytes to rewrite (max 8 bytes).
+	Value	uint64	`protobuf:"varint,3,opt,name=value,proto3" json:"value,omitempty"`	/// The value to write into the packet, max 8 bytes.
 }
 
 func (x *UpdateArg_Field) Reset() {
@@ -7579,7 +7708,8 @@ func (x *UpdateArg_Field) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateArg_Field) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*UpdateArg_Field) ProtoMessage()	{}
 
 func (x *UpdateArg_Field) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[130]
@@ -7619,15 +7749,15 @@ func (x *UpdateArg_Field) GetValue() uint64 {
 	return 0
 }
 
-//*
+// *
 // A URL consists of a host and a path.
 type UrlFilterArg_Url struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Host string `protobuf:"bytes,1,opt,name=host,proto3" json:"host,omitempty"` /// Host field, e.g. "www.google.com"
-	Path string `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"` /// Path prefix, e.g. "/"
+	Host	string	`protobuf:"bytes,1,opt,name=host,proto3" json:"host,omitempty"`	/// Host field, e.g. "www.google.com"
+	Path	string	`protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`	/// Path prefix, e.g. "/"
 }
 
 func (x *UrlFilterArg_Url) Reset() {
@@ -7643,7 +7773,8 @@ func (x *UrlFilterArg_Url) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UrlFilterArg_Url) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*UrlFilterArg_Url) ProtoMessage()	{}
 
 func (x *UrlFilterArg_Url) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[131]
@@ -7677,16 +7808,16 @@ func (x *UrlFilterArg_Url) GetPath() string {
 }
 
 type FlowMeasureReadResponse_Statistic struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Fseid        uint64                                       `protobuf:"varint,1,opt,name=fseid,proto3" json:"fseid,omitempty"`
-	Pdr          uint64                                       `protobuf:"varint,2,opt,name=pdr,proto3" json:"pdr,omitempty"`
-	Latency      *FlowMeasureReadResponse_Statistic_Histogram `protobuf:"bytes,3,opt,name=latency,proto3" json:"latency,omitempty"`
-	Jitter       *FlowMeasureReadResponse_Statistic_Histogram `protobuf:"bytes,4,opt,name=jitter,proto3" json:"jitter,omitempty"`
-	TotalBytes   uint64                                       `protobuf:"varint,11,opt,name=total_bytes,json=totalBytes,proto3" json:"total_bytes,omitempty"`
-	TotalPackets uint64                                       `protobuf:"varint,12,opt,name=total_packets,json=totalPackets,proto3" json:"total_packets,omitempty"`
+	Fseid		uint64						`protobuf:"varint,1,opt,name=fseid,proto3" json:"fseid,omitempty"`
+	Pdr		uint64						`protobuf:"varint,2,opt,name=pdr,proto3" json:"pdr,omitempty"`
+	Latency		*FlowMeasureReadResponse_Statistic_Histogram	`protobuf:"bytes,3,opt,name=latency,proto3" json:"latency,omitempty"`
+	Jitter		*FlowMeasureReadResponse_Statistic_Histogram	`protobuf:"bytes,4,opt,name=jitter,proto3" json:"jitter,omitempty"`
+	TotalBytes	uint64						`protobuf:"varint,11,opt,name=total_bytes,json=totalBytes,proto3" json:"total_bytes,omitempty"`
+	TotalPackets	uint64						`protobuf:"varint,12,opt,name=total_packets,json=totalPackets,proto3" json:"total_packets,omitempty"`
 }
 
 func (x *FlowMeasureReadResponse_Statistic) Reset() {
@@ -7702,7 +7833,8 @@ func (x *FlowMeasureReadResponse_Statistic) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*FlowMeasureReadResponse_Statistic) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*FlowMeasureReadResponse_Statistic) ProtoMessage()	{}
 
 func (x *FlowMeasureReadResponse_Statistic) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[133]
@@ -7764,18 +7896,18 @@ func (x *FlowMeasureReadResponse_Statistic) GetTotalPackets() uint64 {
 }
 
 type FlowMeasureReadResponse_Statistic_Histogram struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	Count              uint64   `protobuf:"varint,1,opt,name=count,proto3" json:"count,omitempty"`                                   /// Total # of measured data points, including above_range
-	AboveRange         uint64   `protobuf:"varint,2,opt,name=above_range,json=aboveRange,proto3" json:"above_range,omitempty"`       /// # of data points for the "too large value" bucket
-	ResolutionNs       uint64   `protobuf:"varint,8,opt,name=resolution_ns,json=resolutionNs,proto3" json:"resolution_ns,omitempty"` /// resolution of measured data
-	MinNs              uint64   `protobuf:"varint,3,opt,name=min_ns,json=minNs,proto3" json:"min_ns,omitempty"`
-	AvgNs              uint64   `protobuf:"varint,4,opt,name=avg_ns,json=avgNs,proto3" json:"avg_ns,omitempty"`
-	MaxNs              uint64   `protobuf:"varint,5,opt,name=max_ns,json=maxNs,proto3" json:"max_ns,omitempty"`
-	TotalNs            uint64   `protobuf:"varint,6,opt,name=total_ns,json=totalNs,proto3" json:"total_ns,omitempty"`
-	PercentileValuesNs []uint64 `protobuf:"varint,7,rep,packed,name=percentile_values_ns,json=percentileValuesNs,proto3" json:"percentile_values_ns,omitempty"`
+	Count			uint64		`protobuf:"varint,1,opt,name=count,proto3" json:"count,omitempty"`					/// Total # of measured data points, including above_range
+	AboveRange		uint64		`protobuf:"varint,2,opt,name=above_range,json=aboveRange,proto3" json:"above_range,omitempty"`		/// # of data points for the "too large value" bucket
+	ResolutionNs		uint64		`protobuf:"varint,8,opt,name=resolution_ns,json=resolutionNs,proto3" json:"resolution_ns,omitempty"`	/// resolution of measured data
+	MinNs			uint64		`protobuf:"varint,3,opt,name=min_ns,json=minNs,proto3" json:"min_ns,omitempty"`
+	AvgNs			uint64		`protobuf:"varint,4,opt,name=avg_ns,json=avgNs,proto3" json:"avg_ns,omitempty"`
+	MaxNs			uint64		`protobuf:"varint,5,opt,name=max_ns,json=maxNs,proto3" json:"max_ns,omitempty"`
+	TotalNs			uint64		`protobuf:"varint,6,opt,name=total_ns,json=totalNs,proto3" json:"total_ns,omitempty"`
+	PercentileValuesNs	[]uint64	`protobuf:"varint,7,rep,packed,name=percentile_values_ns,json=percentileValuesNs,proto3" json:"percentile_values_ns,omitempty"`
 }
 
 func (x *FlowMeasureReadResponse_Statistic_Histogram) Reset() {
@@ -7791,7 +7923,8 @@ func (x *FlowMeasureReadResponse_Statistic_Histogram) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*FlowMeasureReadResponse_Statistic_Histogram) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*FlowMeasureReadResponse_Statistic_Histogram) ProtoMessage()	{}
 
 func (x *FlowMeasureReadResponse_Statistic_Histogram) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[134]
@@ -7867,15 +8000,15 @@ func (x *FlowMeasureReadResponse_Statistic_Histogram) GetPercentileValuesNs() []
 }
 
 type GtpuPathMonitoringCommandReadResponse_Statistic struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+	state		protoimpl.MessageState
+	sizeCache	protoimpl.SizeCache
+	unknownFields	protoimpl.UnknownFields
 
-	GnbIp       uint32 `protobuf:"varint,1,opt,name=gnb_ip,json=gnbIp,proto3" json:"gnb_ip,omitempty"`                   /// gNB IP
-	Count       uint64 `protobuf:"varint,2,opt,name=count,proto3" json:"count,omitempty"`                                /// count
-	LatencyMin  uint64 `protobuf:"varint,3,opt,name=latency_min,json=latencyMin,proto3" json:"latency_min,omitempty"`    /// minimum latency
-	LatencyMean uint64 `protobuf:"varint,4,opt,name=latency_mean,json=latencyMean,proto3" json:"latency_mean,omitempty"` /// average latency
-	LatencyMax  uint64 `protobuf:"varint,5,opt,name=latency_max,json=latencyMax,proto3" json:"latency_max,omitempty"`    /// maximum latency
+	GnbIp		uint32	`protobuf:"varint,1,opt,name=gnb_ip,json=gnbIp,proto3" json:"gnb_ip,omitempty"`				/// gNB IP
+	Count		uint64	`protobuf:"varint,2,opt,name=count,proto3" json:"count,omitempty"`					/// count
+	LatencyMin	uint64	`protobuf:"varint,3,opt,name=latency_min,json=latencyMin,proto3" json:"latency_min,omitempty"`		/// minimum latency
+	LatencyMean	uint64	`protobuf:"varint,4,opt,name=latency_mean,json=latencyMean,proto3" json:"latency_mean,omitempty"`	/// average latency
+	LatencyMax	uint64	`protobuf:"varint,5,opt,name=latency_max,json=latencyMax,proto3" json:"latency_max,omitempty"`		/// maximum latency
 }
 
 func (x *GtpuPathMonitoringCommandReadResponse_Statistic) Reset() {
@@ -7891,7 +8024,8 @@ func (x *GtpuPathMonitoringCommandReadResponse_Statistic) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GtpuPathMonitoringCommandReadResponse_Statistic) ProtoMessage() {}
+// NOSONAR: Empty protobuf generated method
+func (*GtpuPathMonitoringCommandReadResponse_Statistic) ProtoMessage()	{}
 
 func (x *GtpuPathMonitoringCommandReadResponse_Statistic) ProtoReflect() protoreflect.Message {
 	mi := &file_module_msg_proto_msgTypes[135]
@@ -8642,8 +8776,8 @@ var file_module_msg_proto_rawDesc = []byte{
 }
 
 var (
-	file_module_msg_proto_rawDescOnce sync.Once
-	file_module_msg_proto_rawDescData = file_module_msg_proto_rawDesc
+	file_module_msg_proto_rawDescOnce	sync.Once
+	file_module_msg_proto_rawDescData	= file_module_msg_proto_rawDesc
 )
 
 func file_module_msg_proto_rawDescGZIP() []byte {
@@ -8655,202 +8789,202 @@ func file_module_msg_proto_rawDescGZIP() []byte {
 
 var file_module_msg_proto_msgTypes = make([]protoimpl.MessageInfo, 136)
 var file_module_msg_proto_goTypes = []interface{}{
-	(*EmptyArg)(nil),                                        // 0: bess.pb.EmptyArg
-	(*BPFCommandClearArg)(nil),                              // 1: bess.pb.BPFCommandClearArg
-	(*ExactMatchCommandAddArg)(nil),                         // 2: bess.pb.ExactMatchCommandAddArg
-	(*ExactMatchCommandDeleteArg)(nil),                      // 3: bess.pb.ExactMatchCommandDeleteArg
-	(*ExactMatchCommandClearArg)(nil),                       // 4: bess.pb.ExactMatchCommandClearArg
-	(*ExactMatchCommandSetDefaultGateArg)(nil),              // 5: bess.pb.ExactMatchCommandSetDefaultGateArg
-	(*FlowGenCommandSetBurstArg)(nil),                       // 6: bess.pb.FlowGenCommandSetBurstArg
-	(*HashLBCommandSetModeArg)(nil),                         // 7: bess.pb.HashLBCommandSetModeArg
-	(*HashLBCommandSetGatesArg)(nil),                        // 8: bess.pb.HashLBCommandSetGatesArg
-	(*IPLookupCommandAddArg)(nil),                           // 9: bess.pb.IPLookupCommandAddArg
-	(*IPLookupCommandDeleteArg)(nil),                        // 10: bess.pb.IPLookupCommandDeleteArg
-	(*IPLookupCommandClearArg)(nil),                         // 11: bess.pb.IPLookupCommandClearArg
-	(*L2ForwardCommandAddArg)(nil),                          // 12: bess.pb.L2ForwardCommandAddArg
-	(*L2ForwardCommandDeleteArg)(nil),                       // 13: bess.pb.L2ForwardCommandDeleteArg
-	(*L2ForwardCommandSetDefaultGateArg)(nil),               // 14: bess.pb.L2ForwardCommandSetDefaultGateArg
-	(*L2ForwardCommandLookupArg)(nil),                       // 15: bess.pb.L2ForwardCommandLookupArg
-	(*L2ForwardCommandLookupResponse)(nil),                  // 16: bess.pb.L2ForwardCommandLookupResponse
-	(*L2ForwardCommandPopulateArg)(nil),                     // 17: bess.pb.L2ForwardCommandPopulateArg
-	(*MeasureCommandGetSummaryArg)(nil),                     // 18: bess.pb.MeasureCommandGetSummaryArg
-	(*MeasureCommandGetSummaryResponse)(nil),                // 19: bess.pb.MeasureCommandGetSummaryResponse
-	(*DRRArg)(nil),                                          // 20: bess.pb.DRRArg
-	(*DRRQuantumArg)(nil),                                   // 21: bess.pb.DRRQuantumArg
-	(*DRRMaxFlowQueueSizeArg)(nil),                          // 22: bess.pb.DRRMaxFlowQueueSizeArg
-	(*PortIncCommandSetBurstArg)(nil),                       // 23: bess.pb.PortIncCommandSetBurstArg
-	(*QueueIncCommandSetBurstArg)(nil),                      // 24: bess.pb.QueueIncCommandSetBurstArg
-	(*QueueCommandSetBurstArg)(nil),                         // 25: bess.pb.QueueCommandSetBurstArg
-	(*QueueCommandSetSizeArg)(nil),                          // 26: bess.pb.QueueCommandSetSizeArg
-	(*QueueCommandGetStatusArg)(nil),                        // 27: bess.pb.QueueCommandGetStatusArg
-	(*QueueCommandGetStatusResponse)(nil),                   // 28: bess.pb.QueueCommandGetStatusResponse
-	(*RandomUpdateCommandClearArg)(nil),                     // 29: bess.pb.RandomUpdateCommandClearArg
-	(*RewriteCommandClearArg)(nil),                          // 30: bess.pb.RewriteCommandClearArg
-	(*UpdateCommandClearArg)(nil),                           // 31: bess.pb.UpdateCommandClearArg
-	(*WildcardMatchCommandAddArg)(nil),                      // 32: bess.pb.WildcardMatchCommandAddArg
-	(*WildcardMatchCommandDeleteArg)(nil),                   // 33: bess.pb.WildcardMatchCommandDeleteArg
-	(*WildcardMatchCommandClearArg)(nil),                    // 34: bess.pb.WildcardMatchCommandClearArg
-	(*WildcardMatchCommandSetDefaultGateArg)(nil),           // 35: bess.pb.WildcardMatchCommandSetDefaultGateArg
-	(*ACLArg)(nil),                                          // 36: bess.pb.ACLArg
-	(*BPFArg)(nil),                                          // 37: bess.pb.BPFArg
-	(*BufferArg)(nil),                                       // 38: bess.pb.BufferArg
-	(*BypassArg)(nil),                                       // 39: bess.pb.BypassArg
-	(*DumpArg)(nil),                                         // 40: bess.pb.DumpArg
-	(*EtherEncapArg)(nil),                                   // 41: bess.pb.EtherEncapArg
-	(*ExactMatchArg)(nil),                                   // 42: bess.pb.ExactMatchArg
-	(*ExactMatchConfig)(nil),                                // 43: bess.pb.ExactMatchConfig
-	(*FlowGenArg)(nil),                                      // 44: bess.pb.FlowGenArg
-	(*GenericDecapArg)(nil),                                 // 45: bess.pb.GenericDecapArg
-	(*GenericEncapArg)(nil),                                 // 46: bess.pb.GenericEncapArg
-	(*HashLBArg)(nil),                                       // 47: bess.pb.HashLBArg
-	(*IPEncapArg)(nil),                                      // 48: bess.pb.IPEncapArg
-	(*IPLookupArg)(nil),                                     // 49: bess.pb.IPLookupArg
-	(*L2ForwardArg)(nil),                                    // 50: bess.pb.L2ForwardArg
-	(*MACSwapArg)(nil),                                      // 51: bess.pb.MACSwapArg
-	(*MeasureArg)(nil),                                      // 52: bess.pb.MeasureArg
-	(*MergeArg)(nil),                                        // 53: bess.pb.MergeArg
-	(*MetadataTestArg)(nil),                                 // 54: bess.pb.MetadataTestArg
-	(*NATArg)(nil),                                          // 55: bess.pb.NATArg
-	(*StaticNATArg)(nil),                                    // 56: bess.pb.StaticNATArg
-	(*NoOpArg)(nil),                                         // 57: bess.pb.NoOpArg
-	(*PortIncArg)(nil),                                      // 58: bess.pb.PortIncArg
-	(*PortOutArg)(nil),                                      // 59: bess.pb.PortOutArg
-	(*QueueIncArg)(nil),                                     // 60: bess.pb.QueueIncArg
-	(*QueueOutArg)(nil),                                     // 61: bess.pb.QueueOutArg
-	(*QueueArg)(nil),                                        // 62: bess.pb.QueueArg
-	(*RandomSplitArg)(nil),                                  // 63: bess.pb.RandomSplitArg
-	(*RandomSplitCommandSetDroprateArg)(nil),                // 64: bess.pb.RandomSplitCommandSetDroprateArg
-	(*RandomSplitCommandSetGatesArg)(nil),                   // 65: bess.pb.RandomSplitCommandSetGatesArg
-	(*RandomUpdateArg)(nil),                                 // 66: bess.pb.RandomUpdateArg
-	(*RewriteArg)(nil),                                      // 67: bess.pb.RewriteArg
-	(*RoundRobinCommandSetGatesArg)(nil),                    // 68: bess.pb.RoundRobinCommandSetGatesArg
-	(*RoundRobinCommandSetModeArg)(nil),                     // 69: bess.pb.RoundRobinCommandSetModeArg
-	(*RoundRobinArg)(nil),                                   // 70: bess.pb.RoundRobinArg
-	(*ReplicateArg)(nil),                                    // 71: bess.pb.ReplicateArg
-	(*ReplicateCommandSetGatesArg)(nil),                     // 72: bess.pb.ReplicateCommandSetGatesArg
-	(*SetMetadataArg)(nil),                                  // 73: bess.pb.SetMetadataArg
-	(*SinkArg)(nil),                                         // 74: bess.pb.SinkArg
-	(*SourceCommandSetBurstArg)(nil),                        // 75: bess.pb.SourceCommandSetBurstArg
-	(*SourceCommandSetPktSizeArg)(nil),                      // 76: bess.pb.SourceCommandSetPktSizeArg
-	(*SourceArg)(nil),                                       // 77: bess.pb.SourceArg
-	(*IPChecksumArg)(nil),                                   // 78: bess.pb.IPChecksumArg
-	(*L4ChecksumArg)(nil),                                   // 79: bess.pb.L4ChecksumArg
-	(*GtpuEchoArg)(nil),                                     // 80: bess.pb.GtpuEchoArg
-	(*IPDefragArg)(nil),                                     // 81: bess.pb.IPDefragArg
-	(*IPFragArg)(nil),                                       // 82: bess.pb.IPFragArg
-	(*CounterAddArg)(nil),                                   // 83: bess.pb.CounterAddArg
-	(*CounterRemoveArg)(nil),                                // 84: bess.pb.CounterRemoveArg
-	(*CounterArg)(nil),                                      // 85: bess.pb.CounterArg
-	(*GtpuEncapArg)(nil),                                    // 86: bess.pb.GtpuEncapArg
-	(*SplitArg)(nil),                                        // 87: bess.pb.SplitArg
-	(*TimestampArg)(nil),                                    // 88: bess.pb.TimestampArg
-	(*UpdateArg)(nil),                                       // 89: bess.pb.UpdateArg
-	(*UrlFilterArg)(nil),                                    // 90: bess.pb.UrlFilterArg
-	(*UrlFilterConfig)(nil),                                 // 91: bess.pb.UrlFilterConfig
-	(*VLANPopArg)(nil),                                      // 92: bess.pb.VLANPopArg
-	(*VLANPushArg)(nil),                                     // 93: bess.pb.VLANPushArg
-	(*VLANSplitArg)(nil),                                    // 94: bess.pb.VLANSplitArg
-	(*VXLANDecapArg)(nil),                                   // 95: bess.pb.VXLANDecapArg
-	(*VXLANEncapArg)(nil),                                   // 96: bess.pb.VXLANEncapArg
-	(*WildcardMatchArg)(nil),                                // 97: bess.pb.WildcardMatchArg
-	(*WildcardMatchConfig)(nil),                             // 98: bess.pb.WildcardMatchConfig
-	(*ArpResponderArg)(nil),                                 // 99: bess.pb.ArpResponderArg
-	(*MplsPopArg)(nil),                                      // 100: bess.pb.MplsPopArg
-	(*WorkerSplitArg)(nil),                                  // 101: bess.pb.WorkerSplitArg
-	(*QosArg)(nil),                                          // 102: bess.pb.QosArg
-	(*QosCommandAddArg)(nil),                                // 103: bess.pb.QosCommandAddArg
-	(*QosCommandDeleteArg)(nil),                             // 104: bess.pb.QosCommandDeleteArg
-	(*QosCommandClearArg)(nil),                              // 105: bess.pb.QosCommandClearArg
-	(*QosCommandSetDefaultGateArg)(nil),                     // 106: bess.pb.QosCommandSetDefaultGateArg
-	(*FlowMeasureArg)(nil),                                  // 107: bess.pb.FlowMeasureArg
-	(*FlowMeasureCommandReadArg)(nil),                       // 108: bess.pb.FlowMeasureCommandReadArg
-	(*FlowMeasureReadResponse)(nil),                         // 109: bess.pb.FlowMeasureReadResponse
-	(*FlowMeasureCommandFlipArg)(nil),                       // 110: bess.pb.FlowMeasureCommandFlipArg
-	(*FlowMeasureFlipResponse)(nil),                         // 111: bess.pb.FlowMeasureFlipResponse
-	(*GtpuPathMonitoringCommandAddDeleteArg)(nil),           // 112: bess.pb.GtpuPathMonitoringCommandAddDeleteArg
-	(*GtpuPathMonitoringCommandClearArg)(nil),               // 113: bess.pb.GtpuPathMonitoringCommandClearArg
-	(*GtpuPathMonitoringCommandReadArg)(nil),                // 114: bess.pb.GtpuPathMonitoringCommandReadArg
-	(*GtpuPathMonitoringCommandReadResponse)(nil),           // 115: bess.pb.GtpuPathMonitoringCommandReadResponse
-	(*L2ForwardCommandAddArg_Entry)(nil),                    // 116: bess.pb.L2ForwardCommandAddArg.Entry
-	(*MeasureCommandGetSummaryResponse_Histogram)(nil),      // 117: bess.pb.MeasureCommandGetSummaryResponse.Histogram
-	(*ACLArg_Rule)(nil),                                     // 118: bess.pb.ACLArg.Rule
-	(*BPFArg_Filter)(nil),                                   // 119: bess.pb.BPFArg.Filter
-	(*GenericEncapArg_EncapField)(nil),                      // 120: bess.pb.GenericEncapArg.EncapField
-	nil,                                                     // 121: bess.pb.MetadataTestArg.ReadEntry
-	nil,                                                     // 122: bess.pb.MetadataTestArg.WriteEntry
-	nil,                                                     // 123: bess.pb.MetadataTestArg.UpdateEntry
-	(*NATArg_PortRange)(nil),                                // 124: bess.pb.NATArg.PortRange
-	(*NATArg_ExternalAddress)(nil),                          // 125: bess.pb.NATArg.ExternalAddress
-	(*StaticNATArg_AddressRange)(nil),                       // 126: bess.pb.StaticNATArg.AddressRange
-	(*StaticNATArg_AddressRangePair)(nil),                   // 127: bess.pb.StaticNATArg.AddressRangePair
-	(*RandomUpdateArg_Field)(nil),                           // 128: bess.pb.RandomUpdateArg.Field
-	(*SetMetadataArg_Attribute)(nil),                        // 129: bess.pb.SetMetadataArg.Attribute
-	(*UpdateArg_Field)(nil),                                 // 130: bess.pb.UpdateArg.Field
-	(*UrlFilterArg_Url)(nil),                                // 131: bess.pb.UrlFilterArg.Url
-	nil,                                                     // 132: bess.pb.WorkerSplitArg.WorkerGatesEntry
-	(*FlowMeasureReadResponse_Statistic)(nil),               // 133: bess.pb.FlowMeasureReadResponse.Statistic
-	(*FlowMeasureReadResponse_Statistic_Histogram)(nil),     // 134: bess.pb.FlowMeasureReadResponse.Statistic.Histogram
-	(*GtpuPathMonitoringCommandReadResponse_Statistic)(nil), // 135: bess.pb.GtpuPathMonitoringCommandReadResponse.Statistic
-	(*FieldData)(nil),                                       // 136: bess.pb.FieldData
-	(*Field)(nil),                                           // 137: bess.pb.Field
+	(*EmptyArg)(nil),						// 0: bess.pb.EmptyArg
+	(*BPFCommandClearArg)(nil),					// 1: bess.pb.BPFCommandClearArg
+	(*ExactMatchCommandAddArg)(nil),				// 2: bess.pb.ExactMatchCommandAddArg
+	(*ExactMatchCommandDeleteArg)(nil),				// 3: bess.pb.ExactMatchCommandDeleteArg
+	(*ExactMatchCommandClearArg)(nil),				// 4: bess.pb.ExactMatchCommandClearArg
+	(*ExactMatchCommandSetDefaultGateArg)(nil),			// 5: bess.pb.ExactMatchCommandSetDefaultGateArg
+	(*FlowGenCommandSetBurstArg)(nil),				// 6: bess.pb.FlowGenCommandSetBurstArg
+	(*HashLBCommandSetModeArg)(nil),				// 7: bess.pb.HashLBCommandSetModeArg
+	(*HashLBCommandSetGatesArg)(nil),				// 8: bess.pb.HashLBCommandSetGatesArg
+	(*IPLookupCommandAddArg)(nil),					// 9: bess.pb.IPLookupCommandAddArg
+	(*IPLookupCommandDeleteArg)(nil),				// 10: bess.pb.IPLookupCommandDeleteArg
+	(*IPLookupCommandClearArg)(nil),				// 11: bess.pb.IPLookupCommandClearArg
+	(*L2ForwardCommandAddArg)(nil),					// 12: bess.pb.L2ForwardCommandAddArg
+	(*L2ForwardCommandDeleteArg)(nil),				// 13: bess.pb.L2ForwardCommandDeleteArg
+	(*L2ForwardCommandSetDefaultGateArg)(nil),			// 14: bess.pb.L2ForwardCommandSetDefaultGateArg
+	(*L2ForwardCommandLookupArg)(nil),				// 15: bess.pb.L2ForwardCommandLookupArg
+	(*L2ForwardCommandLookupResponse)(nil),				// 16: bess.pb.L2ForwardCommandLookupResponse
+	(*L2ForwardCommandPopulateArg)(nil),				// 17: bess.pb.L2ForwardCommandPopulateArg
+	(*MeasureCommandGetSummaryArg)(nil),				// 18: bess.pb.MeasureCommandGetSummaryArg
+	(*MeasureCommandGetSummaryResponse)(nil),			// 19: bess.pb.MeasureCommandGetSummaryResponse
+	(*DRRArg)(nil),							// 20: bess.pb.DRRArg
+	(*DRRQuantumArg)(nil),						// 21: bess.pb.DRRQuantumArg
+	(*DRRMaxFlowQueueSizeArg)(nil),					// 22: bess.pb.DRRMaxFlowQueueSizeArg
+	(*PortIncCommandSetBurstArg)(nil),				// 23: bess.pb.PortIncCommandSetBurstArg
+	(*QueueIncCommandSetBurstArg)(nil),				// 24: bess.pb.QueueIncCommandSetBurstArg
+	(*QueueCommandSetBurstArg)(nil),				// 25: bess.pb.QueueCommandSetBurstArg
+	(*QueueCommandSetSizeArg)(nil),					// 26: bess.pb.QueueCommandSetSizeArg
+	(*QueueCommandGetStatusArg)(nil),				// 27: bess.pb.QueueCommandGetStatusArg
+	(*QueueCommandGetStatusResponse)(nil),				// 28: bess.pb.QueueCommandGetStatusResponse
+	(*RandomUpdateCommandClearArg)(nil),				// 29: bess.pb.RandomUpdateCommandClearArg
+	(*RewriteCommandClearArg)(nil),					// 30: bess.pb.RewriteCommandClearArg
+	(*UpdateCommandClearArg)(nil),					// 31: bess.pb.UpdateCommandClearArg
+	(*WildcardMatchCommandAddArg)(nil),				// 32: bess.pb.WildcardMatchCommandAddArg
+	(*WildcardMatchCommandDeleteArg)(nil),				// 33: bess.pb.WildcardMatchCommandDeleteArg
+	(*WildcardMatchCommandClearArg)(nil),				// 34: bess.pb.WildcardMatchCommandClearArg
+	(*WildcardMatchCommandSetDefaultGateArg)(nil),			// 35: bess.pb.WildcardMatchCommandSetDefaultGateArg
+	(*ACLArg)(nil),							// 36: bess.pb.ACLArg
+	(*BPFArg)(nil),							// 37: bess.pb.BPFArg
+	(*BufferArg)(nil),						// 38: bess.pb.BufferArg
+	(*BypassArg)(nil),						// 39: bess.pb.BypassArg
+	(*DumpArg)(nil),						// 40: bess.pb.DumpArg
+	(*EtherEncapArg)(nil),						// 41: bess.pb.EtherEncapArg
+	(*ExactMatchArg)(nil),						// 42: bess.pb.ExactMatchArg
+	(*ExactMatchConfig)(nil),					// 43: bess.pb.ExactMatchConfig
+	(*FlowGenArg)(nil),						// 44: bess.pb.FlowGenArg
+	(*GenericDecapArg)(nil),					// 45: bess.pb.GenericDecapArg
+	(*GenericEncapArg)(nil),					// 46: bess.pb.GenericEncapArg
+	(*HashLBArg)(nil),						// 47: bess.pb.HashLBArg
+	(*IPEncapArg)(nil),						// 48: bess.pb.IPEncapArg
+	(*IPLookupArg)(nil),						// 49: bess.pb.IPLookupArg
+	(*L2ForwardArg)(nil),						// 50: bess.pb.L2ForwardArg
+	(*MACSwapArg)(nil),						// 51: bess.pb.MACSwapArg
+	(*MeasureArg)(nil),						// 52: bess.pb.MeasureArg
+	(*MergeArg)(nil),						// 53: bess.pb.MergeArg
+	(*MetadataTestArg)(nil),					// 54: bess.pb.MetadataTestArg
+	(*NATArg)(nil),							// 55: bess.pb.NATArg
+	(*StaticNATArg)(nil),						// 56: bess.pb.StaticNATArg
+	(*NoOpArg)(nil),						// 57: bess.pb.NoOpArg
+	(*PortIncArg)(nil),						// 58: bess.pb.PortIncArg
+	(*PortOutArg)(nil),						// 59: bess.pb.PortOutArg
+	(*QueueIncArg)(nil),						// 60: bess.pb.QueueIncArg
+	(*QueueOutArg)(nil),						// 61: bess.pb.QueueOutArg
+	(*QueueArg)(nil),						// 62: bess.pb.QueueArg
+	(*RandomSplitArg)(nil),						// 63: bess.pb.RandomSplitArg
+	(*RandomSplitCommandSetDroprateArg)(nil),			// 64: bess.pb.RandomSplitCommandSetDroprateArg
+	(*RandomSplitCommandSetGatesArg)(nil),				// 65: bess.pb.RandomSplitCommandSetGatesArg
+	(*RandomUpdateArg)(nil),					// 66: bess.pb.RandomUpdateArg
+	(*RewriteArg)(nil),						// 67: bess.pb.RewriteArg
+	(*RoundRobinCommandSetGatesArg)(nil),				// 68: bess.pb.RoundRobinCommandSetGatesArg
+	(*RoundRobinCommandSetModeArg)(nil),				// 69: bess.pb.RoundRobinCommandSetModeArg
+	(*RoundRobinArg)(nil),						// 70: bess.pb.RoundRobinArg
+	(*ReplicateArg)(nil),						// 71: bess.pb.ReplicateArg
+	(*ReplicateCommandSetGatesArg)(nil),				// 72: bess.pb.ReplicateCommandSetGatesArg
+	(*SetMetadataArg)(nil),						// 73: bess.pb.SetMetadataArg
+	(*SinkArg)(nil),						// 74: bess.pb.SinkArg
+	(*SourceCommandSetBurstArg)(nil),				// 75: bess.pb.SourceCommandSetBurstArg
+	(*SourceCommandSetPktSizeArg)(nil),				// 76: bess.pb.SourceCommandSetPktSizeArg
+	(*SourceArg)(nil),						// 77: bess.pb.SourceArg
+	(*IPChecksumArg)(nil),						// 78: bess.pb.IPChecksumArg
+	(*L4ChecksumArg)(nil),						// 79: bess.pb.L4ChecksumArg
+	(*GtpuEchoArg)(nil),						// 80: bess.pb.GtpuEchoArg
+	(*IPDefragArg)(nil),						// 81: bess.pb.IPDefragArg
+	(*IPFragArg)(nil),						// 82: bess.pb.IPFragArg
+	(*CounterAddArg)(nil),						// 83: bess.pb.CounterAddArg
+	(*CounterRemoveArg)(nil),					// 84: bess.pb.CounterRemoveArg
+	(*CounterArg)(nil),						// 85: bess.pb.CounterArg
+	(*GtpuEncapArg)(nil),						// 86: bess.pb.GtpuEncapArg
+	(*SplitArg)(nil),						// 87: bess.pb.SplitArg
+	(*TimestampArg)(nil),						// 88: bess.pb.TimestampArg
+	(*UpdateArg)(nil),						// 89: bess.pb.UpdateArg
+	(*UrlFilterArg)(nil),						// 90: bess.pb.UrlFilterArg
+	(*UrlFilterConfig)(nil),					// 91: bess.pb.UrlFilterConfig
+	(*VLANPopArg)(nil),						// 92: bess.pb.VLANPopArg
+	(*VLANPushArg)(nil),						// 93: bess.pb.VLANPushArg
+	(*VLANSplitArg)(nil),						// 94: bess.pb.VLANSplitArg
+	(*VXLANDecapArg)(nil),						// 95: bess.pb.VXLANDecapArg
+	(*VXLANEncapArg)(nil),						// 96: bess.pb.VXLANEncapArg
+	(*WildcardMatchArg)(nil),					// 97: bess.pb.WildcardMatchArg
+	(*WildcardMatchConfig)(nil),					// 98: bess.pb.WildcardMatchConfig
+	(*ArpResponderArg)(nil),					// 99: bess.pb.ArpResponderArg
+	(*MplsPopArg)(nil),						// 100: bess.pb.MplsPopArg
+	(*WorkerSplitArg)(nil),						// 101: bess.pb.WorkerSplitArg
+	(*QosArg)(nil),							// 102: bess.pb.QosArg
+	(*QosCommandAddArg)(nil),					// 103: bess.pb.QosCommandAddArg
+	(*QosCommandDeleteArg)(nil),					// 104: bess.pb.QosCommandDeleteArg
+	(*QosCommandClearArg)(nil),					// 105: bess.pb.QosCommandClearArg
+	(*QosCommandSetDefaultGateArg)(nil),				// 106: bess.pb.QosCommandSetDefaultGateArg
+	(*FlowMeasureArg)(nil),						// 107: bess.pb.FlowMeasureArg
+	(*FlowMeasureCommandReadArg)(nil),				// 108: bess.pb.FlowMeasureCommandReadArg
+	(*FlowMeasureReadResponse)(nil),				// 109: bess.pb.FlowMeasureReadResponse
+	(*FlowMeasureCommandFlipArg)(nil),				// 110: bess.pb.FlowMeasureCommandFlipArg
+	(*FlowMeasureFlipResponse)(nil),				// 111: bess.pb.FlowMeasureFlipResponse
+	(*GtpuPathMonitoringCommandAddDeleteArg)(nil),			// 112: bess.pb.GtpuPathMonitoringCommandAddDeleteArg
+	(*GtpuPathMonitoringCommandClearArg)(nil),			// 113: bess.pb.GtpuPathMonitoringCommandClearArg
+	(*GtpuPathMonitoringCommandReadArg)(nil),			// 114: bess.pb.GtpuPathMonitoringCommandReadArg
+	(*GtpuPathMonitoringCommandReadResponse)(nil),			// 115: bess.pb.GtpuPathMonitoringCommandReadResponse
+	(*L2ForwardCommandAddArg_Entry)(nil),				// 116: bess.pb.L2ForwardCommandAddArg.Entry
+	(*MeasureCommandGetSummaryResponse_Histogram)(nil),		// 117: bess.pb.MeasureCommandGetSummaryResponse.Histogram
+	(*ACLArg_Rule)(nil),						// 118: bess.pb.ACLArg.Rule
+	(*BPFArg_Filter)(nil),						// 119: bess.pb.BPFArg.Filter
+	(*GenericEncapArg_EncapField)(nil),				// 120: bess.pb.GenericEncapArg.EncapField
+	nil,								// 121: bess.pb.MetadataTestArg.ReadEntry
+	nil,								// 122: bess.pb.MetadataTestArg.WriteEntry
+	nil,								// 123: bess.pb.MetadataTestArg.UpdateEntry
+	(*NATArg_PortRange)(nil),					// 124: bess.pb.NATArg.PortRange
+	(*NATArg_ExternalAddress)(nil),					// 125: bess.pb.NATArg.ExternalAddress
+	(*StaticNATArg_AddressRange)(nil),				// 126: bess.pb.StaticNATArg.AddressRange
+	(*StaticNATArg_AddressRangePair)(nil),				// 127: bess.pb.StaticNATArg.AddressRangePair
+	(*RandomUpdateArg_Field)(nil),					// 128: bess.pb.RandomUpdateArg.Field
+	(*SetMetadataArg_Attribute)(nil),				// 129: bess.pb.SetMetadataArg.Attribute
+	(*UpdateArg_Field)(nil),					// 130: bess.pb.UpdateArg.Field
+	(*UrlFilterArg_Url)(nil),					// 131: bess.pb.UrlFilterArg.Url
+	nil,								// 132: bess.pb.WorkerSplitArg.WorkerGatesEntry
+	(*FlowMeasureReadResponse_Statistic)(nil),			// 133: bess.pb.FlowMeasureReadResponse.Statistic
+	(*FlowMeasureReadResponse_Statistic_Histogram)(nil),		// 134: bess.pb.FlowMeasureReadResponse.Statistic.Histogram
+	(*GtpuPathMonitoringCommandReadResponse_Statistic)(nil),	// 135: bess.pb.GtpuPathMonitoringCommandReadResponse.Statistic
+	(*FieldData)(nil),						// 136: bess.pb.FieldData
+	(*Field)(nil),							// 137: bess.pb.Field
 }
 var file_module_msg_proto_depIdxs = []int32{
-	136, // 0: bess.pb.ExactMatchCommandAddArg.fields:type_name -> bess.pb.FieldData
-	136, // 1: bess.pb.ExactMatchCommandAddArg.values:type_name -> bess.pb.FieldData
-	136, // 2: bess.pb.ExactMatchCommandDeleteArg.fields:type_name -> bess.pb.FieldData
-	137, // 3: bess.pb.HashLBCommandSetModeArg.fields:type_name -> bess.pb.Field
-	116, // 4: bess.pb.L2ForwardCommandAddArg.entries:type_name -> bess.pb.L2ForwardCommandAddArg.Entry
-	117, // 5: bess.pb.MeasureCommandGetSummaryResponse.latency:type_name -> bess.pb.MeasureCommandGetSummaryResponse.Histogram
-	117, // 6: bess.pb.MeasureCommandGetSummaryResponse.jitter:type_name -> bess.pb.MeasureCommandGetSummaryResponse.Histogram
-	136, // 7: bess.pb.WildcardMatchCommandAddArg.values:type_name -> bess.pb.FieldData
-	136, // 8: bess.pb.WildcardMatchCommandAddArg.masks:type_name -> bess.pb.FieldData
-	136, // 9: bess.pb.WildcardMatchCommandAddArg.valuesv:type_name -> bess.pb.FieldData
-	136, // 10: bess.pb.WildcardMatchCommandDeleteArg.values:type_name -> bess.pb.FieldData
-	136, // 11: bess.pb.WildcardMatchCommandDeleteArg.masks:type_name -> bess.pb.FieldData
-	118, // 12: bess.pb.ACLArg.rules:type_name -> bess.pb.ACLArg.Rule
-	119, // 13: bess.pb.BPFArg.filters:type_name -> bess.pb.BPFArg.Filter
-	137, // 14: bess.pb.ExactMatchArg.fields:type_name -> bess.pb.Field
-	136, // 15: bess.pb.ExactMatchArg.masks:type_name -> bess.pb.FieldData
-	137, // 16: bess.pb.ExactMatchArg.values:type_name -> bess.pb.Field
-	136, // 17: bess.pb.ExactMatchArg.masksv:type_name -> bess.pb.FieldData
-	2,   // 18: bess.pb.ExactMatchConfig.rules:type_name -> bess.pb.ExactMatchCommandAddArg
-	120, // 19: bess.pb.GenericEncapArg.fields:type_name -> bess.pb.GenericEncapArg.EncapField
-	137, // 20: bess.pb.HashLBArg.fields:type_name -> bess.pb.Field
-	121, // 21: bess.pb.MetadataTestArg.read:type_name -> bess.pb.MetadataTestArg.ReadEntry
-	122, // 22: bess.pb.MetadataTestArg.write:type_name -> bess.pb.MetadataTestArg.WriteEntry
-	123, // 23: bess.pb.MetadataTestArg.update:type_name -> bess.pb.MetadataTestArg.UpdateEntry
-	125, // 24: bess.pb.NATArg.ext_addrs:type_name -> bess.pb.NATArg.ExternalAddress
-	127, // 25: bess.pb.StaticNATArg.pairs:type_name -> bess.pb.StaticNATArg.AddressRangePair
-	128, // 26: bess.pb.RandomUpdateArg.fields:type_name -> bess.pb.RandomUpdateArg.Field
-	129, // 27: bess.pb.SetMetadataArg.attrs:type_name -> bess.pb.SetMetadataArg.Attribute
-	130, // 28: bess.pb.UpdateArg.fields:type_name -> bess.pb.UpdateArg.Field
-	131, // 29: bess.pb.UrlFilterArg.blacklist:type_name -> bess.pb.UrlFilterArg.Url
-	131, // 30: bess.pb.UrlFilterConfig.blacklist:type_name -> bess.pb.UrlFilterArg.Url
-	137, // 31: bess.pb.WildcardMatchArg.fields:type_name -> bess.pb.Field
-	137, // 32: bess.pb.WildcardMatchArg.values:type_name -> bess.pb.Field
-	32,  // 33: bess.pb.WildcardMatchConfig.rules:type_name -> bess.pb.WildcardMatchCommandAddArg
-	132, // 34: bess.pb.WorkerSplitArg.worker_gates:type_name -> bess.pb.WorkerSplitArg.WorkerGatesEntry
-	137, // 35: bess.pb.QosArg.fields:type_name -> bess.pb.Field
-	137, // 36: bess.pb.QosArg.values:type_name -> bess.pb.Field
-	136, // 37: bess.pb.QosCommandAddArg.fields:type_name -> bess.pb.FieldData
-	136, // 38: bess.pb.QosCommandAddArg.values:type_name -> bess.pb.FieldData
-	136, // 39: bess.pb.QosCommandDeleteArg.fields:type_name -> bess.pb.FieldData
-	133, // 40: bess.pb.FlowMeasureReadResponse.statistics:type_name -> bess.pb.FlowMeasureReadResponse.Statistic
-	135, // 41: bess.pb.GtpuPathMonitoringCommandReadResponse.statistics:type_name -> bess.pb.GtpuPathMonitoringCommandReadResponse.Statistic
-	136, // 42: bess.pb.GenericEncapArg.EncapField.value:type_name -> bess.pb.FieldData
-	124, // 43: bess.pb.NATArg.ExternalAddress.port_ranges:type_name -> bess.pb.NATArg.PortRange
-	126, // 44: bess.pb.StaticNATArg.AddressRangePair.int_range:type_name -> bess.pb.StaticNATArg.AddressRange
-	126, // 45: bess.pb.StaticNATArg.AddressRangePair.ext_range:type_name -> bess.pb.StaticNATArg.AddressRange
-	134, // 46: bess.pb.FlowMeasureReadResponse.Statistic.latency:type_name -> bess.pb.FlowMeasureReadResponse.Statistic.Histogram
-	134, // 47: bess.pb.FlowMeasureReadResponse.Statistic.jitter:type_name -> bess.pb.FlowMeasureReadResponse.Statistic.Histogram
-	48,  // [48:48] is the sub-list for method output_type
-	48,  // [48:48] is the sub-list for method input_type
-	48,  // [48:48] is the sub-list for extension type_name
-	48,  // [48:48] is the sub-list for extension extendee
-	0,   // [0:48] is the sub-list for field type_name
+	136,	// 0: bess.pb.ExactMatchCommandAddArg.fields:type_name -> bess.pb.FieldData
+	136,	// 1: bess.pb.ExactMatchCommandAddArg.values:type_name -> bess.pb.FieldData
+	136,	// 2: bess.pb.ExactMatchCommandDeleteArg.fields:type_name -> bess.pb.FieldData
+	137,	// 3: bess.pb.HashLBCommandSetModeArg.fields:type_name -> bess.pb.Field
+	116,	// 4: bess.pb.L2ForwardCommandAddArg.entries:type_name -> bess.pb.L2ForwardCommandAddArg.Entry
+	117,	// 5: bess.pb.MeasureCommandGetSummaryResponse.latency:type_name -> bess.pb.MeasureCommandGetSummaryResponse.Histogram
+	117,	// 6: bess.pb.MeasureCommandGetSummaryResponse.jitter:type_name -> bess.pb.MeasureCommandGetSummaryResponse.Histogram
+	136,	// 7: bess.pb.WildcardMatchCommandAddArg.values:type_name -> bess.pb.FieldData
+	136,	// 8: bess.pb.WildcardMatchCommandAddArg.masks:type_name -> bess.pb.FieldData
+	136,	// 9: bess.pb.WildcardMatchCommandAddArg.valuesv:type_name -> bess.pb.FieldData
+	136,	// 10: bess.pb.WildcardMatchCommandDeleteArg.values:type_name -> bess.pb.FieldData
+	136,	// 11: bess.pb.WildcardMatchCommandDeleteArg.masks:type_name -> bess.pb.FieldData
+	118,	// 12: bess.pb.ACLArg.rules:type_name -> bess.pb.ACLArg.Rule
+	119,	// 13: bess.pb.BPFArg.filters:type_name -> bess.pb.BPFArg.Filter
+	137,	// 14: bess.pb.ExactMatchArg.fields:type_name -> bess.pb.Field
+	136,	// 15: bess.pb.ExactMatchArg.masks:type_name -> bess.pb.FieldData
+	137,	// 16: bess.pb.ExactMatchArg.values:type_name -> bess.pb.Field
+	136,	// 17: bess.pb.ExactMatchArg.masksv:type_name -> bess.pb.FieldData
+	2,	// 18: bess.pb.ExactMatchConfig.rules:type_name -> bess.pb.ExactMatchCommandAddArg
+	120,	// 19: bess.pb.GenericEncapArg.fields:type_name -> bess.pb.GenericEncapArg.EncapField
+	137,	// 20: bess.pb.HashLBArg.fields:type_name -> bess.pb.Field
+	121,	// 21: bess.pb.MetadataTestArg.read:type_name -> bess.pb.MetadataTestArg.ReadEntry
+	122,	// 22: bess.pb.MetadataTestArg.write:type_name -> bess.pb.MetadataTestArg.WriteEntry
+	123,	// 23: bess.pb.MetadataTestArg.update:type_name -> bess.pb.MetadataTestArg.UpdateEntry
+	125,	// 24: bess.pb.NATArg.ext_addrs:type_name -> bess.pb.NATArg.ExternalAddress
+	127,	// 25: bess.pb.StaticNATArg.pairs:type_name -> bess.pb.StaticNATArg.AddressRangePair
+	128,	// 26: bess.pb.RandomUpdateArg.fields:type_name -> bess.pb.RandomUpdateArg.Field
+	129,	// 27: bess.pb.SetMetadataArg.attrs:type_name -> bess.pb.SetMetadataArg.Attribute
+	130,	// 28: bess.pb.UpdateArg.fields:type_name -> bess.pb.UpdateArg.Field
+	131,	// 29: bess.pb.UrlFilterArg.blacklist:type_name -> bess.pb.UrlFilterArg.Url
+	131,	// 30: bess.pb.UrlFilterConfig.blacklist:type_name -> bess.pb.UrlFilterArg.Url
+	137,	// 31: bess.pb.WildcardMatchArg.fields:type_name -> bess.pb.Field
+	137,	// 32: bess.pb.WildcardMatchArg.values:type_name -> bess.pb.Field
+	32,	// 33: bess.pb.WildcardMatchConfig.rules:type_name -> bess.pb.WildcardMatchCommandAddArg
+	132,	// 34: bess.pb.WorkerSplitArg.worker_gates:type_name -> bess.pb.WorkerSplitArg.WorkerGatesEntry
+	137,	// 35: bess.pb.QosArg.fields:type_name -> bess.pb.Field
+	137,	// 36: bess.pb.QosArg.values:type_name -> bess.pb.Field
+	136,	// 37: bess.pb.QosCommandAddArg.fields:type_name -> bess.pb.FieldData
+	136,	// 38: bess.pb.QosCommandAddArg.values:type_name -> bess.pb.FieldData
+	136,	// 39: bess.pb.QosCommandDeleteArg.fields:type_name -> bess.pb.FieldData
+	133,	// 40: bess.pb.FlowMeasureReadResponse.statistics:type_name -> bess.pb.FlowMeasureReadResponse.Statistic
+	135,	// 41: bess.pb.GtpuPathMonitoringCommandReadResponse.statistics:type_name -> bess.pb.GtpuPathMonitoringCommandReadResponse.Statistic
+	136,	// 42: bess.pb.GenericEncapArg.EncapField.value:type_name -> bess.pb.FieldData
+	124,	// 43: bess.pb.NATArg.ExternalAddress.port_ranges:type_name -> bess.pb.NATArg.PortRange
+	126,	// 44: bess.pb.StaticNATArg.AddressRangePair.int_range:type_name -> bess.pb.StaticNATArg.AddressRange
+	126,	// 45: bess.pb.StaticNATArg.AddressRangePair.ext_range:type_name -> bess.pb.StaticNATArg.AddressRange
+	134,	// 46: bess.pb.FlowMeasureReadResponse.Statistic.latency:type_name -> bess.pb.FlowMeasureReadResponse.Statistic.Histogram
+	134,	// 47: bess.pb.FlowMeasureReadResponse.Statistic.jitter:type_name -> bess.pb.FlowMeasureReadResponse.Statistic.Histogram
+	48,	// [48:48] is the sub-list for method output_type
+	48,	// [48:48] is the sub-list for method input_type
+	48,	// [48:48] is the sub-list for extension type_name
+	48,	// [48:48] is the sub-list for extension extendee
+	0,	// [0:48] is the sub-list for field type_name
 }
 
-func init() { file_module_msg_proto_init() }
+func init()	{ file_module_msg_proto_init() }
 func file_module_msg_proto_init() {
 	if File_module_msg_proto != nil {
 		return
@@ -10468,16 +10602,16 @@ func file_module_msg_proto_init() {
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
-			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_module_msg_proto_rawDesc,
-			NumEnums:      0,
-			NumMessages:   136,
-			NumExtensions: 0,
-			NumServices:   0,
+			GoPackagePath:	reflect.TypeOf(x{}).PkgPath(),
+			RawDescriptor:	file_module_msg_proto_rawDesc,
+			NumEnums:	0,
+			NumMessages:	136,
+			NumExtensions:	0,
+			NumServices:	0,
 		},
-		GoTypes:           file_module_msg_proto_goTypes,
-		DependencyIndexes: file_module_msg_proto_depIdxs,
-		MessageInfos:      file_module_msg_proto_msgTypes,
+		GoTypes:		file_module_msg_proto_goTypes,
+		DependencyIndexes:	file_module_msg_proto_depIdxs,
+		MessageInfos:		file_module_msg_proto_msgTypes,
 	}.Build()
 	File_module_msg_proto = out.File
 	file_module_msg_proto_rawDesc = nil
