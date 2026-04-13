@@ -37,6 +37,13 @@ type Session struct {
 	Duration  float64
 }
 
+type UETraffic struct {
+	NodeID    string
+	UEIP      string
+	Direction string // "uplink" or "downlink"
+	Bytes     uint64
+}
+
 func NewSession(nodeID string) *Session {
 	return &Session{
 		NodeID:    nodeID,
@@ -51,5 +58,6 @@ func (s *Session) Delete() {
 type InstrumentPFCP interface {
 	SaveMessages(m *Message)
 	SaveSessions(s *Session)
+	SaveUEThroughput(t *UETraffic)
 	Stop() error
 }

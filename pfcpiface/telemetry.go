@@ -127,6 +127,7 @@ type PfcpNodeCollector struct {
 	sessionRxPackets      *prometheus.Desc
 	sessionDroppedPackets *prometheus.Desc
 	sessionTxBytes        *prometheus.Desc
+	ueTrafficBytes        *prometheus.Desc
 }
 
 func NewPFCPNodeCollector(node *PFCPNode) *PfcpNodeCollector {
@@ -147,6 +148,10 @@ func NewPFCPNodeCollector(node *PFCPNode) *PfcpNodeCollector {
 		sessionRxPackets: prometheus.NewDesc(prometheus.BuildFQName("upf", "session", "rx_packets"),
 			"Shows the total number of packets received for a given session in UPF",
 			[]string{"fseid", "pdr", "ue_ip"}, nil,
+		),
+		ueTrafficBytes: prometheus.NewDesc(prometheus.BuildFQName("upf", "ue", "traffic_bytes"),
+			"Total bytes transferred per UE and direction",
+			[]string{"ue_ip", "direction"}, nil,
 		),
 		sessionDroppedPackets: prometheus.NewDesc(prometheus.BuildFQName("upf", "session", "dropped_packets"),
 			"Shows the number of packets dropped for a given session in UPF",
