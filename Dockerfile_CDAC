@@ -3,9 +3,9 @@
 # Copyright 2019-present Intel Corporation
 
 # Stage bess-build: fetch BESS dependencies & pre-reqs
-FROM docker.io/cdac5gc/bess_build:260312 AS bess-build
+FROM docker.io/cdac5gc/bess_build:latest AS bess-build
 ARG CPU=native
-ARG BESS_COMMIT=cdacmaster
+ARG BESS_COMMIT=flow-measure
 ENV PLUGINS_DIR=plugins
 ARG MAKEFLAGS
 ENV PKG_CONFIG_PATH=/usr/lib64/pkgconfig
