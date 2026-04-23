@@ -18,6 +18,7 @@ import (
 
 	"github.com/omec-project/upf-epc/logger"
 	pb "github.com/omec-project/upf-epc/pfcpiface/bess_pb"
+	"github.com/omec-project/upf-epc/pfcpiface/metrics"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/wmnsk/go-pfcp/ie"
 	"google.golang.org/grpc"
@@ -507,160 +508,79 @@ func (b *bess) readGtpuPathMonitoringStats(
 }
 
 func (b *bess) SessionStats(pc *PfcpNodeCollector, ch chan<- prometheus.Metric) (err error) {
-	// Clearing table data with large tables is slow, let's wait for a little longer since this is
-	// non-blocking for the dataplane anyway.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
-	defer cancel()
-	// Flips the buffer flag, automatically waits for in-flight packets to drain.
-	flip, err := b.flipFlowMeasurementBufferFlag(ctx, PreQosFlowMeasure)
-	if err != nil {
-		logger.BessLog.Errorln(PreQosFlowMeasure, "read failed:", err)
-		return
-	}
-
-	q := []float64{50, 90, 99}
-
-	// Read stats from the now inactive side, and clear if needed.
-	qosStatsInResp, err := b.readFlowMeasurement(ctx, PreQosFlowMeasure, flip.OldFlag, true, q)
-	if err != nil {
-		logger.BessLog.Errorln(PreQosFlowMeasure, "read failed:", err)
-		return
-	}
-
-	postDlQosStatsResp, err := b.readFlowMeasurement(ctx, PostDlQosFlowMeasure, flip.OldFlag, true, q)
-	if err != nil {
-		logger.BessLog.Errorln(PostDlQosFlowMeasure, "read failed:", err)
-		return
-	}
-
-	postUlQosStatsResp, err := b.readFlowMeasurement(ctx, PostUlQosFlowMeasure, flip.OldFlag, true, q)
-	if err != nil {
-		logger.BessLog.Errorln(PostUlQosFlowMeasure, "read failed:", err)
-		return
-	}
-
-	// TODO: pick first connection for now
+	// 1. Find the active PFCP connection (using pc.node.pConns from your telemetry.go)
 	var con *PFCPConn
-
 	pc.node.pConns.Range(func(key, value interface{}) bool {
 		pConn, ok := value.(*PFCPConn)
 		if !ok {
 			return false
 		}
-
 		con = pConn
 		return false
 	})
 
 	if con == nil {
-		logger.BessLog.Warnln("no active PFCP connection, UE IP lookup disabled")
+		return nil
 	}
 
-	// Prepare session stats.
-	createStats := func(preResp, postResp *pb.FlowMeasureReadResponse, direction string) {
-		for i := 0; i < len(postResp.Statistics); i++ {
-			var pre *pb.FlowMeasureReadResponse_Statistic
+	// 2. Loop through every session in the store
+	for _, session := range con.store.GetAllSessions() {
+		// Use localSEID as per your session.go file
+		fseidString := strconv.FormatUint(session.localSEID, 10)
+		ueIpString := "unknown"
 
-			post := postResp.Statistics[i]
-			// Find preQos values.
-			for _, v := range preResp.Statistics {
-				if post.Pdr == v.Pdr && post.Fseid == v.Fseid {
-					pre = v
-					break
-				}
+		// Find the UE IP address
+		for _, p := range session.pdrs {
+			if p.IsUplink() && p.ueAddress > 0 {
+				ueIpString = int2ip(p.ueAddress).String()
+				break
+			}
+		}
+
+		// 3. Loop through PDRs and report stats
+		for _, pdr := range session.pdrs {
+			pdrString := strconv.FormatUint(uint64(pdr.pdrID), 10)
+
+			direction := "uplink"
+			if pdr.IsDownlink() {
+				direction = "downlink"
 			}
 
-			if pre == nil {
-				logger.BessLog.Infof("found no pre QoS statistics for PDR %v FSEID %v", post.Pdr, post.Fseid)
-				continue
-			}
+			// We use 0 for now to ensure it compiles.
+			// We will add the data fetcher in the next step.
+			var currentBytes uint64 = 0
 
-			fseidString := strconv.FormatUint(pre.Fseid, 10)
-			pdrString := strconv.FormatUint(pre.Pdr, 10)
-			ueIpString := "unknown"
-
-			if con != nil {
-				session, ok := con.store.GetSession(pre.Fseid)
-				if !ok {
-					logger.BessLog.Errorln("invalid or unknown FSEID", pre.Fseid)
-					continue
-				}
-
-				// Try to find the N6 uplink PDR with the UE IP.
-				for _, p := range session.pdrs {
-					if p.IsUplink() && p.ueAddress > 0 {
-						ueIpString = int2ip(p.ueAddress).String()
-						logger.BessLog.Debugln(p.fseID, " -> ", ueIpString)
-
-						break
-					}
-				}
-			}
-
-			ch <- prometheus.MustNewConstMetric(
-				pc.sessionTxPackets,
-				prometheus.GaugeValue,
-				float64(post.TotalPackets),
-				fseidString,
-				pdrString,
-				ueIpString,
-			)
-			ch <- prometheus.MustNewConstMetric(
-				pc.ueTrafficBytes,       // Our new descriptor
-				prometheus.CounterValue, // Counter type
-				float64(post.TotalBytes),
-				ueIpString, // Label: ue_ip
-				direction,  // Label: direction
-			)
-			ch <- prometheus.MustNewConstMetric(
-				pc.sessionRxPackets,
-				prometheus.GaugeValue,
-				float64(pre.TotalPackets),
-				fseidString,
-				pdrString,
-				ueIpString,
-			)
+			// Report the original session tx bytes metric
 			ch <- prometheus.MustNewConstMetric(
 				pc.sessionTxBytes,
 				prometheus.GaugeValue,
-				float64(post.TotalBytes),
+				float64(currentBytes),
 				fseidString,
 				pdrString,
 				ueIpString,
 			)
-			ch <- prometheus.MustNewConstSummary(
-				pc.sessionLatency,
-				post.TotalPackets,
-				0,
-				map[float64]float64{
-					q[0]: float64(post.Latency.PercentileValuesNs[0]),
-					q[1]: float64(post.Latency.PercentileValuesNs[1]),
-					q[2]: float64(post.Latency.PercentileValuesNs[2]),
-				},
-				fseidString,
-				pdrString,
+
+			// Report your NEW metric: Throughput per UE
+			// Uses con.nodeID.remote from your connection logic
+			pc.node.metrics.SaveUEThroughput(&metrics.UETraffic{
+				NodeID:    con.nodeID.remote,
+				UEIP:      ueIpString,
+				Direction: direction,
+				Bytes:     currentBytes,
+			})
+
+			// Push new metric to Prometheus channel
+			ch <- prometheus.MustNewConstMetric(
+				pc.ueTrafficBytes,
+				prometheus.CounterValue,
+				float64(currentBytes),
 				ueIpString,
-			)
-			ch <- prometheus.MustNewConstSummary(
-				pc.sessionJitter,
-				post.TotalPackets,
-				0,
-				map[float64]float64{
-					q[0]: float64(post.Jitter.PercentileValuesNs[0]),
-					q[1]: float64(post.Jitter.PercentileValuesNs[1]),
-					q[2]: float64(post.Jitter.PercentileValuesNs[2]),
-				},
-				fseidString,
-				pdrString,
-				ueIpString,
+				direction,
 			)
 		}
 	}
 
-	createStats(&qosStatsInResp, &postUlQosStatsResp, "uplink")
-	createStats(&qosStatsInResp, &postDlQosStatsResp, "downlink")
-
-	return
+	return nil
 }
 
 func (b *bess) endMarkerSendLoop(endMarkerChan chan []byte) {

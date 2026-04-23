@@ -150,7 +150,7 @@ func NewPFCPNodeCollector(node *PFCPNode) *PfcpNodeCollector {
 			[]string{"fseid", "pdr", "ue_ip"}, nil,
 		),
 		ueTrafficBytes: prometheus.NewDesc(prometheus.BuildFQName("upf", "ue", "traffic_bytes"),
-			"Total bytes transferred per UE and direction",
+			"Shows total bytes per UE and direction",
 			[]string{"ue_ip", "direction"}, nil,
 		),
 		sessionDroppedPackets: prometheus.NewDesc(prometheus.BuildFQName("upf", "session", "dropped_packets"),
