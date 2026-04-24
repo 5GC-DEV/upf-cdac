@@ -169,13 +169,15 @@ func (col PfcpNodeCollector) Describe(ch chan<- *prometheus.Desc) {
 }
 
 func (col PfcpNodeCollector) Collect(ch chan<- prometheus.Metric) {
-	if col.node.upf.enableFlowMeasure {
-		err := col.node.upf.SessionStats(&col, ch)
-		if err != nil {
-			logger.PfcpLog.Errorln(err)
-			return
-		}
+	logger.PfcpLog.Infoln("[DEBUG-METRICS] Prometheus scrape triggered for PfcpNodeCollector")
+	//if col.node.upf.enableFlowMeasure {
+	err := col.node.upf.SessionStats(&col, ch)
+	if err != nil {
+		logger.PfcpLog.Errorf("[DEBUG-METRICS] SessionStats failed: %v", err)
+		return
 	}
+	//}
+	logger.PfcpLog.Infoln("[DEBUG-METRICS] PfcpNodeCollector collection finished")
 }
 
 func setupProm(mux *http.ServeMux, upf *upf, node *PFCPNode) (*upfCollector, *PfcpNodeCollector, error) {
