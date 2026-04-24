@@ -9,6 +9,7 @@ import (
 	"flag"
 	"math"
 	"net"
+	"strconv"
 	"time"
 
 	"google.golang.org/grpc/connectivity"
@@ -507,69 +508,76 @@ func (b *bess) readGtpuPathMonitoringStats(
 }
 
 func (b *bess) SessionStats(pc *PfcpNodeCollector, ch chan<- prometheus.Metric) (err error) {
-	// 1. CRITICAL: Check if the node is nil. This is the real cause of panics in tests.
-	if pc == nil || pc.node == nil {
-		return nil
-	}
-
-	// 2. Locate the active PFCP connection
+	logger.BessLog.Infoln("[DEBUG-BESS] Entering SessionStats function")
+	// 1. Find the active PFCP connection (using pc.node.pConns from your telemetry.go)
 	var con *PFCPConn
-
-	// Since pConns is a sync.Map struct, we call Range directly.
-	// It will simply do nothing if the map is empty.
 	pc.node.pConns.Range(func(key, value interface{}) bool {
 		pConn, ok := value.(*PFCPConn)
-		if ok {
-			con = pConn
-			return false // Found one, stop iterating
+		if !ok {
+			return false
 		}
-		return true
+		con = pConn
+		return false
 	})
 
-	// If no connection is found, exit safely
 	if con == nil {
+		logger.BessLog.Warnln("[DEBUG-BESS] No active PFCP connection found in pConns map")
 		return nil
 	}
 
-	// 3. Get all sessions from the local store (Safety check for store)
-	if con.store == nil {
-		return nil
-	}
+	// 2. Get all sessions from the store
 	allSessions := con.store.GetAllSessions()
+	logger.BessLog.Infof("[DEBUG-BESS] Found %d sessions in the local store", len(allSessions))
 
+	// 3. Loop through sessions
 	for _, session := range allSessions {
+		fseidString := strconv.FormatUint(session.localSEID, 10)
 		ueIpString := "unknown"
+
+		// Find UE IP for this session
 		for _, p := range session.pdrs {
 			if p.IsUplink() && p.ueAddress > 0 {
 				ueIpString = int2ip(p.ueAddress).String()
 				break
 			}
 		}
+		logger.BessLog.Infof("[DEBUG-BESS] Processing Session SEID: %s, UE IP: %s", fseidString, ueIpString)
 
+		// 4. Report metrics for each PDR
 		for _, pdr := range session.pdrs {
+			pdrString := strconv.FormatUint(uint64(pdr.pdrID), 10)
 			direction := "uplink"
 			if pdr.IsDownlink() {
 				direction = "downlink"
 			}
 
-			// CurrentBytes is 0 for the visibility test
+			// We use 0 for now to ensure it compiles.
+			// We will add the data fetcher in the next step.
 			var currentBytes uint64 = 0
 
-			// 4. Safety check for metrics service (Metrics IS usually a pointer/interface)
-			if pc.node.metrics != nil {
-				pc.node.metrics.SaveUEThroughput(&metrics.UETraffic{
-					NodeID:    con.nodeID.remote,
-					UEIP:      ueIpString,
-					Direction: direction,
-					Bytes:     currentBytes,
-				})
-			}
+			// Report the original session tx bytes metric
+			ch <- prometheus.MustNewConstMetric(
+				pc.sessionTxBytes,
+				prometheus.GaugeValue,
+				float64(currentBytes),
+				fseidString,
+				pdrString,
+				ueIpString,
+			)
 
-			// 5. Push to Prometheus channel
+			// New metric: Throughput per UE
+			pc.node.metrics.SaveUEThroughput(&metrics.UETraffic{
+				NodeID:    con.nodeID.remote,
+				UEIP:      ueIpString,
+				Direction: direction,
+				Bytes:     0, // We start with 0 to ensure the name appears in Prometheus
+			})
+
+			// Direct push to Prometheus channel (This makes the name appear in curl)
 			ch <- prometheus.MustNewConstMetric(
 				pc.ueTrafficBytes,
 				prometheus.CounterValue,
-				float64(currentBytes),
+				float64(0),
 				ueIpString,
 				direction,
 			)

@@ -169,24 +169,15 @@ func (col PfcpNodeCollector) Describe(ch chan<- *prometheus.Desc) {
 }
 
 func (col PfcpNodeCollector) Collect(ch chan<- prometheus.Metric) {
-	// 1. Log the attempt
-	logger.PfcpLog.Infoln("[DEBUG-METRICS] Prometheus scrape triggered")
-
-	// 2. CRITICAL SAFETY CHECKS for Unit Tests
-	if col.node == nil {
-		logger.PfcpLog.Warnln("[DEBUG-METRICS] Skip: col.node is nil")
-		return
-	}
-	if col.node.upf == nil {
-		logger.PfcpLog.Warnln("[DEBUG-METRICS] Skip: col.node.upf is nil")
-		return
-	}
-
-	// 3. Call SessionStats only if pointers are valid
+	logger.PfcpLog.Infoln("[DEBUG-METRICS] Prometheus scrape triggered for PfcpNodeCollector")
+	//if col.node.upf.enableFlowMeasure {
 	err := col.node.upf.SessionStats(&col, ch)
 	if err != nil {
-		logger.PfcpLog.Errorf("[DEBUG-METRICS] SessionStats error: %v", err)
+		logger.PfcpLog.Errorf("[DEBUG-METRICS] SessionStats failed: %v", err)
+		return
 	}
+	//}
+	logger.PfcpLog.Infoln("[DEBUG-METRICS] PfcpNodeCollector collection finished")
 }
 
 func setupProm(mux *http.ServeMux, upf *upf, node *PFCPNode) (*upfCollector, *PfcpNodeCollector, error) {
