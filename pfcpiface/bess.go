@@ -521,31 +521,28 @@ func (b *bess) SessionStats(pc *PfcpNodeCollector, ch chan<- prometheus.Metric) 
 	})
 
 	if con == nil {
-		logger.BessLog.Warnln("[DEBUG-BESS] No active PFCP connection found in pConns map")
+
 		return nil
 	}
 
-	// 2. Get all sessions from the store
-	allSessions := con.store.GetAllSessions()
-	logger.BessLog.Infof("[DEBUG-BESS] Found %d sessions in the local store", len(allSessions))
-
-	// 3. Loop through sessions
-	for _, session := range allSessions {
+	// 2. Loop through every session in the store
+	for _, session := range con.store.GetAllSessions() {
+		// Use localSEID as per your session.go file
 		fseidString := strconv.FormatUint(session.localSEID, 10)
 		ueIpString := "unknown"
 
-		// Find UE IP for this session
+		// Find the UE IP address
 		for _, p := range session.pdrs {
 			if p.IsUplink() && p.ueAddress > 0 {
 				ueIpString = int2ip(p.ueAddress).String()
 				break
 			}
 		}
-		logger.BessLog.Infof("[DEBUG-BESS] Processing Session SEID: %s, UE IP: %s", fseidString, ueIpString)
 
-		// 4. Report metrics for each PDR
+		// 3. Loop through PDRs and report stats
 		for _, pdr := range session.pdrs {
 			pdrString := strconv.FormatUint(uint64(pdr.pdrID), 10)
+
 			direction := "uplink"
 			if pdr.IsDownlink() {
 				direction = "downlink"
@@ -565,19 +562,20 @@ func (b *bess) SessionStats(pc *PfcpNodeCollector, ch chan<- prometheus.Metric) 
 				ueIpString,
 			)
 
-			// New metric: Throughput per UE
+			// Report your NEW metric: Throughput per UE
+			// Uses con.nodeID.remote from your connection logic
 			pc.node.metrics.SaveUEThroughput(&metrics.UETraffic{
 				NodeID:    con.nodeID.remote,
 				UEIP:      ueIpString,
 				Direction: direction,
-				Bytes:     0, // We start with 0 to ensure the name appears in Prometheus
+				Bytes:     currentBytes,
 			})
 
-			// Direct push to Prometheus channel (This makes the name appear in curl)
+			// Push new metric to Prometheus channel
 			ch <- prometheus.MustNewConstMetric(
 				pc.ueTrafficBytes,
 				prometheus.CounterValue,
-				float64(0),
+				float64(currentBytes),
 				ueIpString,
 				direction,
 			)
