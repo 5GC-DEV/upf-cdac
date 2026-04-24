@@ -169,12 +169,17 @@ func (col PfcpNodeCollector) Describe(ch chan<- *prometheus.Desc) {
 }
 
 func (col PfcpNodeCollector) Collect(ch chan<- prometheus.Metric) {
-	if col.node.upf.enableFlowMeasure {
+	logger.PfcpLog.Infoln("[DEBUG-SCAN] Prometheus scrape starting for PfcpNodeCollector")
+
+	if col.node != nil && col.node.upf != nil && col.node.upf.enableFlowMeasure {
+		logger.PfcpLog.Infoln("[DEBUG-SCAN] FlowMeasure is enabled, calling SessionStats...")
 		err := col.node.upf.SessionStats(&col, ch)
 		if err != nil {
-			logger.PfcpLog.Errorln(err)
+			logger.PfcpLog.Errorf("[DEBUG-SCAN] SessionStats error: %v", err)
 			return
 		}
+	} else {
+		logger.PfcpLog.Infoln("[DEBUG-SCAN] FlowMeasure is disabled or node is not ready. Skipping SessionStats.")
 	}
 }
 
