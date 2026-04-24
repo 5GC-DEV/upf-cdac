@@ -169,14 +169,26 @@ func (col PfcpNodeCollector) Describe(ch chan<- *prometheus.Desc) {
 }
 
 func (col PfcpNodeCollector) Collect(ch chan<- prometheus.Metric) {
+	// 1. Log that we started
 	logger.PfcpLog.Infoln("[DEBUG-METRICS] Prometheus scrape triggered for PfcpNodeCollector")
-	//if col.node.upf.enableFlowMeasure {
+
+	// 2. CRITICAL SAFETY CHECK: Ensure the node and upf pointers are not nil
+	if col.node == nil {
+		logger.PfcpLog.Warnln("[DEBUG-METRICS] PfcpNodeCollector skipped: node is nil")
+		return
+	}
+	if col.node.upf == nil {
+		logger.PfcpLog.Warnln("[DEBUG-METRICS] PfcpNodeCollector skipped: node.upf is nil")
+		return
+	}
+
+	// 3. Now it is safe to call SessionStats
 	err := col.node.upf.SessionStats(&col, ch)
 	if err != nil {
 		logger.PfcpLog.Errorf("[DEBUG-METRICS] SessionStats failed: %v", err)
 		return
 	}
-	//}
+
 	logger.PfcpLog.Infoln("[DEBUG-METRICS] PfcpNodeCollector collection finished")
 }
 
