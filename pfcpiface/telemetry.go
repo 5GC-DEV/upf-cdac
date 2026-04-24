@@ -169,18 +169,26 @@ func (col PfcpNodeCollector) Describe(ch chan<- *prometheus.Desc) {
 }
 
 func (col PfcpNodeCollector) Collect(ch chan<- prometheus.Metric) {
-	logger.PfcpLog.Infoln("[DEBUG-SCAN] Prometheus scrape starting for PfcpNodeCollector")
+	logger.PfcpLog.Infoln("[DEBUG-METRICS] === Prometheus Scrape Started ===")
 
-	if col.node != nil && col.node.upf != nil && col.node.upf.enableFlowMeasure {
-		logger.PfcpLog.Infoln("[DEBUG-SCAN] FlowMeasure is enabled, calling SessionStats...")
-		err := col.node.upf.SessionStats(&col, ch)
-		if err != nil {
-			logger.PfcpLog.Errorf("[DEBUG-SCAN] SessionStats error: %v", err)
-			return
-		}
-	} else {
-		logger.PfcpLog.Infoln("[DEBUG-SCAN] FlowMeasure is disabled or node is not ready. Skipping SessionStats.")
+	// 1. Safety check for initialization
+	if col.node == nil {
+		logger.PfcpLog.Warnln("[DEBUG-METRICS] PfcpNodeCollector skipped: col.node is nil")
+		return
 	}
+	if col.node.upf == nil {
+		logger.PfcpLog.Warnln("[DEBUG-METRICS] PfcpNodeCollector skipped: col.node.upf is nil")
+		return
+	}
+
+	// 2. Call our safe SessionStats function
+	logger.PfcpLog.Infoln("[DEBUG-METRICS] Calling SessionStats to report UE metrics...")
+	err := col.node.upf.SessionStats(&col, ch)
+	if err != nil {
+		logger.PfcpLog.Errorf("[DEBUG-METRICS] SessionStats returned error: %v", err)
+	}
+
+	logger.PfcpLog.Infoln("[DEBUG-METRICS] === Prometheus Scrape Finished ===")
 }
 
 func setupProm(mux *http.ServeMux, upf *upf, node *PFCPNode) (*upfCollector, *PfcpNodeCollector, error) {

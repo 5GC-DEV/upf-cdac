@@ -9,6 +9,7 @@ import (
 	"flag"
 	"math"
 	"net"
+	"strconv"
 	"time"
 
 	"google.golang.org/grpc/connectivity"
@@ -17,6 +18,7 @@ import (
 
 	"github.com/omec-project/upf-epc/logger"
 	pb "github.com/omec-project/upf-epc/pfcpiface/bess_pb"
+	"github.com/omec-project/upf-epc/pfcpiface/metrics"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/wmnsk/go-pfcp/ie"
 	"google.golang.org/grpc"
@@ -506,87 +508,75 @@ func (b *bess) readGtpuPathMonitoringStats(
 }
 
 func (b *bess) SessionStats(pc *PfcpNodeCollector, ch chan<- prometheus.Metric) (err error) {
-	logger.BessLog.Infoln("[DEBUG-BESS] Entering original SessionStats")
+	logger.BessLog.Infoln("[DEBUG-BESS] Entering SessionStats")
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
-	defer cancel()
-
-	// 1. Check BESS Module Read
-	flip, err := b.flipFlowMeasurementBufferFlag(ctx, PreQosFlowMeasure)
-	if err != nil {
-		logger.BessLog.Errorf("[DEBUG-BESS] BESS Flip failed: %v", err)
-		return
-	}
-	logger.BessLog.Infof("[DEBUG-BESS] BESS Flip success. OldFlag: %v", flip.OldFlag)
-
-	q := []float64{50, 90, 99}
-	qosStatsInResp, err := b.readFlowMeasurement(ctx, PreQosFlowMeasure, flip.OldFlag, true, q)
-	if err != nil {
-		logger.BessLog.Errorf("[DEBUG-BESS] Read PreQos failed: %v", err)
-		return
-	}
-	logger.BessLog.Infof("[DEBUG-BESS] Received %d PreQos stats from BESS", len(qosStatsInResp.Statistics))
-
-	postDlQosStatsResp, err := b.readFlowMeasurement(ctx, PostDlQosFlowMeasure, flip.OldFlag, true, q)
-	postUlQosStatsResp, err := b.readFlowMeasurement(ctx, PostUlQosFlowMeasure, flip.OldFlag, true, q)
-
-	// 2. Check Connection
+	// 1. Locate the active PFCP connection
 	var con *PFCPConn
 	pc.node.pConns.Range(func(key, value interface{}) bool {
-		pConn, _ := value.(*PFCPConn)
-		con = pConn
-		return false
+		pConn, ok := value.(*PFCPConn)
+		if ok {
+			con = pConn
+			logger.BessLog.Infof("[DEBUG-BESS] Found active connection to SMF: %v", con.nodeID.remote)
+			return false // Stop iterating
+		}
+		return true
 	})
 
 	if con == nil {
-		logger.BessLog.Warnln("[DEBUG-BESS] No PFCP connection found")
-	} else {
-		logger.BessLog.Infoln("[DEBUG-BESS] Found active PFCP connection")
+		logger.BessLog.Warnln("[DEBUG-BESS] No active PFCP connection found in memory")
+		return nil
 	}
 
-	// 3. Helper Loop
-	createStats := func(preResp, postResp *pb.FlowMeasureReadResponse, direction string) {
-		logger.BessLog.Infof("[DEBUG-BESS] Loop: processing %d stats for %s", len(postResp.Statistics), direction)
+	// 2. Get all sessions from Go store
+	allSessions := con.store.GetAllSessions()
+	logger.BessLog.Infof("[DEBUG-BESS] Scanning %d active sessions for metrics", len(allSessions))
 
-		for i := 0; i < len(postResp.Statistics); i++ {
-			post := postResp.Statistics[i]
-			var pre *pb.FlowMeasureReadResponse_Statistic
+	// 3. Loop through sessions
+	for _, session := range allSessions {
+		fseidString := strconv.FormatUint(session.localSEID, 10)
+		ueIpString := "unknown"
 
-			for _, v := range preResp.Statistics {
-				if post.Pdr == v.Pdr && post.Fseid == v.Fseid {
-					pre = v
-					break
-				}
+		// Identify the UE IP for this session
+		for _, p := range session.pdrs {
+			if p.IsUplink() && p.ueAddress > 0 {
+				ueIpString = int2ip(p.ueAddress).String()
+				break
+			}
+		}
+		logger.BessLog.Infof("[DEBUG-BESS] Found Session SEID: %s for UE: %s", fseidString, ueIpString)
+
+		// 4. Report metrics for each PDR (Uplink and Downlink)
+		for _, pdr := range session.pdrs {
+			direction := "uplink"
+			if pdr.IsDownlink() {
+				direction = "downlink"
 			}
 
-			if pre == nil {
-				continue
+			// We use 0 as a placeholder to verify connectivity first
+			var currentBytes uint64 = 0
+
+			logger.BessLog.Infof("[DEBUG-BESS] Reporting metric -> UE: %s, Dir: %s, Bytes: %d", ueIpString, direction, currentBytes)
+
+			// Push new metric to Prometheus
+			ch <- prometheus.MustNewConstMetric(
+				pc.ueTrafficBytes,
+				prometheus.CounterValue,
+				float64(currentBytes),
+				ueIpString,
+				direction,
+			)
+
+			// Save to internal metrics service
+			if pc.node.metrics != nil {
+				pc.node.metrics.SaveUEThroughput(&metrics.UETraffic{
+					NodeID:    con.nodeID.remote,
+					UEIP:      ueIpString,
+					Direction: direction,
+					Bytes:     currentBytes,
+				})
 			}
-
-			ueIpString := "unknown"
-			if con != nil {
-				session, ok := con.store.GetSession(pre.Fseid)
-				if ok {
-					for _, p := range session.pdrs {
-						if p.IsUplink() && p.ueAddress > 0 {
-							ueIpString = int2ip(p.ueAddress).String()
-							break
-						}
-					}
-				}
-			}
-
-			logger.BessLog.Infof("[DEBUG-BESS] Reporting UE: %s, Bytes: %v, Dir: %s", ueIpString, post.TotalBytes, direction)
-
-			// Push to Prometheus channel
-			// If you kept the 'ueTrafficBytes' field, this will work.
-			// If you deleted it, comment out the line below.
-			ch <- prometheus.MustNewConstMetric(pc.ueTrafficBytes, prometheus.CounterValue, float64(post.TotalBytes), ueIpString, direction)
 		}
 	}
-
-	createStats(&qosStatsInResp, &postUlQosStatsResp, "uplink")
-	createStats(&qosStatsInResp, &postDlQosStatsResp, "downlink")
 
 	return nil
 }
