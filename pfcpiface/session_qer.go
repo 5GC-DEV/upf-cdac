@@ -104,6 +104,26 @@ func (s *PFCPSession) MarkSessionQer(qers []qer) {
 	//                                Currently handle same as len = 2
 	var (
 		sessionIdx int
+		sessQerID  uint32
+	)
+	sessionIdx, sessQerID = findSessionQER(qers, sessQerIDList)
+
+	logger.PfcpLog.Infoln("session QER found. QER ID:", sessQerID)
+
+	qers[sessionIdx].qosLevel = SessionQos
+
+	for i := range s.pdrs {
+		// remove common qerID from pdr's qer list
+		idx := findItemIndex(s.pdrs[i].qerIDList, sessQerID)
+		if idx != len(s.pdrs[i].qerIDList) {
+			s.pdrs[i].qerIDList = append(s.pdrs[i].qerIDList[:idx], s.pdrs[i].qerIDList[idx+1:]...)
+			s.pdrs[i].qerIDList = append(s.pdrs[i].qerIDList, sessQerID)
+		}
+	}
+}
+func findSessionQER(qers []qer, sessQerIDList []uint32) (int, uint32) {
+	var (
+		sessionIdx int
 		sessionMbr uint64
 		sessQerID  uint32
 	)
@@ -126,19 +146,8 @@ func (s *PFCPSession) MarkSessionQer(qers []qer) {
 			}
 		}
 	}
+	return sessionIdx, sessQerID
 
-	logger.PfcpLog.Infoln("session QER found. QER ID:", sessQerID)
-
-	qers[sessionIdx].qosLevel = SessionQos
-
-	for i := range s.pdrs {
-		// remove common qerID from pdr's qer list
-		idx := findItemIndex(s.pdrs[i].qerIDList, sessQerID)
-		if idx != len(s.pdrs[i].qerIDList) {
-			s.pdrs[i].qerIDList = append(s.pdrs[i].qerIDList[:idx], s.pdrs[i].qerIDList[idx+1:]...)
-			s.pdrs[i].qerIDList = append(s.pdrs[i].qerIDList, sessQerID)
-		}
-	}
 }
 
 // RemoveQER removes qer from existing list of QERs in the session.

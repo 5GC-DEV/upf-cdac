@@ -11,6 +11,12 @@ import (
 	"testing"
 )
 
+const (
+	ipRouteCIDR   = "10.0.0.1/32"
+	ipGateway     = "60.60.0.1"
+	ipPeerAddress = "60.60.0.102"
+)
+
 func mustParseCIDRNet(s string) *net.IPNet {
 	_, ipNet, err := net.ParseCIDR(s)
 	if err != nil {
@@ -37,11 +43,11 @@ func Test_endpoint_parseNet(t *testing.T) {
 	}{
 		{name: "single IP",
 			args:    "10.0.0.1",
-			want:    endpoint{IPNet: mustParseCIDRNet("10.0.0.1/32")},
+			want:    endpoint{IPNet: mustParseCIDRNet(ipRouteCIDR)},
 			wantErr: false},
 		{name: "single IP with /32 net",
-			args:    "10.0.0.1/32",
-			want:    endpoint{IPNet: mustParseCIDRNet("10.0.0.1/32")},
+			args:    ipRouteCIDR,
+			want:    endpoint{IPNet: mustParseCIDRNet(ipRouteCIDR)},
 			wantErr: false},
 		{name: "single IP with net",
 			args:    "10.0.0.1/24",
@@ -295,7 +301,7 @@ func Test_parseFlowDesc(t *testing.T) {
 					ports: newWildcardPortRange(),
 				},
 				dst: endpoint{
-					IPNet: newIpv4AddrAsNet("60.60.0.102"),
+					IPNet: newIpv4AddrAsNet(ipPeerAddress),
 					ports: newWildcardPortRange(),
 				},
 			}, wantErr: false},
@@ -313,7 +319,7 @@ func Test_parseFlowDesc(t *testing.T) {
 					ports: newWildcardPortRange(),
 				},
 				dst: endpoint{
-					IPNet: newIpv4AddrAsNet("60.60.0.102"),
+					IPNet: newIpv4AddrAsNet(ipPeerAddress),
 					ports: newWildcardPortRange(),
 				},
 			}, wantErr: false},
@@ -327,7 +333,7 @@ func Test_parseFlowDesc(t *testing.T) {
 				direction: "out",
 				proto:     reservedProto,
 				src: endpoint{
-					IPNet: newIpv4AddrAsNet("60.60.0.1"),
+					IPNet: newIpv4AddrAsNet(ipGateway),
 					ports: newExactMatchPortRange(8888),
 				},
 				dst: endpoint{
@@ -345,7 +351,7 @@ func Test_parseFlowDesc(t *testing.T) {
 				direction: "out",
 				proto:     reservedProto,
 				src: endpoint{
-					IPNet: newIpv4AddrAsNet("60.60.0.1"),
+					IPNet: newIpv4AddrAsNet(ipGateway),
 					ports: newExactMatchPortRange(8888),
 				},
 				dst: endpoint{
@@ -363,11 +369,11 @@ func Test_parseFlowDesc(t *testing.T) {
 				direction: "out",
 				proto:     reservedProto,
 				src: endpoint{
-					IPNet: newIpv4AddrAsNet("60.60.0.1"),
+					IPNet: newIpv4AddrAsNet(ipGateway),
 					ports: newWildcardPortRange(),
 				},
 				dst: endpoint{
-					IPNet: newIpv4AddrAsNet("60.60.0.102"),
+					IPNet: newIpv4AddrAsNet(ipPeerAddress),
 					ports: newExactMatchPortRange(9999),
 				},
 			}, wantErr: false},
@@ -381,11 +387,11 @@ func Test_parseFlowDesc(t *testing.T) {
 				direction: "out",
 				proto:     reservedProto,
 				src: endpoint{
-					IPNet: newIpv4AddrAsNet("60.60.0.1"),
+					IPNet: newIpv4AddrAsNet(ipGateway),
 					ports: newExactMatchPortRange(8888),
 				},
 				dst: endpoint{
-					IPNet: newIpv4AddrAsNet("60.60.0.102"),
+					IPNet: newIpv4AddrAsNet(ipPeerAddress),
 					ports: newExactMatchPortRange(9999),
 				},
 			}, wantErr: false},
@@ -399,11 +405,11 @@ func Test_parseFlowDesc(t *testing.T) {
 				direction: "out",
 				proto:     reservedProto,
 				src: endpoint{
-					IPNet: newIpv4AddrAsNet("60.60.0.1"),
+					IPNet: newIpv4AddrAsNet(ipGateway),
 					ports: newExactMatchPortRange(8888),
 				},
 				dst: endpoint{
-					IPNet: newIpv4AddrAsNet("60.60.0.102"),
+					IPNet: newIpv4AddrAsNet(ipPeerAddress),
 					ports: newExactMatchPortRange(9999),
 				},
 			}, wantErr: false},

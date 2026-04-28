@@ -15,6 +15,8 @@ import (
 	"github.com/omec-project/upf-epc/pfcpiface/metrics"
 )
 
+const msgRemovedConnectionTo = "removed connection to"
+
 // PFCPNode represents a PFCP endpoint of the UPF.
 type PFCPNode struct {
 	ctx    context.Context
@@ -126,7 +128,7 @@ func (node *PFCPNode) Serve() {
 			})
 		case rAddr := <-node.pConnDone:
 			node.pConns.Delete(rAddr)
-			logger.PfcpLog.Infoln("removed connection to", rAddr)
+			logger.PfcpLog.Infoln(msgRemovedConnectionTo, rAddr)
 		case <-node.ctx.Done():
 			shutdown = true
 
@@ -148,7 +150,7 @@ func (node *PFCPNode) Serve() {
 							break clearLoop
 						}
 						node.pConns.Delete(rAddr)
-						logger.PfcpLog.Infoln("removed connection to", rAddr)
+						logger.PfcpLog.Infoln(msgRemovedConnectionTo, rAddr)
 					}
 				default:
 					// nothing to read from channel
@@ -159,7 +161,7 @@ func (node *PFCPNode) Serve() {
 			if len(node.pConnDone) > 0 {
 				for rAddr := range node.pConnDone {
 					node.pConns.Delete(rAddr)
-					logger.PfcpLog.Infoln("removed connection to", rAddr)
+					logger.PfcpLog.Infoln(msgRemovedConnectionTo, rAddr)
 				}
 			}
 

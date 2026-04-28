@@ -63,6 +63,10 @@ const (
 	p4InfoPath       = "../../conf/p4/bin/p4info.txt"
 	deviceConfigPath = "../../conf/p4/bin/bmv2.json"
 )
+const (
+	localLoopbackAltIP = "127.0.0.8"
+	localhostIPIn      = "127.0.0.1"
+)
 
 type UEState uint8
 
@@ -227,11 +231,11 @@ func waitForPFCPAssociationSetup(pfcpClient *pfcpsim.PFCPClient) error {
 }
 
 func waitForMockUP4ToStart() error {
-	return waitForPortOpen("tcp", "127.0.0.1", "50001")
+	return waitForPortOpen("tcp", localhostIPIn, "50001")
 }
 
 func waitForBESSFakeToStart() error {
-	return waitForPortOpen("tcp", "127.0.0.1", "10514")
+	return waitForPortOpen("tcp", localhostIPIn, "10514")
 }
 
 func isDatapathUP4() bool {
@@ -281,7 +285,7 @@ func mustInitCountersWithDummyValue() {
 }
 
 func MustStartMockUP4() {
-	providers.MustRunDockerContainer(ContainerNameMockUP4, ImageNameMockUP4, "--topo single", "127.0.0.1", []string{"50001/tcp"}, "", DockerTestNetwork)
+	providers.MustRunDockerContainer(ContainerNameMockUP4, ImageNameMockUP4, "--topo single", localhostIPIn, []string{"50001/tcp"}, "", DockerTestNetwork)
 	err := waitForMockUP4ToStart()
 	if err != nil {
 		panic(err)
@@ -296,7 +300,7 @@ func MustStopMockUP4() {
 
 func MustStartPFCPAgent() {
 	providers.MustRunDockerContainer(ContainerNamePFCPAgent, ImageNamePFCPAgent, "-config /config/upf.jsonc",
-		"127.0.0.8", []string{"8805/udp", "8080/tcp"}, "/tmp:/config", DockerTestNetwork)
+		localLoopbackAltIP, []string{"8805/udp", "8080/tcp"}, "/tmp:/config", DockerTestNetwork)
 }
 
 func MustStopPFCPAgent() {
@@ -331,15 +335,15 @@ func setup(t *testing.T, configType uint32) {
 		MustStartPFCPAgent()
 	case ModeNative:
 		upfConf := GetConfig(os.Getenv(EnvDatapath), configType)
-		upfConf.N4Addr = "127.0.0.8"
+		upfConf.N4Addr = localLoopbackAltIP
 		pfcpAgent = pfcpiface.NewPFCPIface(upfConf)
 		go pfcpAgent.Run()
 	default:
 		t.Fatal("Unexpected test mode")
 	}
 
-	pfcpClient = pfcpsim.NewPFCPClient("127.0.0.1")
-	err := pfcpClient.ConnectN4("127.0.0.8")
+	pfcpClient = pfcpsim.NewPFCPClient(localhostIPIn)
+	err := pfcpClient.ConnectN4(localLoopbackAltIP)
 	require.NoErrorf(t, err, "failed to connect to UPF")
 
 	// wait for PFCP Agent to initialize, blocking
