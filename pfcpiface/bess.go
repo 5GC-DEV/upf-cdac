@@ -66,8 +66,9 @@ const (
 	sliceMeterGateMeter   uint64 = 0
 	sliceMeterGateUnmeter uint64 = 6
 )
+
 const (
-	//SOnarQube define constants.
+	// SOnarQube define constants.
 	errGRPCCallFailed    = "unable to make GRPC calls"
 	errMarshalRule       = "error marshalling the rule"
 	errMarshalRequest    = "error marshalling request"
@@ -132,7 +133,8 @@ func (b *bess) AddSliceInfo(sliceInfo *SliceInfo) error {
 }
 
 func (b *bess) SendMsgToUPF(
-	method upfMsgType, rules PacketForwardingRules, updated PacketForwardingRules) uint8 {
+	method upfMsgType, rules PacketForwardingRules, updated PacketForwardingRules,
+) uint8 {
 	// create context
 	cause := ie.CauseRequestAccepted
 
@@ -452,7 +454,6 @@ func (b *bess) readFlowMeasurement(
 			Arg:  arg,
 		},
 	)
-
 	if err != nil {
 		logger.BessLog.Errorln(module, errReadFailed, err)
 		return
@@ -472,7 +473,8 @@ func (b *bess) readFlowMeasurement(
 }
 
 func (b *bess) readGtpuPathMonitoringStats(
-	module string, isClear bool) *pb.GtpuPathMonitoringCommandReadResponse {
+	module string, isClear bool,
+) *pb.GtpuPathMonitoringCommandReadResponse {
 	req := &pb.GtpuPathMonitoringCommandReadArg{
 		Clear: isClear,
 	}
@@ -492,7 +494,6 @@ func (b *bess) readGtpuPathMonitoringStats(
 			Arg:  arg,
 		},
 	)
-
 	if err != nil {
 		logger.BessLog.Errorln(module, errReadFailed, err)
 		return nil
@@ -505,7 +506,6 @@ func (b *bess) readGtpuPathMonitoringStats(
 
 	var res pb.GtpuPathMonitoringCommandReadResponse
 	err = resp.Data.UnmarshalTo(&res)
-
 	if err != nil {
 		logger.BessLog.Errorln(err, resp)
 		return nil
@@ -861,6 +861,7 @@ func (b *bess) SetUpfInfo(u *upf, conf *Conf) {
 		enableGtpuPathMonitoring = true
 	}
 }
+
 func (b *bess) setupSliceMeter(conf *Conf) {
 	if (conf.SliceMeterConfig.N6RateBps > 0) ||
 		(conf.SliceMeterConfig.N3RateBps > 0) {
@@ -1105,7 +1106,8 @@ func (b *bess) handleDownlinkQER(ctx context.Context, qer qer) {
 
 func (b *bess) addApplicationQER(ctx context.Context, gate uint64, srcIface uint8,
 	cir uint64, pir uint64, cbs uint64, pbs uint64,
-	ebs uint64, qer qer) {
+	ebs uint64, qer qer,
+) {
 	var (
 		arg *anypb.Any
 		err error
@@ -1171,7 +1173,8 @@ func (b *bess) delQER(ctx context.Context, done chan<- bool, qer qer) {
 }
 
 func (b *bess) delApplicationQER(
-	ctx context.Context, srcIface uint8, qer qer) {
+	ctx context.Context, srcIface uint8, qer qer,
+) {
 	var (
 		arg *anypb.Any
 		err error
@@ -1396,11 +1399,11 @@ func (b *bess) addSliceMeter(ctx context.Context, done chan<- bool, meterConfig 
 		done <- true
 	}()
 }
+
 func (b *bess) handleUplinkSliceMeter(
 	meterConfig SliceMeterConfig,
 	cir, pir, cbs, ebs, pbs, gate *uint64,
 ) (*anypb.Any, error) {
-
 	// Uplink N6 slice meter config
 	if meterConfig.N6RateBps != 0 {
 		*gate = sliceMeterGateMeter
@@ -1444,11 +1447,11 @@ func (b *bess) handleUplinkSliceMeter(
 
 	return arg, nil
 }
+
 func (b *bess) handleDownlinkSliceMeter(
 	meterConfig SliceMeterConfig,
 	cir, pir, cbs, ebs, pbs, gate *uint64,
 ) (*anypb.Any, error) {
-
 	// Downlink N3 slice meter config
 	if meterConfig.N3RateBps != 0 {
 		*gate = sliceMeterGateMeter
@@ -1518,7 +1521,8 @@ func (b *bess) processQER(ctx context.Context, arg *anypb.Any, method upfMsgType
 
 func (b *bess) addSessionQER(ctx context.Context, gate uint64, srcIface uint8,
 	cir uint64, pir uint64, cbs uint64,
-	pbs uint64, ebs uint64, qer qer) {
+	pbs uint64, ebs uint64, qer qer,
+) {
 	var (
 		arg *anypb.Any
 		err error

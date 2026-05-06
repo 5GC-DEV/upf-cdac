@@ -4,13 +4,13 @@
 package pfcpiface
 
 import (
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-
 	"math"
 	"net"
 	"sync"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 const ipSubnetCIDR = "10.0.0.0/24"

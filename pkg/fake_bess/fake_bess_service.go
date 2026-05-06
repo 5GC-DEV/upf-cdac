@@ -28,6 +28,7 @@ const (
 	clearCmd                     = "clear"
 	deleteCmd                    = "delete"
 )
+
 const (
 	msgUpdatedEntry    = "updated existing entry %v"
 	msgAddedEntry      = "added new entry %v"

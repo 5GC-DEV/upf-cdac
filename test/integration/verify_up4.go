@@ -45,6 +45,7 @@ const (
 	minApplicationID   uint8 = 1
 	maxApplicationID   uint8 = 255
 )
+
 const (
 	p4RuntimeAddr       = "127.0.0.1:50001"
 	errP4RuntimeConnect = "failed to connect to P4Runtime server"
@@ -310,8 +311,8 @@ func verifyP4RuntimeEntries(t *testing.T, testdata *pfcpSessionData, expectedVal
 	}
 
 	// FIXME: uncomment once pfcpiface properly removes all the state, see SDFAB-960
-	//allInstalledEntries, _ := p4rtClient.ReadTableEntryWildcard("")
-	//require.Equal(t, expectedNumberOfAllEntries, len(allInstalledEntries),
+	// allInstalledEntries, _ := p4rtClient.ReadTableEntryWildcard("")
+	// require.Equal(t, expectedNumberOfAllEntries, len(allInstalledEntries),
 	//	fmt.Sprintf("UP4 should have exactly %v p4RtEntries installed", expectedNumberOfAllEntries),
 	//	allInstalledEntries)
 
@@ -396,8 +397,8 @@ func verifyP4RuntimeEntries(t *testing.T, testdata *pfcpSessionData, expectedVal
 		entries,
 		tunnelPeerSessionsDownlink,
 	)
-
 }
+
 func verifyPostDLAndMeters(
 	t *testing.T,
 	p4rtClient *client.Client,
@@ -481,6 +482,7 @@ func verifyPostDLAndMeters(
 	// verify egress counter
 	verifyCounter(p4constants.CounterPostQosPipePostQosCounter)
 }
+
 func verifyNumberOfEntries(t *testing.T, tableID uint32, expectedNoOfEntries int) {
 	p4rtClient, err := providers.ConnectP4rt(p4RuntimeAddr, false)
 	require.NoErrorf(t, err, errP4RuntimeConnect)

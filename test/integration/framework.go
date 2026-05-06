@@ -63,6 +63,7 @@ const (
 	p4InfoPath       = "../../conf/p4/bin/p4info.txt"
 	deviceConfigPath = "../../conf/p4/bin/bmv2.json"
 )
+
 const (
 	localLoopbackAltIP = "127.0.0.8"
 	localhostIPIn      = "127.0.0.1"
