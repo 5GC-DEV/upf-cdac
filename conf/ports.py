@@ -6,7 +6,7 @@ import errno
 import inspect
 import sys
 
-from conf.parser import MAX_GATES
+from conf.parser import *
 from conf.utils import (
     peer_by_interface,
     alias_by_interface, 
