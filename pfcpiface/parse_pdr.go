@@ -213,9 +213,7 @@ func CreatePortRangeCartesianProduct(src, dst portRange) ([]portRangeTernaryCart
 		if err != nil {
 			return nil, err
 		}
-
 		rules = buildRulesFromRange(srcTernaryRules, dstTernary, true)
-
 	} else if dst.isRangeMatch() {
 		dstTernaryRules, err := dst.asComplexTernaryMatches(Exact)
 		if err != nil {
@@ -228,7 +226,6 @@ func CreatePortRangeCartesianProduct(src, dst portRange) ([]portRangeTernaryCart
 		}
 
 		rules = buildRulesFromRange(dstTernaryRules, srcTernary, false)
-
 	} else {
 		// Neither is range. Only one rule needed.
 		srcTernary, err := src.asTrivialTernaryMatch()
@@ -247,7 +244,6 @@ func CreatePortRangeCartesianProduct(src, dst portRange) ([]portRangeTernaryCart
 		}
 		rules = append(rules, p)
 	}
-
 	return rules, nil
 }
 

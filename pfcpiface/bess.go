@@ -632,7 +632,6 @@ func (b *bess) SessionStats(pc *PfcpNodeCollector, ch chan<- prometheus.Metric) 
 func (b *bess) readSessionMeasurements(
 	ctx context.Context,
 ) (pre, postDl, postUl pb.FlowMeasureReadResponse, err error) {
-
 	// Flip buffer
 	flip, err := b.flipFlowMeasurementBufferFlag(ctx, PreQosFlowMeasure)
 	if err != nil {
@@ -671,7 +670,6 @@ func resolveUEIP(
 	pre *pb.FlowMeasureReadResponse_Statistic,
 	ueIpString string,
 ) (string, bool) {
-
 	if con != nil {
 		session, ok := con.store.GetSession(pre.Fseid)
 		if !ok {
@@ -1021,7 +1019,6 @@ func (b *bess) delPDR(ctx context.Context, done chan<- bool, p pdr) {
 
 func (b *bess) addQER(ctx context.Context, done chan<- bool, qer qer) {
 	go func() {
-
 		// Uplink
 		b.handleUplinkQER(ctx, qer)
 

@@ -121,6 +121,7 @@ func (s *PFCPSession) MarkSessionQer(qers []qer) {
 		}
 	}
 }
+
 func findSessionQER(qers []qer, sessQerIDList []uint32) (int, uint32) {
 	var (
 		sessionIdx int
@@ -147,7 +148,6 @@ func findSessionQER(qers []qer, sessQerIDList []uint32) (int, uint32) {
 		}
 	}
 	return sessionIdx, sessQerID
-
 }
 
 // RemoveQER removes qer from existing list of QERs in the session.
