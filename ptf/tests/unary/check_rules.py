@@ -3,7 +3,7 @@
 
 from ipaddress import IPv4Address
 
-from grpc_test import GrpcTest
+from grpc_test import *
 from trex_test import TrexTest
 
 UPF_DEST_MAC = "0c:c4:7a:19:6d:ca"
