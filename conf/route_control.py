@@ -541,31 +541,7 @@ class RouteController:
                 next_hop.route_count -= 1
 
                 if next_hop.route_count == 0:
-                    if route_entry.interface is not None:
-                        route_module = get_route_module_name(route_entry.interface)
-                        if next_hop.mac_address is not None:
-                            update_module_name = get_update_module_name(
-                                route_module_name=route_module,
-                                mac_address=next_hop.mac_address,
-                            )
-
-                            try:
-                                self._bess_controller.delete_module(update_module_name)
-                            except Exception:
-                                logger.exception(
-                                    "Error deleting update module %s",
-                                    update_module_name,
-                                )
-                                return
-
-                            logger.info("Module deleted %s", update_module_name)
-
-                            del self._neighbor_cache[route_entry.next_hop_ip]
-                            logger.info("Deleted item from neighbor cache")
-                        else:
-                            logger.warning("MAC address is None, cannot get update module name")
-                    else:
-                        logger.warning("Interface is None, cannot get route module name")
+                        self._cleanup_update_module(route_entry, next_hop)
                 else:
                     logger.info(
                         "Route count for %s decremented to %i",
@@ -577,6 +553,35 @@ class RouteController:
                 logger.info("Neighbor %s does not exist", route_entry.next_hop_ip)
         else:
             logger.warning("next_hop_ip is None, cannot delete route entry")
+    def _cleanup_update_module(self, route_entry: RouteEntry, next_hop) -> None:
+        """Handles deletion of update module and neighbor cache cleanup."""
+
+        if route_entry.interface is None:
+            logger.warning("Interface is None, cannot get route module name")
+            return
+
+            if next_hop.mac_address is None:
+                logger.warning("MAC address is None, cannot get update module name")
+                return
+
+                route_module = get_route_module_name(route_entry.interface)
+                update_module_name = get_update_module_name(
+                    route_module_name=route_module,
+                    mac_address=next_hop.mac_address,
+                )
+
+                try:
+                    self._bess_controller.delete_module(update_module_name)
+                except Exception:
+                    logger.exception(
+                        "Error deleting update module %s",
+                        update_module_name,
+                    )
+                return
+
+    logger.info("Module deleted %s", update_module_name)
+    del self._neighbor_cache[route_entry.next_hop_ip]
+    logger.info("Deleted item from neighbor cache")
 
     def _ping_missing_entries(self):
         """Pings missing entries every 10 seconds.

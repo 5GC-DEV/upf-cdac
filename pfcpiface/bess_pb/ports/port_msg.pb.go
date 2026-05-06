@@ -72,6 +72,7 @@ func (x *PCAPPortArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*PCAPPortArg) ProtoMessage() {}
 
 func (x *PCAPPortArg) ProtoReflect() protoreflect.Message {
@@ -136,6 +137,7 @@ func (x *PMDPortArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*PMDPortArg) ProtoMessage() {}
 
 func (x *PMDPortArg) ProtoReflect() protoreflect.Message {
@@ -262,10 +264,13 @@ type PMDPortArg_Vdev struct {
 	Vdev string `protobuf:"bytes,4,opt,name=vdev,proto3,oneof"`
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*PMDPortArg_PortId) isPMDPortArg_Port() {}
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*PMDPortArg_Pci) isPMDPortArg_Port() {}
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*PMDPortArg_Vdev) isPMDPortArg_Port() {}
 
 type isPMDPortArg_Socket interface {
@@ -276,6 +281,7 @@ type PMDPortArg_SocketId struct {
 	SocketId int32 `protobuf:"varint,8,opt,name=socket_id,json=socketId,proto3,oneof"`
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*PMDPortArg_SocketId) isPMDPortArg_Socket() {}
 
 type UnixSocketPortArg struct {
@@ -309,6 +315,7 @@ func (x *UnixSocketPortArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*UnixSocketPortArg) ProtoMessage() {}
 
 func (x *UnixSocketPortArg) ProtoReflect() protoreflect.Message {
@@ -380,6 +387,7 @@ func (x *VPortArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*VPortArg) ProtoMessage() {}
 
 func (x *VPortArg) ProtoReflect() protoreflect.Message {
@@ -485,10 +493,13 @@ type VPortArg_Netns struct {
 	Netns string `protobuf:"bytes,4,opt,name=netns,proto3,oneof"`
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*VPortArg_Docker) isVPortArg_Cpid() {}
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*VPortArg_ContainerPid) isVPortArg_Cpid() {}
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*VPortArg_Netns) isVPortArg_Cpid() {}
 
 type CndpPortArg struct {
@@ -515,6 +526,7 @@ func (x *CndpPortArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*CndpPortArg) ProtoMessage() {}
 
 func (x *CndpPortArg) ProtoReflect() protoreflect.Message {

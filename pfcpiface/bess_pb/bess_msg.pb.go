@@ -46,11 +46,12 @@
 package bess_pb
 
 import (
+	reflect "reflect"
+	sync "sync"
+
 	any1 "github.com/golang/protobuf/ptypes/any"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	reflect "reflect"
-	sync "sync"
 )
 
 const (
@@ -79,6 +80,7 @@ func (x *EmptyRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*EmptyRequest) ProtoMessage() {}
 
 func (x *EmptyRequest) ProtoReflect() protoreflect.Message {
@@ -121,6 +123,7 @@ func (x *EmptyResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*EmptyResponse) ProtoMessage() {}
 
 func (x *EmptyResponse) ProtoReflect() protoreflect.Message {
@@ -169,6 +172,7 @@ func (x *VersionResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*VersionResponse) ProtoMessage() {}
 
 func (x *VersionResponse) ProtoReflect() protoreflect.Message {
@@ -223,6 +227,7 @@ func (x *ImportPluginRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*ImportPluginRequest) ProtoMessage() {}
 
 func (x *ImportPluginRequest) ProtoReflect() protoreflect.Message {
@@ -270,6 +275,7 @@ func (x *UnloadPluginRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*UnloadPluginRequest) ProtoMessage() {}
 
 func (x *UnloadPluginRequest) ProtoReflect() protoreflect.Message {
@@ -318,6 +324,7 @@ func (x *ListPluginsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*ListPluginsResponse) ProtoMessage() {}
 
 func (x *ListPluginsResponse) ProtoReflect() protoreflect.Message {
@@ -373,6 +380,7 @@ func (x *ListWorkersResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*ListWorkersResponse) ProtoMessage() {}
 
 func (x *ListWorkersResponse) ProtoReflect() protoreflect.Message {
@@ -429,6 +437,7 @@ func (x *AddWorkerRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*AddWorkerRequest) ProtoMessage() {}
 
 func (x *AddWorkerRequest) ProtoReflect() protoreflect.Message {
@@ -490,6 +499,7 @@ func (x *DestroyWorkerRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*DestroyWorkerRequest) ProtoMessage() {}
 
 func (x *DestroyWorkerRequest) ProtoReflect() protoreflect.Message {
@@ -560,6 +570,7 @@ func (x *TrafficClass) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*TrafficClass) ProtoMessage() {}
 
 func (x *TrafficClass) ProtoReflect() protoreflect.Message {
@@ -688,8 +699,10 @@ type TrafficClass_Share struct {
 	Share int64 `protobuf:"varint,7,opt,name=share,proto3,oneof"`
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*TrafficClass_Priority) isTrafficClass_Arg() {}
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*TrafficClass_Share) isTrafficClass_Arg() {}
 
 type ListTcsRequest struct {
@@ -715,6 +728,7 @@ func (x *ListTcsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*ListTcsRequest) ProtoMessage() {}
 
 func (x *ListTcsRequest) ProtoReflect() protoreflect.Message {
@@ -763,6 +777,7 @@ func (x *ListTcsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*ListTcsResponse) ProtoMessage() {}
 
 func (x *ListTcsResponse) ProtoReflect() protoreflect.Message {
@@ -820,6 +835,7 @@ func (x *CheckSchedulingConstraintsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*CheckSchedulingConstraintsResponse) ProtoMessage() {}
 
 func (x *CheckSchedulingConstraintsResponse) ProtoReflect() protoreflect.Message {
@@ -888,6 +904,7 @@ func (x *AddTcRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*AddTcRequest) ProtoMessage() {}
 
 func (x *AddTcRequest) ProtoReflect() protoreflect.Message {
@@ -935,6 +952,7 @@ func (x *UpdateTcParamsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*UpdateTcParamsRequest) ProtoMessage() {}
 
 func (x *UpdateTcParamsRequest) ProtoReflect() protoreflect.Message {
@@ -982,6 +1000,7 @@ func (x *UpdateTcParentRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*UpdateTcParentRequest) ProtoMessage() {}
 
 func (x *UpdateTcParentRequest) ProtoReflect() protoreflect.Message {
@@ -1029,6 +1048,7 @@ func (x *GetTcStatsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GetTcStatsRequest) ProtoMessage() {}
 
 func (x *GetTcStatsRequest) ProtoReflect() protoreflect.Message {
@@ -1083,6 +1103,7 @@ func (x *GetTcStatsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GetTcStatsResponse) ProtoMessage() {}
 
 func (x *GetTcStatsResponse) ProtoReflect() protoreflect.Message {
@@ -1166,6 +1187,7 @@ func (x *ListDriversResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*ListDriversResponse) ProtoMessage() {}
 
 func (x *ListDriversResponse) ProtoReflect() protoreflect.Message {
@@ -1220,6 +1242,7 @@ func (x *GetDriverInfoRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GetDriverInfoRequest) ProtoMessage() {}
 
 func (x *GetDriverInfoRequest) ProtoReflect() protoreflect.Message {
@@ -1270,6 +1293,7 @@ func (x *GetDriverInfoResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GetDriverInfoResponse) ProtoMessage() {}
 
 func (x *GetDriverInfoResponse) ProtoReflect() protoreflect.Message {
@@ -1339,6 +1363,7 @@ func (x *ListPortsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*ListPortsResponse) ProtoMessage() {}
 
 func (x *ListPortsResponse) ProtoReflect() protoreflect.Message {
@@ -1410,6 +1435,7 @@ func (x *CreatePortRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*CreatePortRequest) ProtoMessage() {}
 
 func (x *CreatePortRequest) ProtoReflect() protoreflect.Message {
@@ -1478,7 +1504,7 @@ func (x *CreatePortRequest) GetArg() *any1.Any {
 	return nil
 }
 
-/// All configuration parameters updatable at runtime
+// / All configuration parameters updatable at runtime
 type PortConf struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1507,6 +1533,7 @@ func (x *PortConf) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*PortConf) ProtoMessage() {}
 
 func (x *PortConf) ProtoReflect() protoreflect.Message {
@@ -1569,6 +1596,7 @@ func (x *SetPortConfRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*SetPortConfRequest) ProtoMessage() {}
 
 func (x *SetPortConfRequest) ProtoReflect() protoreflect.Message {
@@ -1623,6 +1651,7 @@ func (x *GetPortConfRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GetPortConfRequest) ProtoMessage() {}
 
 func (x *GetPortConfRequest) ProtoReflect() protoreflect.Message {
@@ -1671,6 +1700,7 @@ func (x *GetPortConfResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GetPortConfResponse) ProtoMessage() {}
 
 func (x *GetPortConfResponse) ProtoReflect() protoreflect.Message {
@@ -1727,6 +1757,7 @@ func (x *CreatePortResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*CreatePortResponse) ProtoMessage() {}
 
 func (x *CreatePortResponse) ProtoReflect() protoreflect.Message {
@@ -1788,6 +1819,7 @@ func (x *DestroyPortRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*DestroyPortRequest) ProtoMessage() {}
 
 func (x *DestroyPortRequest) ProtoReflect() protoreflect.Message {
@@ -1835,6 +1867,7 @@ func (x *GetPortStatsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GetPortStatsRequest) ProtoMessage() {}
 
 func (x *GetPortStatsRequest) ProtoReflect() protoreflect.Message {
@@ -1885,6 +1918,7 @@ func (x *GetPortStatsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GetPortStatsResponse) ProtoMessage() {}
 
 func (x *GetPortStatsResponse) ProtoReflect() protoreflect.Message {
@@ -1953,6 +1987,7 @@ func (x *GetLinkStatusRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GetLinkStatusRequest) ProtoMessage() {}
 
 func (x *GetLinkStatusRequest) ProtoReflect() protoreflect.Message {
@@ -2004,6 +2039,7 @@ func (x *GetLinkStatusResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GetLinkStatusResponse) ProtoMessage() {}
 
 func (x *GetLinkStatusResponse) ProtoReflect() protoreflect.Message {
@@ -2080,6 +2116,7 @@ func (x *ListMclassResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*ListMclassResponse) ProtoMessage() {}
 
 func (x *ListMclassResponse) ProtoReflect() protoreflect.Message {
@@ -2134,6 +2171,7 @@ func (x *GetMclassInfoRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GetMclassInfoRequest) ProtoMessage() {}
 
 func (x *GetMclassInfoRequest) ProtoReflect() protoreflect.Message {
@@ -2185,6 +2223,7 @@ func (x *GetMclassInfoResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GetMclassInfoResponse) ProtoMessage() {}
 
 func (x *GetMclassInfoResponse) ProtoReflect() protoreflect.Message {
@@ -2261,6 +2300,7 @@ func (x *ListModulesResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*ListModulesResponse) ProtoMessage() {}
 
 func (x *ListModulesResponse) ProtoReflect() protoreflect.Message {
@@ -2323,6 +2363,7 @@ func (x *CreateModuleRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*CreateModuleRequest) ProtoMessage() {}
 
 func (x *CreateModuleRequest) ProtoReflect() protoreflect.Message {
@@ -2385,6 +2426,7 @@ func (x *CreateModuleResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*CreateModuleResponse) ProtoMessage() {}
 
 func (x *CreateModuleResponse) ProtoReflect() protoreflect.Message {
@@ -2439,6 +2481,7 @@ func (x *DestroyModuleRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*DestroyModuleRequest) ProtoMessage() {}
 
 func (x *DestroyModuleRequest) ProtoReflect() protoreflect.Message {
@@ -2486,6 +2529,7 @@ func (x *GetModuleInfoRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GetModuleInfoRequest) ProtoMessage() {}
 
 func (x *GetModuleInfoRequest) ProtoReflect() protoreflect.Message {
@@ -2540,6 +2584,7 @@ func (x *GetModuleInfoResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GetModuleInfoResponse) ProtoMessage() {}
 
 func (x *GetModuleInfoResponse) ProtoReflect() protoreflect.Message {
@@ -2642,6 +2687,7 @@ func (x *ConnectModulesRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*ConnectModulesRequest) ProtoMessage() {}
 
 func (x *ConnectModulesRequest) ProtoReflect() protoreflect.Message {
@@ -2718,6 +2764,7 @@ func (x *DisconnectModulesRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*DisconnectModulesRequest) ProtoMessage() {}
 
 func (x *DisconnectModulesRequest) ProtoReflect() protoreflect.Message {
@@ -2782,6 +2829,7 @@ func (x *MempoolDump) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*MempoolDump) ProtoMessage() {}
 
 func (x *MempoolDump) ProtoReflect() protoreflect.Message {
@@ -2899,6 +2947,7 @@ func (x *DumpMempoolRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*DumpMempoolRequest) ProtoMessage() {}
 
 func (x *DumpMempoolRequest) ProtoReflect() protoreflect.Message {
@@ -2947,6 +2996,7 @@ func (x *DumpMempoolResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*DumpMempoolResponse) ProtoMessage() {}
 
 func (x *DumpMempoolResponse) ProtoReflect() protoreflect.Message {
@@ -3003,6 +3053,7 @@ func (x *CommandRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*CommandRequest) ProtoMessage() {}
 
 func (x *CommandRequest) ProtoReflect() protoreflect.Message {
@@ -3065,6 +3116,7 @@ func (x *CommandResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*CommandResponse) ProtoMessage() {}
 
 func (x *CommandResponse) ProtoReflect() protoreflect.Message {
@@ -3120,6 +3172,7 @@ func (x *ListGateHookClassResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*ListGateHookClassResponse) ProtoMessage() {}
 
 func (x *ListGateHookClassResponse) ProtoReflect() protoreflect.Message {
@@ -3174,6 +3227,7 @@ func (x *GetGateHookClassInfoRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GetGateHookClassInfoRequest) ProtoMessage() {}
 
 func (x *GetGateHookClassInfoRequest) ProtoReflect() protoreflect.Message {
@@ -3225,6 +3279,7 @@ func (x *GetGateHookClassInfoResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GetGateHookClassInfoResponse) ProtoMessage() {}
 
 func (x *GetGateHookClassInfoResponse) ProtoReflect() protoreflect.Message {
@@ -3279,13 +3334,13 @@ func (x *GetGateHookClassInfoResponse) GetCmdArgs() []string {
 	return nil
 }
 
-/// Enable/Disable the "Track" hook on a gate (or all gates)
-///
-/// "Track" hook accumulates the number of total packets, batches and bits
-///  passing through a gate. This incurs some amount of CPU overheads. While
-///  the cost is very small, remember that the delay adds up at every gate.
-///
-/// NOTE: There should be no running worker to run this command.
+// / Enable/Disable the "Track" hook on a gate (or all gates)
+// /
+// / "Track" hook accumulates the number of total packets, batches and bits
+// /  passing through a gate. This incurs some amount of CPU overheads. While
+// /  the cost is very small, remember that the delay adds up at every gate.
+// /
+// / NOTE: There should be no running worker to run this command.
 type TrackArg struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3307,6 +3362,7 @@ func (x *TrackArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*TrackArg) ProtoMessage() {}
 
 func (x *TrackArg) ProtoReflect() protoreflect.Message {
@@ -3333,14 +3389,14 @@ func (x *TrackArg) GetBits() bool {
 	return false
 }
 
-/// Enable/Disable tcpdump tapping at an input/output gate.
-///
-/// Once the tap is installed, all packets going through the gate will be
-/// captured and sent in PCAP format to the specified named pipe (FIFO).
-/// Thus you can run `tcpdump -r <path to FIFO>` or save the stream in a file.
-/// This feature may affect performance.
-///
-/// NOTE: There should be no running worker to run this command.
+// / Enable/Disable tcpdump tapping at an input/output gate.
+// /
+// / Once the tap is installed, all packets going through the gate will be
+// / captured and sent in PCAP format to the specified named pipe (FIFO).
+// / Thus you can run `tcpdump -r <path to FIFO>` or save the stream in a file.
+// / This feature may affect performance.
+// /
+// / NOTE: There should be no running worker to run this command.
 type TcpdumpArg struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3364,6 +3420,7 @@ func (x *TcpdumpArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*TcpdumpArg) ProtoMessage() {}
 
 func (x *TcpdumpArg) ProtoReflect() protoreflect.Message {
@@ -3404,16 +3461,16 @@ func (x *TcpdumpArg) GetReconnect() bool {
 	return false
 }
 
-/// Enable/Disable pcapng tapping at an input/output gate.
-///
-/// Once the tap is installed, all packets going through the gate will be
-/// captured and sent in pcapng format to the specified named pipe (FIFO).
-/// Unlike the Tcpdump hook, this also dumps a textual metadata representation,
-/// in the form of a comment to the Enhanced Packet Block. Thus you can run
-/// `tcpdump -r <path to FIFO>` or save the stream in a file.
-/// This feature may affect performance.
-///
-/// NOTE: There should be no running worker to run this command.
+// / Enable/Disable pcapng tapping at an input/output gate.
+// /
+// / Once the tap is installed, all packets going through the gate will be
+// / captured and sent in pcapng format to the specified named pipe (FIFO).
+// / Unlike the Tcpdump hook, this also dumps a textual metadata representation,
+// / in the form of a comment to the Enhanced Packet Block. Thus you can run
+// / `tcpdump -r <path to FIFO>` or save the stream in a file.
+// / This feature may affect performance.
+// /
+// / NOTE: There should be no running worker to run this command.
 type PcapngArg struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3437,6 +3494,7 @@ func (x *PcapngArg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*PcapngArg) ProtoMessage() {}
 
 func (x *PcapngArg) ProtoReflect() protoreflect.Message {
@@ -3505,6 +3563,7 @@ func (x *GateHookInfo) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GateHookInfo) ProtoMessage() {}
 
 func (x *GateHookInfo) ProtoReflect() protoreflect.Message {
@@ -3585,8 +3644,10 @@ type GateHookInfo_Ogate struct {
 	Ogate int64 `protobuf:"varint,5,opt,name=ogate,proto3,oneof"` /// Output gate index. All output gates if -1
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GateHookInfo_Igate) isGateHookInfo_Gate() {}
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GateHookInfo_Ogate) isGateHookInfo_Gate() {}
 
 type ConfigureGateHookRequest struct {
@@ -3611,6 +3672,7 @@ func (x *ConfigureGateHookRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*ConfigureGateHookRequest) ProtoMessage() {}
 
 func (x *ConfigureGateHookRequest) ProtoReflect() protoreflect.Message {
@@ -3666,6 +3728,7 @@ func (x *ConfigureGateHookResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*ConfigureGateHookResponse) ProtoMessage() {}
 
 func (x *ConfigureGateHookResponse) ProtoReflect() protoreflect.Message {
@@ -3721,6 +3784,7 @@ func (x *ListGateHooksResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*ListGateHooksResponse) ProtoMessage() {}
 
 func (x *ListGateHooksResponse) ProtoReflect() protoreflect.Message {
@@ -3776,6 +3840,7 @@ func (x *GateHookCommandRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GateHookCommandRequest) ProtoMessage() {}
 
 func (x *GateHookCommandRequest) ProtoReflect() protoreflect.Message {
@@ -3833,6 +3898,7 @@ func (x *ConfigureResumeHookRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*ConfigureResumeHookRequest) ProtoMessage() {}
 
 func (x *ConfigureResumeHookRequest) ProtoReflect() protoreflect.Message {
@@ -3894,6 +3960,7 @@ func (x *PauseWorkerRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*PauseWorkerRequest) ProtoMessage() {}
 
 func (x *PauseWorkerRequest) ProtoReflect() protoreflect.Message {
@@ -3941,6 +4008,7 @@ func (x *ResumeWorkerRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*ResumeWorkerRequest) ProtoMessage() {}
 
 func (x *ResumeWorkerRequest) ProtoReflect() protoreflect.Message {
@@ -3996,6 +4064,7 @@ func (x *ListWorkersResponse_WorkerStatus) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*ListWorkersResponse_WorkerStatus) ProtoMessage() {}
 
 func (x *ListWorkersResponse_WorkerStatus) ProtoReflect() protoreflect.Message {
@@ -4072,6 +4141,7 @@ func (x *ListTcsResponse_TrafficClassStatus) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*ListTcsResponse_TrafficClassStatus) ProtoMessage() {}
 
 func (x *ListTcsResponse_TrafficClassStatus) ProtoReflect() protoreflect.Message {
@@ -4129,6 +4199,7 @@ func (x *CheckSchedulingConstraintsResponse_ViolatingClass) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*CheckSchedulingConstraintsResponse_ViolatingClass) ProtoMessage() {}
 
 func (x *CheckSchedulingConstraintsResponse_ViolatingClass) ProtoReflect() protoreflect.Message {
@@ -4197,6 +4268,7 @@ func (x *CheckSchedulingConstraintsResponse_ViolatingModule) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*CheckSchedulingConstraintsResponse_ViolatingModule) ProtoMessage() {}
 
 func (x *CheckSchedulingConstraintsResponse_ViolatingModule) ProtoReflect() protoreflect.Message {
@@ -4256,6 +4328,7 @@ func (x *ListPortsResponse_Port) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*ListPortsResponse_Port) ProtoMessage() {}
 
 func (x *ListPortsResponse_Port) ProtoReflect() protoreflect.Message {
@@ -4371,6 +4444,7 @@ func (x *GetPortStatsResponse_Stat) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GetPortStatsResponse_Stat) ProtoMessage() {}
 
 func (x *GetPortStatsResponse_Stat) ProtoReflect() protoreflect.Message {
@@ -4455,6 +4529,7 @@ func (x *ListModulesResponse_Module) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*ListModulesResponse_Module) ProtoMessage() {}
 
 func (x *ListModulesResponse_Module) ProtoReflect() protoreflect.Message {
@@ -4517,6 +4592,7 @@ func (x *GetModuleInfoResponse_GateHook) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GetModuleInfoResponse_GateHook) ProtoMessage() {}
 
 func (x *GetModuleInfoResponse_GateHook) ProtoReflect() protoreflect.Message {
@@ -4577,6 +4653,7 @@ func (x *GetModuleInfoResponse_IGate) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GetModuleInfoResponse_IGate) ProtoMessage() {}
 
 func (x *GetModuleInfoResponse_IGate) ProtoReflect() protoreflect.Message {
@@ -4673,6 +4750,7 @@ func (x *GetModuleInfoResponse_OGate) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GetModuleInfoResponse_OGate) ProtoMessage() {}
 
 func (x *GetModuleInfoResponse_OGate) ProtoReflect() protoreflect.Message {
@@ -4772,6 +4850,7 @@ func (x *GetModuleInfoResponse_Attribute) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GetModuleInfoResponse_Attribute) ProtoMessage() {}
 
 func (x *GetModuleInfoResponse_Attribute) ProtoReflect() protoreflect.Message {
@@ -4841,6 +4920,7 @@ func (x *GetModuleInfoResponse_IGate_OGate) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*GetModuleInfoResponse_IGate_OGate) ProtoMessage() {}
 
 func (x *GetModuleInfoResponse_IGate_OGate) ProtoReflect() protoreflect.Message {
