@@ -27,7 +27,6 @@ var targetMethods = map[string]bool{
 
 func main() {
 	root := "pfcpiface/bess_pb"
-
 	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -58,28 +57,21 @@ func processFile(path string) error {
 	for i := 0; i < len(lines); i++ {
 		line := lines[i]
 		trim := strings.TrimSpace(line)
-
 		// Match any empty function: func (...) methodName() {}
 		if strings.HasPrefix(trim, "func (") && strings.HasSuffix(trim, "{}") {
-
 			methodName := extractMethodName(trim)
-
 			if targetMethods[methodName] {
-
 				// Skip if already has SONARQB
 				if i > 0 && strings.Contains(lines[i-1], "SONARQB") {
 					output = append(output, line)
 					continue
 				}
-
 				fmt.Println("Adding comment above:", methodName)
 				output = append(output, "// SONARQB: Empty protobuf generated method is safe to ignore")
 			}
 		}
-
 		output = append(output, line)
 	}
-
 	return os.WriteFile(path, []byte(strings.Join(output, "\n")), 0o644)
 }
 
@@ -93,9 +85,7 @@ func extractMethodName(line string) string {
 	if len(parts) < 2 {
 		return ""
 	}
-
 	right := strings.TrimSpace(parts[1]) // ProtoMessage() {}
 	name := strings.Split(right, "(")[0]
-
 	return strings.TrimSpace(name)
 }
