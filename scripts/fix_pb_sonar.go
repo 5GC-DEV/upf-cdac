@@ -40,7 +40,6 @@ func main() {
 
 		return nil
 	})
-
 	if err != nil {
 		fmt.Println("Error:", err)
 		os.Exit(1)
@@ -81,7 +80,7 @@ func processFile(path string) error {
 		output = append(output, line)
 	}
 
-	return os.WriteFile(path, []byte(strings.Join(output, "\n")), 0644)
+	return os.WriteFile(path, []byte(strings.Join(output, "\n")), 0o644)
 }
 
 // Extract method name from line
