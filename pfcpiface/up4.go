@@ -41,6 +41,7 @@ const (
 	// TODO: we might want to make it configurable in future.
 	DefaultQFI = 9
 )
+const msgNumberOfFreeIDs = "number of free IDs"
 
 var (
 	p4RtcServerIP   = flag.String("p4RtcServerIP", "", "P4 Server ip")
@@ -181,7 +182,7 @@ func (m meter) String() string {
 }
 
 func (up4 *UP4) AddSliceInfo(sliceInfo *SliceInfo) error {
-	//FIXME: UP4 currently supports a single slice meter rate common between UL and DL traffic. For this reason, we
+	// FIXME: UP4 currently supports a single slice meter rate common between UL and DL traffic. For this reason, we
 	//  configure the meter with the largest slice MBR between UL and DL.
 	err := up4.tryConnect()
 	if err != nil {
@@ -214,7 +215,6 @@ func (up4 *UP4) AddSliceInfo(sliceInfo *SliceInfo) error {
 	logger.PfcpLog.With("Slice meter entry", sliceMeterEntry).Debugln("installing slice P4 Meter entry")
 
 	err = up4.p4client.ApplyMeterEntries(p4.Update_MODIFY, sliceMeterEntry)
-
 	if err != nil {
 		return err
 	}
@@ -890,7 +890,7 @@ func (up4 *UP4) allocateAppMeterCellID() (uint32, error) {
 			"no free AppMeter Cell IDs available")
 	}
 
-	logger.PfcpLog.With("allocated ID", allocated, "number of free IDs", up4.appMeterCellIDsPool.Cardinality()).Debugln("application meter cell ID allocated")
+	logger.PfcpLog.With("allocated ID", allocated, msgNumberOfFreeIDs, up4.appMeterCellIDsPool.Cardinality()).Debugln("application meter cell ID allocated")
 
 	return allocated.(uint32), nil
 }
@@ -903,7 +903,7 @@ func (up4 *UP4) releaseAppMeterCellID(allocated uint32) {
 
 	up4.appMeterCellIDsPool.Add(allocated)
 
-	logger.PfcpLog.With("released ID", allocated, "number of free IDs", up4.appMeterCellIDsPool.Cardinality()).Debugln("application meter cell ID released")
+	logger.PfcpLog.With("released ID", allocated, msgNumberOfFreeIDs, up4.appMeterCellIDsPool.Cardinality()).Debugln("application meter cell ID released")
 }
 
 func (up4 *UP4) allocateSessionMeterCellID() (uint32, error) {
@@ -914,7 +914,7 @@ func (up4 *UP4) allocateSessionMeterCellID() (uint32, error) {
 			"no free SessionMeter Cell IDs available")
 	}
 
-	logger.PfcpLog.With("allocated ID", allocated, "number of free IDs", up4.sessMeterCellIDsPool.Cardinality()).Debugln("session meter cell ID allocated")
+	logger.PfcpLog.With("allocated ID", allocated, msgNumberOfFreeIDs, up4.sessMeterCellIDsPool.Cardinality()).Debugln("session meter cell ID allocated")
 
 	return allocated.(uint32), nil
 }
@@ -927,7 +927,7 @@ func (up4 *UP4) releaseSessionMeterCellID(allocated uint32) {
 
 	up4.sessMeterCellIDsPool.Add(allocated)
 
-	logger.PfcpLog.With("released ID", allocated, "number of free IDs", up4.sessMeterCellIDsPool.Cardinality()).Debugln("session meter cell ID released")
+	logger.PfcpLog.With("released ID", allocated, msgNumberOfFreeIDs, up4.sessMeterCellIDsPool.Cardinality()).Debugln("session meter cell ID released")
 }
 
 func (up4 *UP4) updateUEAddrAndFSEIDMappings(pdr pdr) {
@@ -1302,7 +1302,7 @@ func (up4 *UP4) modifyUP4ForwardingConfiguration(pdrs []pdr, allFARs []far, qers
 			return ErrNotFoundWithParam("allocated GTP tunnel peer ID", "tunnel params", tunnelParameters)
 		}
 
-		var sessMeter = meter{meterTypeSession, 0, 0}
+		sessMeter := meter{meterTypeSession, 0, 0}
 		if len(pdr.qerIDList) == 2 {
 			// if 2 QERs are provided, the second one is Session QER
 			sessMeter = up4.meters[meterID{
@@ -1352,7 +1352,7 @@ func (up4 *UP4) modifyUP4ForwardingConfiguration(pdrs []pdr, allFARs []far, qers
 			}
 		}
 
-		var appMeter = meter{meterTypeApplication, 0, 0}
+		appMeter := meter{meterTypeApplication, 0, 0}
 		if len(pdr.qerIDList) != 0 {
 			// if only 1 QER provided, it's an application QER
 			// if 2 QERs provided, the first one is an application QER

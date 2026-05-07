@@ -67,6 +67,15 @@ const (
 	sliceMeterGateUnmeter uint64 = 6
 )
 
+const (
+	// SOnarQube define constants.
+	errGRPCCallFailed    = "unable to make GRPC calls"
+	errMarshalRule       = "error marshalling the rule"
+	errMarshalRequest    = "error marshalling request"
+	errReadFailed        = "read failed:"
+	errInvalidMethodName = "invalid method name:"
+)
+
 var intEnc = func(u uint64) *pb.FieldData {
 	return &pb.FieldData{Encoding: &pb.FieldData_ValueInt{ValueInt: u}}
 }
@@ -117,14 +126,15 @@ func (b *bess) AddSliceInfo(sliceInfo *SliceInfo) error {
 	rc := b.GRPCJoin(1, Timeout, done)
 
 	if !rc {
-		logger.BessLog.Errorln("unable to make GRPC calls")
+		logger.BessLog.Errorln(errGRPCCallFailed)
 	}
 
 	return nil
 }
 
 func (b *bess) SendMsgToUPF(
-	method upfMsgType, rules PacketForwardingRules, updated PacketForwardingRules) uint8 {
+	method upfMsgType, rules PacketForwardingRules, updated PacketForwardingRules,
+) uint8 {
 	// create context
 	cause := ie.CauseRequestAccepted
 
@@ -189,7 +199,7 @@ func (b *bess) SendMsgToUPF(
 
 	rc := b.GRPCJoin(calls, Timeout, done)
 	if !rc {
-		logger.BessLog.Errorln("unable to make GRPC calls")
+		logger.BessLog.Errorln(errGRPCCallFailed)
 	}
 
 	return cause
@@ -207,7 +217,7 @@ func (b *bess) measureUpf(ifName string, f *pb.MeasureCommandGetSummaryArg) *pb.
 
 	arg, err := anypb.New(f)
 	if err != nil {
-		logger.BessLog.Errorln("error marshalling the rule", f, err)
+		logger.BessLog.Errorln(errMarshalRule, f, err)
 		return nil
 	}
 
@@ -391,7 +401,7 @@ func (b *bess) flipFlowMeasurementBufferFlag(ctx context.Context, module string)
 
 	arg, err := anypb.New(req)
 	if err != nil {
-		logger.BessLog.Errorln("error marshalling request", req, err)
+		logger.BessLog.Errorln(errMarshalRequest, req, err)
 		return
 	}
 
@@ -404,7 +414,7 @@ func (b *bess) flipFlowMeasurementBufferFlag(ctx context.Context, module string)
 	)
 
 	if err != nil {
-		logger.BessLog.Errorln(module, "read failed:", err)
+		logger.BessLog.Errorln(module, errReadFailed, err)
 		return
 	}
 
@@ -433,7 +443,7 @@ func (b *bess) readFlowMeasurement(
 
 	arg, err := anypb.New(req)
 	if err != nil {
-		logger.BessLog.Errorln("error marshalling request", req, err)
+		logger.BessLog.Errorln(errMarshalRequest, req, err)
 		return
 	}
 
@@ -444,9 +454,8 @@ func (b *bess) readFlowMeasurement(
 			Arg:  arg,
 		},
 	)
-
 	if err != nil {
-		logger.BessLog.Errorln(module, "read failed:", err)
+		logger.BessLog.Errorln(module, errReadFailed, err)
 		return
 	}
 
@@ -464,14 +473,15 @@ func (b *bess) readFlowMeasurement(
 }
 
 func (b *bess) readGtpuPathMonitoringStats(
-	module string, isClear bool) *pb.GtpuPathMonitoringCommandReadResponse {
+	module string, isClear bool,
+) *pb.GtpuPathMonitoringCommandReadResponse {
 	req := &pb.GtpuPathMonitoringCommandReadArg{
 		Clear: isClear,
 	}
 
 	arg, err := anypb.New(req)
 	if err != nil {
-		logger.BessLog.Errorln("error marshalling request", req, err)
+		logger.BessLog.Errorln(errMarshalRequest, req, err)
 		return nil
 	}
 
@@ -484,9 +494,8 @@ func (b *bess) readGtpuPathMonitoringStats(
 			Arg:  arg,
 		},
 	)
-
 	if err != nil {
-		logger.BessLog.Errorln(module, "read failed:", err)
+		logger.BessLog.Errorln(module, errReadFailed, err)
 		return nil
 	}
 
@@ -497,7 +506,6 @@ func (b *bess) readGtpuPathMonitoringStats(
 
 	var res pb.GtpuPathMonitoringCommandReadResponse
 	err = resp.Data.UnmarshalTo(&res)
-
 	if err != nil {
 		logger.BessLog.Errorln(err, resp)
 		return nil
@@ -512,33 +520,11 @@ func (b *bess) SessionStats(pc *PfcpNodeCollector, ch chan<- prometheus.Metric) 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
 	// Flips the buffer flag, automatically waits for in-flight packets to drain.
-	flip, err := b.flipFlowMeasurementBufferFlag(ctx, PreQosFlowMeasure)
+	qosStatsInResp, postDlQosStatsResp, postUlQosStatsResp, err := b.readSessionMeasurements(ctx)
 	if err != nil {
-		logger.BessLog.Errorln(PreQosFlowMeasure, "read failed:", err)
-		return
+		return err
 	}
-
 	q := []float64{50, 90, 99}
-
-	// Read stats from the now inactive side, and clear if needed.
-	qosStatsInResp, err := b.readFlowMeasurement(ctx, PreQosFlowMeasure, flip.OldFlag, true, q)
-	if err != nil {
-		logger.BessLog.Errorln(PreQosFlowMeasure, "read failed:", err)
-		return
-	}
-
-	postDlQosStatsResp, err := b.readFlowMeasurement(ctx, PostDlQosFlowMeasure, flip.OldFlag, true, q)
-	if err != nil {
-		logger.BessLog.Errorln(PostDlQosFlowMeasure, "read failed:", err)
-		return
-	}
-
-	postUlQosStatsResp, err := b.readFlowMeasurement(ctx, PostUlQosFlowMeasure, flip.OldFlag, true, q)
-	if err != nil {
-		logger.BessLog.Errorln(PostUlQosFlowMeasure, "read failed:", err)
-		return
-	}
-
 	// TODO: pick first connection for now
 	var con *PFCPConn
 
@@ -579,22 +565,9 @@ func (b *bess) SessionStats(pc *PfcpNodeCollector, ch chan<- prometheus.Metric) 
 			pdrString := strconv.FormatUint(pre.Pdr, 10)
 			ueIpString := "unknown"
 
-			if con != nil {
-				session, ok := con.store.GetSession(pre.Fseid)
-				if !ok {
-					logger.BessLog.Errorln("invalid or unknown FSEID", pre.Fseid)
-					continue
-				}
-
-				// Try to find the N6 uplink PDR with the UE IP.
-				for _, p := range session.pdrs {
-					if p.IsUplink() && p.ueAddress > 0 {
-						ueIpString = int2ip(p.ueAddress).String()
-						logger.BessLog.Debugln(p.fseID, " -> ", ueIpString)
-
-						break
-					}
-				}
+			ueIpString, ok := resolveUEIP(con, pre, ueIpString)
+			if !ok {
+				continue
 			}
 
 			ch <- prometheus.MustNewConstMetric(
@@ -654,6 +627,67 @@ func (b *bess) SessionStats(pc *PfcpNodeCollector, ch chan<- prometheus.Metric) 
 	createStats(&qosStatsInResp, &postDlQosStatsResp)
 
 	return
+}
+
+func (b *bess) readSessionMeasurements(
+	ctx context.Context,
+) (pre, postDl, postUl pb.FlowMeasureReadResponse, err error) {
+	// Flip buffer
+	flip, err := b.flipFlowMeasurementBufferFlag(ctx, PreQosFlowMeasure)
+	if err != nil {
+		logger.BessLog.Errorln(PreQosFlowMeasure, errReadFailed, err)
+		return
+	}
+
+	q := []float64{50, 90, 99}
+
+	// Read Pre-QoS
+	pre, err = b.readFlowMeasurement(ctx, PreQosFlowMeasure, flip.OldFlag, true, q)
+	if err != nil {
+		logger.BessLog.Errorln(PreQosFlowMeasure, errReadFailed, err)
+		return
+	}
+
+	// Read Post DL
+	postDl, err = b.readFlowMeasurement(ctx, PostDlQosFlowMeasure, flip.OldFlag, true, q)
+	if err != nil {
+		logger.BessLog.Errorln(PostDlQosFlowMeasure, errReadFailed, err)
+		return
+	}
+
+	// Read Post UL
+	postUl, err = b.readFlowMeasurement(ctx, PostUlQosFlowMeasure, flip.OldFlag, true, q)
+	if err != nil {
+		logger.BessLog.Errorln(PostUlQosFlowMeasure, errReadFailed, err)
+		return
+	}
+
+	return
+}
+
+func resolveUEIP(
+	con *PFCPConn,
+	pre *pb.FlowMeasureReadResponse_Statistic,
+	ueIpString string,
+) (string, bool) {
+	if con != nil {
+		session, ok := con.store.GetSession(pre.Fseid)
+		if !ok {
+			logger.BessLog.Errorln("invalid or unknown FSEID", pre.Fseid)
+			return ueIpString, false
+		}
+
+		// Try to find the N6 uplink PDR with the UE IP.
+		for _, p := range session.pdrs {
+			if p.IsUplink() && p.ueAddress > 0 {
+				ueIpString = int2ip(p.ueAddress).String()
+				logger.BessLog.Debugln(p.fseID, " -> ", ueIpString)
+				break
+			}
+		}
+	}
+
+	return ueIpString, true
 }
 
 func (b *bess) endMarkerSendLoop(endMarkerChan chan []byte) {
@@ -721,7 +755,7 @@ func (b *bess) clearState() {
 
 	anyWildcardClear, err := anypb.New(clearWildcardCmd)
 	if err != nil {
-		logger.BessLog.Errorf("error marshalling the rule %v: %v", clearWildcardCmd, err)
+		logger.BessLog.Errorf("%v %v: %v", errMarshalRule, clearWildcardCmd, err)
 		return
 	}
 
@@ -731,7 +765,7 @@ func (b *bess) clearState() {
 
 	anyExactClear, err := anypb.New(clearExactCmd)
 	if err != nil {
-		logger.BessLog.Errorf("error marshalling the rule %v: %v", anyExactClear, err)
+		logger.BessLog.Errorf("%v %v: %v", errMarshalRule, anyExactClear, err)
 		return
 	}
 
@@ -743,7 +777,7 @@ func (b *bess) clearState() {
 		var anyGtpuPathMonitoringClear *anypb.Any
 		anyGtpuPathMonitoringClear, err = anypb.New(clearGtpuPathMonitoringCmd)
 		if err != nil {
-			logger.BessLog.Errorf("error marshalling the rule %v: %v", anyGtpuPathMonitoringClear, err)
+			logger.BessLog.Errorf("%v %v: %v", errMarshalRule, anyGtpuPathMonitoringClear, err)
 			return
 		}
 
@@ -754,7 +788,7 @@ func (b *bess) clearState() {
 	var anyQoSClear *anypb.Any
 	anyQoSClear, err = anypb.New(clearQoSCmd)
 	if err != nil {
-		logger.BessLog.Errorf("error marshalling the rule %v: %v", anyQoSClear, err)
+		logger.BessLog.Errorf("%v %v: %v", errMarshalRule, anyQoSClear, err)
 		return
 	}
 
@@ -821,6 +855,14 @@ func (b *bess) SetUpfInfo(u *upf, conf *Conf) {
 		go b.endMarkerSendLoop(b.endMarkerChan)
 	}
 
+	b.setupSliceMeter(conf)
+
+	if conf.EnableGtpuPathMonitoring {
+		enableGtpuPathMonitoring = true
+	}
+}
+
+func (b *bess) setupSliceMeter(conf *Conf) {
 	if (conf.SliceMeterConfig.N6RateBps > 0) ||
 		(conf.SliceMeterConfig.N3RateBps > 0) {
 		ctx, cancel := context.WithTimeout(context.Background(), Timeout)
@@ -832,18 +874,14 @@ func (b *bess) SetUpfInfo(u *upf, conf *Conf) {
 
 		rc := b.GRPCJoin(1, Timeout, done)
 		if !rc {
-			logger.BessLog.Errorln("unable to make GRPC calls")
+			logger.BessLog.Errorln(errGRPCCallFailed)
 		}
-	}
-
-	if conf.EnableGtpuPathMonitoring {
-		enableGtpuPathMonitoring = true
 	}
 }
 
 func (b *bess) processPDR(ctx context.Context, arg *anypb.Any, method upfMsgType) {
 	if method != upfMsgTypeAdd && method != upfMsgTypeDel && method != upfMsgTypeClear {
-		logger.BessLog.Infoln("invalid method name:", method)
+		logger.BessLog.Infoln(errInvalidMethodName, method)
 		return
 	}
 
@@ -920,7 +958,7 @@ func (b *bess) addPDR(ctx context.Context, done chan<- bool, p pdr) {
 
 			arg, err = anypb.New(f)
 			if err != nil {
-				logger.BessLog.Infoln("error marshalling the rule", f, err)
+				logger.BessLog.Infoln(errMarshalRule, f, err)
 				return
 			}
 
@@ -970,7 +1008,7 @@ func (b *bess) delPDR(ctx context.Context, done chan<- bool, p pdr) {
 
 			arg, err = anypb.New(f)
 			if err != nil {
-				logger.BessLog.Errorln("error marshalling the rule", f, err)
+				logger.BessLog.Errorln(errMarshalRule, f, err)
 				return
 			}
 
@@ -982,86 +1020,94 @@ func (b *bess) delPDR(ctx context.Context, done chan<- bool, p pdr) {
 
 func (b *bess) addQER(ctx context.Context, done chan<- bool, qer qer) {
 	go func() {
-		var (
-			cir, pir, cbs, ebs, pbs, gate uint64
-			srcIface                      uint8
-		)
+		// Uplink
+		b.handleUplinkQER(ctx, qer)
 
-		// Uplink QER
-		srcIface = access
-
-		// Lookup QCI from QFI, else try default QCI.
-		qosVal, ok := b.qciQosMap[qer.qfi]
-		if !ok {
-			logger.BessLog.Debugf("number of config for qfi/qci: %v using default burst size", qer.qfi)
-
-			qosVal = b.qciQosMap[0]
-		}
-
-		cbs = maxUint64(calcBurstSizeFromRate(qer.ulGbr, uint64(qosVal.burstDurationMs)), uint64(qosVal.cbs))
-		ebs = maxUint64(calcBurstSizeFromRate(qer.ulMbr, uint64(qosVal.burstDurationMs)), uint64(qosVal.ebs))
-		pbs = maxUint64(calcBurstSizeFromRate(qer.ulMbr, uint64(qosVal.burstDurationMs)), uint64(qosVal.ebs))
-
-		if qer.ulStatus != ie.GateStatusOpen {
-			gate = qerGateStatusDrop
-		} else if qer.ulMbr != 0 || qer.ulGbr != 0 {
-			/* MBR/GBR is received in Kilobits/sec.
-			   CIR/PIR is sent in bytes */
-			cir = maxUint64(((qer.ulGbr * 1000) / 8), 1)
-			pir = maxUint64(((qer.ulMbr * 1000) / 8), cir)
-			gate = qerGateMeter
-		} else {
-			gate = qerGateUnmeter
-		}
-
-		switch qer.qosLevel {
-		case ApplicationQos:
-			b.addApplicationQER(ctx, gate, srcIface, cir, pir, cbs, pbs, ebs, qer)
-		case SessionQos:
-			b.addSessionQER(ctx, gate, srcIface, cir, pir, cbs, pbs, ebs, qer)
-		}
-
-		// Downlink QER
-		srcIface = core
-
-		// Lookup QCI from QFI, else try default QCI.
-		qosVal, ok = b.qciQosMap[qer.qfi]
-		if !ok {
-			logger.BessLog.Debugf("number of config for qfi/qci: %v using default burst size", qer.qfi)
-
-			qosVal = b.qciQosMap[0]
-		}
-
-		cbs = maxUint64(calcBurstSizeFromRate(qer.dlGbr, uint64(qosVal.burstDurationMs)), uint64(qosVal.cbs))
-		ebs = maxUint64(calcBurstSizeFromRate(qer.dlMbr, uint64(qosVal.burstDurationMs)), uint64(qosVal.ebs))
-		pbs = maxUint64(calcBurstSizeFromRate(qer.dlMbr, uint64(qosVal.burstDurationMs)), uint64(qosVal.ebs))
-
-		if qer.dlStatus != ie.GateStatusOpen {
-			gate = qerGateStatusDrop
-		} else if qer.dlMbr != 0 || qer.dlGbr != 0 {
-			/* MBR/GBR is received in Kilobits/sec.
-			   CIR/PIR is sent in bytes */
-			cir = maxUint64(((qer.dlGbr * 1000) / 8), 1)
-			pir = maxUint64(((qer.dlMbr * 1000) / 8), cir)
-			gate = qerGateMeter
-		} else {
-			gate = qerGateUnmeter
-		}
-
-		switch qer.qosLevel {
-		case ApplicationQos:
-			b.addApplicationQER(ctx, gate, srcIface, cir, pir, cbs, pbs, ebs, qer)
-		case SessionQos:
-			b.addSessionQER(ctx, gate, srcIface, cir, pir, cbs, pbs, ebs, qer)
-		}
+		// Downlink
+		b.handleDownlinkQER(ctx, qer)
 
 		done <- true
 	}()
 }
 
+func (b *bess) handleUplinkQER(ctx context.Context, qer qer) {
+	var (
+		cir, pir, cbs, ebs, pbs, gate uint64
+		srcIface                      uint8
+	)
+
+	srcIface = access
+
+	// Lookup QCI from QFI
+	qosVal, ok := b.qciQosMap[qer.qfi]
+	if !ok {
+		logger.BessLog.Debugf("number of config for qfi/qci: %v using default burst size", qer.qfi)
+		qosVal = b.qciQosMap[0]
+	}
+
+	cbs = maxUint64(calcBurstSizeFromRate(qer.ulGbr, uint64(qosVal.burstDurationMs)), uint64(qosVal.cbs))
+	ebs = maxUint64(calcBurstSizeFromRate(qer.ulMbr, uint64(qosVal.burstDurationMs)), uint64(qosVal.ebs))
+	pbs = maxUint64(calcBurstSizeFromRate(qer.ulMbr, uint64(qosVal.burstDurationMs)), uint64(qosVal.ebs))
+
+	if qer.ulStatus != ie.GateStatusOpen {
+		gate = qerGateStatusDrop
+	} else if qer.ulMbr != 0 || qer.ulGbr != 0 {
+		cir = maxUint64(((qer.ulGbr * 1000) / 8), 1)
+		pir = maxUint64(((qer.ulMbr * 1000) / 8), cir)
+		gate = qerGateMeter
+	} else {
+		gate = qerGateUnmeter
+	}
+
+	switch qer.qosLevel {
+	case ApplicationQos:
+		b.addApplicationQER(ctx, gate, srcIface, cir, pir, cbs, pbs, ebs, qer)
+	case SessionQos:
+		b.addSessionQER(ctx, gate, srcIface, cir, pir, cbs, pbs, ebs, qer)
+	}
+}
+
+func (b *bess) handleDownlinkQER(ctx context.Context, qer qer) {
+	var (
+		cir, pir, cbs, ebs, pbs, gate uint64
+		srcIface                      uint8
+	)
+
+	srcIface = core
+
+	// Lookup QCI from QFI
+	qosVal, ok := b.qciQosMap[qer.qfi]
+	if !ok {
+		logger.BessLog.Debugf("number of config for qfi/qci: %v using default burst size", qer.qfi)
+		qosVal = b.qciQosMap[0]
+	}
+
+	cbs = maxUint64(calcBurstSizeFromRate(qer.dlGbr, uint64(qosVal.burstDurationMs)), uint64(qosVal.cbs))
+	ebs = maxUint64(calcBurstSizeFromRate(qer.dlMbr, uint64(qosVal.burstDurationMs)), uint64(qosVal.ebs))
+	pbs = maxUint64(calcBurstSizeFromRate(qer.dlMbr, uint64(qosVal.burstDurationMs)), uint64(qosVal.ebs))
+
+	if qer.dlStatus != ie.GateStatusOpen {
+		gate = qerGateStatusDrop
+	} else if qer.dlMbr != 0 || qer.dlGbr != 0 {
+		cir = maxUint64(((qer.dlGbr * 1000) / 8), 1)
+		pir = maxUint64(((qer.dlMbr * 1000) / 8), cir)
+		gate = qerGateMeter
+	} else {
+		gate = qerGateUnmeter
+	}
+
+	switch qer.qosLevel {
+	case ApplicationQos:
+		b.addApplicationQER(ctx, gate, srcIface, cir, pir, cbs, pbs, ebs, qer)
+	case SessionQos:
+		b.addSessionQER(ctx, gate, srcIface, cir, pir, cbs, pbs, ebs, qer)
+	}
+}
+
 func (b *bess) addApplicationQER(ctx context.Context, gate uint64, srcIface uint8,
 	cir uint64, pir uint64, cbs uint64, pbs uint64,
-	ebs uint64, qer qer) {
+	ebs uint64, qer qer,
+) {
 	var (
 		arg *anypb.Any
 		err error
@@ -1086,7 +1132,7 @@ func (b *bess) addApplicationQER(ctx context.Context, gate uint64, srcIface uint
 
 	arg, err = anypb.New(q)
 	if err != nil {
-		logger.BessLog.Errorln("error marshalling the rule", q, err)
+		logger.BessLog.Errorln(errMarshalRule, q, err)
 		return
 	}
 
@@ -1127,7 +1173,8 @@ func (b *bess) delQER(ctx context.Context, done chan<- bool, qer qer) {
 }
 
 func (b *bess) delApplicationQER(
-	ctx context.Context, srcIface uint8, qer qer) {
+	ctx context.Context, srcIface uint8, qer qer,
+) {
 	var (
 		arg *anypb.Any
 		err error
@@ -1143,7 +1190,7 @@ func (b *bess) delApplicationQER(
 
 	arg, err = anypb.New(q)
 	if err != nil {
-		logger.BessLog.Infoln("error marshalling the rule", q, err)
+		logger.BessLog.Infoln(errMarshalRule, q, err)
 		return
 	}
 
@@ -1157,7 +1204,7 @@ func (b *bess) delApplicationQER(
 
 func (b *bess) processFAR(ctx context.Context, arg *anypb.Any, method upfMsgType) {
 	if method != upfMsgTypeAdd && method != upfMsgTypeDel && method != upfMsgTypeClear {
-		logger.BessLog.Errorln("invalid method name:", method)
+		logger.BessLog.Errorln(errInvalidMethodName, method)
 		return
 	}
 
@@ -1178,7 +1225,7 @@ func (b *bess) processFAR(ctx context.Context, arg *anypb.Any, method upfMsgType
 
 func (b *bess) processGtpuPathMonitoring(ctx context.Context, arg *anypb.Any, method upfMsgType) {
 	if method != upfMsgTypeAdd && method != upfMsgTypeDel && method != upfMsgTypeClear {
-		logger.BessLog.Errorln("invalid method name:", method)
+		logger.BessLog.Errorln(errInvalidMethodName, method)
 		return
 	}
 
@@ -1243,7 +1290,7 @@ func (b *bess) addFAR(ctx context.Context, done chan<- bool, far far) {
 
 		arg, err = anypb.New(f)
 		if err != nil {
-			logger.BessLog.Infoln("error marshalling the rule", f, err)
+			logger.BessLog.Infoln(errMarshalRule, f, err)
 			return
 		}
 
@@ -1283,7 +1330,7 @@ func (b *bess) delFAR(ctx context.Context, done chan<- bool, far far) {
 
 		arg, err = anypb.New(f)
 		if err != nil {
-			logger.BessLog.Infoln("error marshalling the rule", f, err)
+			logger.BessLog.Infoln(errMarshalRule, f, err)
 			return
 		}
 
@@ -1309,7 +1356,7 @@ func (b *bess) delFAR(ctx context.Context, done chan<- bool, far far) {
 
 func (b *bess) processSliceMeter(ctx context.Context, arg *anypb.Any, method upfMsgType) {
 	if method != upfMsgTypeAdd && method != upfMsgTypeDel && method != upfMsgTypeClear {
-		logger.BessLog.Errorln("invalid method name:", method)
+		logger.BessLog.Errorln(errInvalidMethodName, method)
 		return
 	}
 
@@ -1335,93 +1382,118 @@ func (b *bess) addSliceMeter(ctx context.Context, done chan<- bool, meterConfig 
 			cir, pir, cbs, ebs, pbs, gate uint64
 		)
 
-		// Uplink N6 slice meter config
-		if meterConfig.N6RateBps != 0 {
-			gate = sliceMeterGateMeter
-			cir = 1                         // Mark all traffic as yellow
-			pir = meterConfig.N6RateBps / 8 // bit/s to byte/s
-		} else {
-			gate = sliceMeterGateUnmeter
-		}
-
-		if meterConfig.N6BurstBytes != 0 {
-			cbs = 1 // Mark all traffic as yellow
-			pbs = meterConfig.N6BurstBytes
-			ebs = 0 // Unused
-		} else {
-			cbs = 1 // Mark all traffic as yellow
-			pbs = DefaultBurstSize
-			ebs = 0 // Unused
-		}
-
-		logger.BessLog.Debugln("uplink slice: cir:", cir, ", pir:", pir, ", cbs:", cbs, ", pbs:", pbs)
-
-		q := &pb.QosCommandAddArg{
-			Gate:              gate,
-			Cir:               cir,                                          /* committed info rate */
-			Pir:               pir,                                          /* peak info rate */
-			Cbs:               cbs,                                          /* committed burst size */
-			Pbs:               pbs,                                          /* Peak burst size */
-			Ebs:               ebs,                                          /* Excess burst size */
-			OptionalDeductLen: &pb.QosCommandAddArg_DeductLen{DeductLen: 0}, /* Include all headers */
-			Fields: []*pb.FieldData{
-				intEnc(uint64(farForwardU)), /* Action */
-				intEnc(uint64(0)),           /* tunnel_out_type */
-			},
-		}
-
-		arg, err = anypb.New(q)
+		// Uplink
+		arg, err = b.handleUplinkSliceMeter(meterConfig, &cir, &pir, &cbs, &ebs, &pbs, &gate)
 		if err != nil {
-			logger.BessLog.Errorln("error marshalling the rule", q, err)
 			return
 		}
-
 		b.processSliceMeter(ctx, arg, upfMsgTypeAdd)
 
-		// Downlink N3 slice meter config
-		if meterConfig.N3RateBps != 0 {
-			gate = sliceMeterGateMeter
-			cir = 1                         // Mark all traffic as yellow
-			pir = meterConfig.N3RateBps / 8 // bit/s to byte/s
-		} else {
-			gate = sliceMeterGateUnmeter
-		}
-
-		if meterConfig.N3BurstBytes != 0 {
-			cbs = 1 // Mark all traffic as yellow
-			pbs = meterConfig.N3BurstBytes
-			ebs = 0 // Unused
-		} else {
-			cbs = 1 // Mark all traffic as yellow
-			pbs = DefaultBurstSize
-			ebs = 0 // Unused
-		}
-
-		logger.BessLog.Debugln("downlink slice: cir:", cir, ", pir:", pir, ", cbs:", cbs, ", pbs:", pbs)
-		// TODO: packet deduction should take GTPU extension header into account
-		q = &pb.QosCommandAddArg{
-			Gate:              gate,
-			Cir:               cir,                                           /* committed info rate */
-			Pir:               pir,                                           /* peak info rate */
-			Cbs:               cbs,                                           /* committed burst size */
-			Pbs:               pbs,                                           /* Peak burst size */
-			Ebs:               ebs,                                           /* Excess burst size */
-			OptionalDeductLen: &pb.QosCommandAddArg_DeductLen{DeductLen: 50}, /* Exclude Ethernet,IP,UDP,GTP header */
-			Fields: []*pb.FieldData{
-				intEnc(uint64(farForwardD)), /* Action */
-				intEnc(uint64(1)),           /* tunnel_out_type */
-			},
-		}
-
-		arg, err = anypb.New(q)
+		// Downlink
+		arg, err = b.handleDownlinkSliceMeter(meterConfig, &cir, &pir, &cbs, &ebs, &pbs, &gate)
 		if err != nil {
-			logger.BessLog.Errorln("error marshalling the rule", q, err)
 			return
 		}
-
 		b.processSliceMeter(ctx, arg, upfMsgTypeAdd)
+
 		done <- true
 	}()
+}
+
+func (b *bess) handleUplinkSliceMeter(
+	meterConfig SliceMeterConfig,
+	cir, pir, cbs, ebs, pbs, gate *uint64,
+) (*anypb.Any, error) {
+	// Uplink N6 slice meter config
+	if meterConfig.N6RateBps != 0 {
+		*gate = sliceMeterGateMeter
+		*cir = 1
+		*pir = meterConfig.N6RateBps / 8
+	} else {
+		*gate = sliceMeterGateUnmeter
+	}
+
+	if meterConfig.N6BurstBytes != 0 {
+		*cbs = 1
+		*pbs = meterConfig.N6BurstBytes
+		*ebs = 0
+	} else {
+		*cbs = 1
+		*pbs = DefaultBurstSize
+		*ebs = 0
+	}
+
+	logger.BessLog.Debugln("uplink slice: cir:", *cir, ", pir:", *pir, ", cbs:", *cbs, ", pbs:", *pbs)
+
+	q := &pb.QosCommandAddArg{
+		Gate:              *gate,
+		Cir:               *cir,
+		Pir:               *pir,
+		Cbs:               *cbs,
+		Pbs:               *pbs,
+		Ebs:               *ebs,
+		OptionalDeductLen: &pb.QosCommandAddArg_DeductLen{DeductLen: 0},
+		Fields: []*pb.FieldData{
+			intEnc(uint64(farForwardU)),
+			intEnc(uint64(0)),
+		},
+	}
+
+	arg, err := anypb.New(q)
+	if err != nil {
+		logger.BessLog.Errorln(errMarshalRule, q, err)
+		return nil, err
+	}
+
+	return arg, nil
+}
+
+func (b *bess) handleDownlinkSliceMeter(
+	meterConfig SliceMeterConfig,
+	cir, pir, cbs, ebs, pbs, gate *uint64,
+) (*anypb.Any, error) {
+	// Downlink N3 slice meter config
+	if meterConfig.N3RateBps != 0 {
+		*gate = sliceMeterGateMeter
+		*cir = 1
+		*pir = meterConfig.N3RateBps / 8
+	} else {
+		*gate = sliceMeterGateUnmeter
+	}
+
+	if meterConfig.N3BurstBytes != 0 {
+		*cbs = 1
+		*pbs = meterConfig.N3BurstBytes
+		*ebs = 0
+	} else {
+		*cbs = 1
+		*pbs = DefaultBurstSize
+		*ebs = 0
+	}
+
+	logger.BessLog.Debugln("downlink slice: cir:", *cir, ", pir:", *pir, ", cbs:", *cbs, ", pbs:", *pbs)
+
+	q := &pb.QosCommandAddArg{
+		Gate:              *gate,
+		Cir:               *cir,
+		Pir:               *pir,
+		Cbs:               *cbs,
+		Pbs:               *pbs,
+		Ebs:               *ebs,
+		OptionalDeductLen: &pb.QosCommandAddArg_DeductLen{DeductLen: 50},
+		Fields: []*pb.FieldData{
+			intEnc(uint64(farForwardD)),
+			intEnc(uint64(1)),
+		},
+	}
+
+	arg, err := anypb.New(q)
+	if err != nil {
+		logger.BessLog.Errorln(errMarshalRule, q, err)
+		return nil, err
+	}
+
+	return arg, nil
 }
 
 func (b *bess) processQER(ctx context.Context, arg *anypb.Any, method upfMsgType, qosTableName string) error {
@@ -1449,7 +1521,8 @@ func (b *bess) processQER(ctx context.Context, arg *anypb.Any, method upfMsgType
 
 func (b *bess) addSessionQER(ctx context.Context, gate uint64, srcIface uint8,
 	cir uint64, pir uint64, cbs uint64,
-	pbs uint64, ebs uint64, qer qer) {
+	pbs uint64, ebs uint64, qer qer,
+) {
 	var (
 		arg *anypb.Any
 		err error
@@ -1470,7 +1543,7 @@ func (b *bess) addSessionQER(ctx context.Context, gate uint64, srcIface uint8,
 
 	arg, err = anypb.New(q)
 	if err != nil {
-		logger.BessLog.Errorln("error marshalling the rule", q, err)
+		logger.BessLog.Errorln(errMarshalRule, q, err)
 		return
 	}
 
@@ -1497,7 +1570,7 @@ func (b *bess) delSessionQER(ctx context.Context, srcIface uint8, qer qer) {
 
 	arg, err = anypb.New(q)
 	if err != nil {
-		logger.BessLog.Errorln("error marshalling the rule", q, err)
+		logger.BessLog.Errorln(errMarshalRule, q, err)
 		return
 	}
 

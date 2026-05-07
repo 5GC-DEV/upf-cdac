@@ -12,9 +12,13 @@ import (
 	"github.com/wmnsk/go-pfcp/message"
 )
 
-var errFlowDescAbsent = errors.New("flow description not present")
-var errDatapathDown = errors.New("datapath down")
-var errReqRejected = errors.New("request rejected")
+const msgAssociationSetupResponseFrom = "association Setup Response from"
+
+var (
+	errFlowDescAbsent = errors.New("flow description not present")
+	errDatapathDown   = errors.New("datapath down")
+	errReqRejected    = errors.New("request rejected")
+)
 
 func (pConn *PFCPConn) sendAssociationRequest() {
 	// Build request message
@@ -189,7 +193,7 @@ func (pConn *PFCPConn) handleAssociationSetupResponse(msg message.Message) error
 	}
 
 	if cause != ie.CauseRequestAccepted {
-		logger.PfcpLog.Errorln("association Setup Response from", addr,
+		logger.PfcpLog.Errorln(msgAssociationSetupResponseFrom, addr,
 			"with Cause:", cause)
 		return errReqRejected
 	}
@@ -206,12 +210,12 @@ func (pConn *PFCPConn) handleAssociationSetupResponse(msg message.Message) error
 
 	if pConn.ts.remote.IsZero() {
 		pConn.ts.remote = ts
-		logger.PfcpLog.Infoln("association Setup Response from", addr,
+		logger.PfcpLog.Infoln(msgAssociationSetupResponseFrom, addr,
 			"with recovery timestamp:", ts)
 	} else if ts.After(pConn.ts.remote) {
 		old := pConn.ts.remote
 		pConn.ts.remote = ts
-		logger.PfcpLog.Warnln("association Setup Response from", addr,
+		logger.PfcpLog.Warnln(msgAssociationSetupResponseFrom, addr,
 			"with newer recovery timestamp:", ts, "older:", old)
 	}
 
@@ -235,7 +239,7 @@ func (pConn *PFCPConn) handleAssociationReleaseRequest(msg message.Message) (mes
 		arres := message.NewAssociationReleaseResponse(arreq.SequenceNumber,
 			pConn.nodeID.localIE,
 			ie.NewCause(ie.CauseMandatoryIEMissing),
-			//ie.NewOffendingIE(ie.NodeID),
+			// ie.NewOffendingIE(ie.NodeID),
 		)
 		return arres, errProcess(errors.New("mandatory IE missing: NodeID"))
 	}
@@ -248,7 +252,7 @@ func (pConn *PFCPConn) handleAssociationReleaseRequest(msg message.Message) (mes
 		arres := message.NewAssociationReleaseResponse(arreq.SequenceNumber,
 			pConn.nodeID.localIE,
 			ie.NewCause(ie.CauseMandatoryIEMissing),
-			//ie.NewOffendingIE(ie.NodeID), // 16 = NodeID
+			// ie.NewOffendingIE(ie.NodeID), // 16 = NodeID
 		)
 		return arres, errUnmarshal(err)
 	}
@@ -261,7 +265,7 @@ func (pConn *PFCPConn) handleAssociationReleaseRequest(msg message.Message) (mes
 		arres := message.NewAssociationReleaseResponse(arreq.SequenceNumber,
 			pConn.nodeID.localIE,
 			ie.NewCause(ie.CauseRequestRejected),
-			//ie.NewOffendingIE(ie.NodeID),
+			// ie.NewOffendingIE(ie.NodeID),
 		)
 		return arres, nil
 	}
@@ -272,14 +276,14 @@ func (pConn *PFCPConn) handleAssociationReleaseRequest(msg message.Message) (mes
 		arres := message.NewAssociationReleaseResponse(arreq.SequenceNumber,
 			pConn.nodeID.localIE,
 			ie.NewCause(ie.CauseMandatoryIEIncorrect),
-			//ie.NewOffendingIE(16),
+			// ie.NewOffendingIE(16),
 		)
 		return arres, nil
 	}
 
 	// Valid NodeID — send accepted response
 	arres := message.NewAssociationReleaseResponse(arreq.SequenceNumber,
-		//ie.NewRecoveryTimeStamp(pConn.ts.local),
+		// ie.NewRecoveryTimeStamp(pConn.ts.local),
 		pConn.nodeID.localIE,
 		ie.NewCause(ie.CauseRequestAccepted),
 	)
