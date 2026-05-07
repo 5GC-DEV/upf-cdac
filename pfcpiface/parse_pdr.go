@@ -560,6 +560,8 @@ func (p *pdr) parsePDI(pdiIEs []*ie.IE, appPFDs map[string]appPFD, ippool *IPPoo
 }
 
 func (p *pdr) parsePDR(ie1 *ie.IE, seid uint64, appPFDs map[string]appPFD, ippool *IPPool) error {
+	logger.PfcpLog.Infof("[parsePDR][Enter] SEID=%d IEType=%d", seid, ie1.Type)
+
 	/* reset outerHeaderRemoval to begin with */
 	outerHeaderRemoval := uint8(0)
 	p.qerIDList = make([]uint32, 0)
@@ -570,34 +572,47 @@ func (p *pdr) parsePDR(ie1 *ie.IE, seid uint64, appPFDs map[string]appPFD, ippoo
 		logger.PfcpLog.Errorln("could not read PDR ID!")
 		return err
 	}
+	logger.PfcpLog.Infof("[parsePDR] Parsed PDR ID=%d", pdrID)
 
 	precedence, err := ie1.Precedence()
 	if err != nil {
 		logger.PfcpLog.Errorln("could not read Precedence!")
 		return err
 	}
+	logger.PfcpLog.Infof("[parsePDR] Parsed Precedence=%d", precedence)
 
 	pdi, err := ie1.PDI()
 	if err != nil {
 		logger.PfcpLog.Errorln("could not read PDI!")
 		return err
 	}
+	logger.PfcpLog.Debugln("[parsePDR] Successfully parsed PDI")
 
 	res, err := ie1.OuterHeaderRemovalDescription()
 	if res == 0 && err == nil { // 0 == GTP-U/UDP/IPv4
 		outerHeaderRemoval = 1
+		logger.PfcpLog.Infof("[parsePDR] OuterHeaderRemoval enabled")
+	} else {
+		logger.PfcpLog.Debugf("[parsePDR] OuterHeaderRemoval not present or unsupported, res=%d err=%v", res, err)
 	}
 
 	err = p.parsePDI(pdi, appPFDs, ippool)
-	if err != nil && !errors.Is(err, errBadFilterDesc) {
-		return err
+	if err != nil {
+		if errors.Is(err, errBadFilterDesc) {
+			logger.PfcpLog.Warnf("[parsePDR] parsePDI returned bad filter description: %v", err)
+		} else {
+			logger.PfcpLog.Errorf("[parsePDR] parsePDI failed: %v", err)
+			return err
+		}
 	}
+	logger.PfcpLog.Debugln("[parsePDR] PDI parsed successfully")
 
 	farID, err := ie1.FARID()
 	if err != nil {
 		logger.PfcpLog.Errorln("could not read FAR ID!")
 		return err
 	}
+	logger.PfcpLog.Infof("[parsePDR] Parsed FAR ID=%d", farID)
 
 	/* Multiple instances of QERID can be present in CreatePDR/UpdatePDR
 	   go-pfcp currently support API to return list of QERIDs. So, we
@@ -608,38 +623,52 @@ func (p *pdr) parsePDR(ie1 *ie.IE, seid uint64, appPFDs map[string]appPFD, ippoo
 
 	switch ie1.Type {
 	case ie.CreatePDR:
+		logger.PfcpLog.Debugln("[parsePDR] Processing CreatePDR IE")
 		ies, errin = ie1.CreatePDR()
 		if errin != nil {
+			logger.PfcpLog.Errorf("[parsePDR] CreatePDR decode failed: %v", errin)
 			return errin
 		}
+
 	case ie.UpdatePDR:
+		logger.PfcpLog.Debugln("[parsePDR] Processing UpdatePDR IE")
 		ies, errin = ie1.UpdatePDR()
 		if errin != nil {
+			logger.PfcpLog.Errorf("[parsePDR] UpdatePDR decode failed: %v", errin)
 			return errin
 		}
+
+	default:
+		logger.PfcpLog.Warnf("[parsePDR] Unsupported IE type=%d", ie1.Type)
 	}
 
 	for _, x := range ies {
 		if x.Type == ie.QERID {
 			qerID, errRead := x.QERID()
 			if errRead != nil {
-				logger.PfcpLog.Errorln("qerID read failed")
+				logger.PfcpLog.Errorln("[parsePDR] qerID read failed")
 				continue
-			} else {
-				p.qerIDList = append(p.qerIDList, qerID)
 			}
+
+			logger.PfcpLog.Infof("[parsePDR] Parsed QER ID=%d", qerID)
+			p.qerIDList = append(p.qerIDList, qerID)
 		}
 	}
-	/*qerID, err := ie1.QERID()
-	if err != nil {
-		logger.PfcpLog.Errorln("could not read QER ID!")
-	}*/
 
 	p.precedence = precedence
 	p.pdrID = uint32(pdrID)
-	p.farID = farID // farID currently not being set <--- FIXIT/TODO/XXX
-	/*p.qerID = qerID*/
+	p.farID = farID
 	p.needDecap = outerHeaderRemoval
+
+	logger.PfcpLog.Infof(
+		"[parsePDR][Exit] SEID=%d PDRID=%d FARID=%d Precedence=%d QERCount=%d NeedDecap=%d",
+		p.fseID,
+		p.pdrID,
+		p.farID,
+		p.precedence,
+		len(p.qerIDList),
+		p.needDecap,
+	)
 
 	return nil
 }

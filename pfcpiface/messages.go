@@ -61,6 +61,9 @@ func (pConn *PFCPConn) HandlePFCPMsg(buf []byte) {
 		err   error
 	)
 
+	// Log raw message size for sanity check
+	logger.PfcpLog.Debugf("received raw PFCP message, size: %d bytes", len(buf))
+
 	msg, err := message.Parse(buf)
 	if err != nil {
 		logger.PfcpLog.Errorf("ignoring undecodable message: %v, error: %v", buf, err)
@@ -71,18 +74,23 @@ func (pConn *PFCPConn) HandlePFCPMsg(buf []byte) {
 	msgType := msg.MessageTypeName()
 	m := metrics.NewMessage(msgType, "Incoming")
 
+	// Log every incoming message with sequence number for correlation
+	logger.PfcpLog.Infof("handling PFCP msg type: %s, seq: %d, from: %s",
+		msgType, msg.Sequence(), addr)
+
 	switch msg.MessageType() {
 	// Connection related messages
 	case message.MsgTypeHeartbeatRequest:
 		reply, err = pConn.handleHeartbeatRequest(msg)
+
 	case message.MsgTypePFDManagementRequest:
 		reply, err = pConn.handlePFDMgmtRequest(msg)
+
 	case message.MsgTypeAssociationSetupRequest:
 		reply, err = pConn.handleAssociationSetupRequest(msg)
 		if reply != nil && err == nil && pConn.upf.enableHBTimer {
 			go pConn.startHeartBeatMonitor()
 		}
-		// TODO: Cleanup sessions
 
 	case message.MsgTypeAssociationReleaseRequest:
 		reply, err = pConn.handleAssociationReleaseRequest(msg)
@@ -90,16 +98,28 @@ func (pConn *PFCPConn) HandlePFCPMsg(buf []byte) {
 
 	// Session related messages
 	case message.MsgTypeSessionEstablishmentRequest:
+		logger.PfcpLog.Debugf("SessionEstablishmentRequest seq: %d from: %s",
+			msg.Sequence(), addr)
 		reply, err = pConn.handleSessionEstablishmentRequest(msg)
+
 	case message.MsgTypeSessionModificationRequest:
+		modReq, ok := msg.(*message.SessionModificationRequest)
+		if !ok {
+			logger.PfcpLog.Errorf("failed to cast to SessionModificationRequest, seq: %d", msg.Sequence())
+		} else {
+			logger.PfcpLog.Infof("SessionModificationRequest seq: %d SEID: %d",
+				modReq.Sequence(), modReq.SEID())
+		}
 		reply, err = pConn.handleSessionModificationRequest(msg)
+
 	case message.MsgTypeSessionDeletionRequest:
+		logger.PfcpLog.Debugf("SessionDeletionRequest seq: %d from: %s",
+			msg.Sequence(), addr)
 		reply, err = pConn.handleSessionDeletionRequest(msg)
+
 	case message.MsgTypeSessionReportResponse:
 		err = pConn.handleSessionReportResponse(msg)
 
-	// Incoming response messages
-	// TODO: Session Report Request
 	case message.MsgTypeAssociationSetupResponse, message.MsgTypeHeartbeatResponse:
 		pConn.handleIncomingResponse(msg)
 
@@ -109,10 +129,18 @@ func (pConn *PFCPConn) HandlePFCPMsg(buf []byte) {
 	}
 
 	nodeID := pConn.nodeID.remote
-	// Check for errors in handling the message
+
 	if err != nil {
 		m.Finish(nodeID, "Failure")
-		logger.PfcpLog.Errorf("error handling PFCP message type %s, from: %s, nodeID: %s, error: %v", msgType, addr, nodeID, err)
+		logger.PfcpLog.Errorf("error handling PFCP message type %s, from: %s, nodeID: %s, error: %v",
+			msgType, addr, nodeID, err)
+		if reply == nil {
+			logger.PfcpLog.Errorf("no reply message constructed after error — SMF will timeout waiting for response, msg type: %s, seq: %d",
+				msgType, msg.Sequence())
+		} else {
+			logger.PfcpLog.Warnf("reply exists despite error — will send failure response, msg type: %s, seq: %d",
+				msgType, msg.Sequence())
+		}
 	} else {
 		m.Finish(nodeID, "Success")
 		logger.PfcpLog.Debugf("successfully processed %s, from %s, nodeID: %s", msgType, addr, nodeID)
@@ -121,6 +149,7 @@ func (pConn *PFCPConn) HandlePFCPMsg(buf []byte) {
 	pConn.SaveMessages(m)
 
 	if reply != nil {
+		logger.PfcpLog.Debugf("sending reply for %s, seq: %d to: %s", msgType, msg.Sequence(), addr)
 		pConn.SendPFCPMsg(reply)
 	}
 }
