@@ -164,9 +164,7 @@ func (f *far) parseFAR(farIE *ie.IE, fseid uint64, upf *upf, op operation) error
 			fwdIE.Type,
 			f.farID,
 		)
-
 		switch fwdIE.Type {
-
 		case ie.OuterHeaderCreation:
 			fields = Set(fields, FwdIEOuterHeaderCreation)
 
@@ -198,7 +196,6 @@ func (f *far) parseFAR(farIE *ie.IE, fseid uint64, upf *upf, op operation) error
 				ohcFields.IPv4Address,
 				f.tunnelPort,
 			)
-
 		case ie.DestinationInterface:
 			fields = Set(fields, FwdIEDestinationIntf)
 
@@ -244,7 +241,6 @@ func (f *far) parseFAR(farIE *ie.IE, fseid uint64, upf *upf, op operation) error
 					f.dstIntf,
 				)
 			}
-
 		case ie.PFCPSMReqFlags:
 			fields = Set(fields, FwdIEPfcpSMReqFlags)
 
@@ -278,7 +274,6 @@ func (f *far) parseFAR(farIE *ie.IE, fseid uint64, upf *upf, op operation) error
 					f.farID,
 				)
 			}
-
 		default:
 			logger.PfcpLog.Debugf(
 				"[parseFAR] FARID=%d Unhandled ForwardingIE Type=%d",
