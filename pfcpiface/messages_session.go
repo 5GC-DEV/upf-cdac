@@ -197,7 +197,7 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 	var remoteSEID uint64
 
 	sendError := func(err error, cause uint8) (message.Message, error) {
-		logger.PfcpLog.Errorln(err)
+		logger.PfcpLog.Errorf("sendError: cause=%d err=%v", cause, err)
 
 		smres := message.NewSessionModificationResponse(0, /* MO?? <-- what's this */
 			0,                    /* FO <-- what's this? */
@@ -211,12 +211,14 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 	}
 
 	localSEID := smreq.SEID()
+	logger.PfcpLog.Debugf("handleSessionModificationRequest: localSEID=%d seq=%d", localSEID, smreq.SequenceNumber)
 
 	session, ok := pConn.store.GetSession(localSEID)
 	if !ok {
+		logger.PfcpLog.Errorf("session not found for localSEID=%d", localSEID)
 		return sendError(ErrNotFoundWithParam("PFCP session", "localSEID", localSEID), ie.CauseRequestRejected)
 	}
-
+	logger.PfcpLog.Debugf("session found: localSEID=%d remoteSEID=%d", localSEID, session.remoteSEID)
 	var fseidIP uint32
 
 	if smreq.CPFSEID != nil {
@@ -224,21 +226,45 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 		if err == nil {
 			session.remoteSEID = fseid.SEID
 			fseidIP = ip2int(fseid.IPv4Address)
+			logger.PfcpLog.Debugf("CPFSEID present: remoteSEID updated to %d, fseidIP=%d", fseid.SEID, fseidIP)
 
 			logger.PfcpLog.Debugln("updated FSEID from session modification request")
+		} else {
+			logger.PfcpLog.Warnf("CPFSEID parse failed: %v", err)
 		}
+	} else {
+		logger.PfcpLog.Debugf("no CPFSEID in request")
 	}
 
 	remoteSEID = session.remoteSEID
+
+	logger.PfcpLog.Debugf("IE counts — CreatePDR:%d CreateFAR:%d CreateQER:%d | UpdatePDR:%d UpdateFAR:%d UpdateQER:%d | RemovePDR:%d RemoveFAR:%d RemoveQER:%d",
+		len(smreq.CreatePDR), len(smreq.CreateFAR), len(smreq.CreateQER),
+		len(smreq.UpdatePDR), len(smreq.UpdateFAR), len(smreq.UpdateQER),
+		len(smreq.RemovePDR), len(smreq.RemoveFAR), len(smreq.RemoveQER))
 
 	addPDRs := make([]pdr, 0, MaxItems)
 	addFARs := make([]far, 0, MaxItems)
 	addQERs := make([]qer, 0, MaxItems)
 	endMarkerList := make([][]byte, 0, MaxItems)
 
-	for _, cPDR := range smreq.CreatePDR {
+	logger.PfcpLog.Debugf(
+		"[PFCP][SessionModification] Processing CreatePDR Count=%d LocalSEID=%d",
+		len(smreq.CreatePDR),
+		localSEID,
+	)
+
+	for i, cPDR := range smreq.CreatePDR {
+		logger.PfcpLog.Infof("[PFCP][CreatePDR] Parsing CreatePDR[%d]", i)
+
 		var p pdr
 		if err := p.parsePDR(cPDR, localSEID, pConn.appPFDs, upf.ippool); err != nil {
+			logger.PfcpLog.Errorf(
+				"[PFCP][CreatePDR] Failed Parse Index=%d LocalSEID=%d Error=%v",
+				i,
+				localSEID,
+				err,
+			)
 			return sendError(err, ie.CauseRequestRejected)
 		}
 
@@ -246,12 +272,35 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 
 		session.CreatePDR(p)
 		addPDRs = append(addPDRs, p)
-	}
-	logger.PfcpLog.Debugln("PDRs added:", addPDRs)
 
-	for _, cFAR := range smreq.CreateFAR {
+		logger.PfcpLog.Debugf(
+			"[PFCP][CreatePDR] Success PDRID=%d FARID=%d QERCount=%d",
+			p.pdrID,
+			p.farID,
+			len(p.qerIDList),
+		)
+	}
+
+	logger.PfcpLog.Debugf("[PFCP][CreatePDR] Total Added PDRs=%d", len(addPDRs))
+
+	// =========================
+	// Create FAR
+	// =========================
+	logger.PfcpLog.Debugf(
+		"[PFCP][SessionModification] Processing CreateFAR Count=%d",
+		len(smreq.CreateFAR),
+	)
+
+	for i, cFAR := range smreq.CreateFAR {
+		logger.PfcpLog.Debugf("[PFCP][CreateFAR] Parsing CreateFAR[%d]", i)
+
 		var f far
 		if err := f.parseFAR(cFAR, localSEID, upf, create); err != nil {
+			logger.PfcpLog.Errorf(
+				"[PFCP][CreateFAR] Failed Parse Index=%d Error=%v",
+				i,
+				err,
+			)
 			return sendError(err, ie.CauseRequestRejected)
 		}
 
@@ -259,11 +308,32 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 
 		session.CreateFAR(f)
 		addFARs = append(addFARs, f)
+
+		logger.PfcpLog.Debugf(
+			"[PFCP][CreateFAR] Success FARID=%d Action=%02x",
+			f.farID,
+			f.applyAction,
+		)
 	}
 
-	for _, cQER := range smreq.CreateQER {
+	// =========================
+	// Create QER
+	// =========================
+	logger.PfcpLog.Debugf(
+		"[PFCP][SessionModification] Processing CreateQER Count=%d",
+		len(smreq.CreateQER),
+	)
+
+	for i, cQER := range smreq.CreateQER {
+		logger.PfcpLog.Debugf("[PFCP][CreateQER] Parsing CreateQER[%d]", i)
+
 		var q qer
 		if err := q.parseQER(cQER, localSEID); err != nil {
+			logger.PfcpLog.Errorf(
+				"[PFCP][CreateQER] Failed Parse Index=%d Error=%v",
+				i,
+				err,
+			)
 			return sendError(err, ie.CauseRequestRejected)
 		}
 
@@ -271,15 +341,35 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 
 		session.CreateQER(q)
 		addQERs = append(addQERs, q)
+
+		logger.PfcpLog.Debugf(
+			"[PFCP][CreateQER] Success QERID=%d",
+			q.qerID,
+		)
 	}
 
-	for _, uPDR := range smreq.UpdatePDR {
+	// =========================
+	// Update PDR
+	// =========================
+	logger.PfcpLog.Debugf(
+		"[PFCP][SessionModification] Processing UpdatePDR Count=%d",
+		len(smreq.UpdatePDR),
+	)
+
+	for i, uPDR := range smreq.UpdatePDR {
+		logger.PfcpLog.Infof("[PFCP][UpdatePDR] Parsing UpdatePDR[%d]", i)
+
 		var (
 			p   pdr
 			err error
 		)
 
 		if err = p.parsePDR(uPDR, localSEID, pConn.appPFDs, upf.ippool); err != nil {
+			logger.PfcpLog.Errorf(
+				"[PFCP][UpdatePDR] Parse Failed Index=%d Error=%v",
+				i,
+				err,
+			)
 			return sendError(err, ie.CauseRequestRejected)
 		}
 
@@ -287,46 +377,81 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 
 		err = session.UpdatePDR(p)
 		if err != nil {
-			logger.PfcpLog.Errorln("session PDR update failed", err)
+			logger.PfcpLog.Errorf(
+				"[PFCP][UpdatePDR] Session Update Failed PDRID=%d Error=%v",
+				p.pdrID,
+				err,
+			)
 			continue
 		}
 
 		addPDRs = append(addPDRs, p)
+
+		logger.PfcpLog.Debugf(
+			"[PFCP][UpdatePDR] Success PDRID=%d",
+			p.pdrID,
+		)
 	}
 
-	// Iterate through each "Update FAR" instruction in the request.
-	for _, uFAR := range smreq.UpdateFAR {
+	// =========================
+	// Update FAR
+	// =========================
+	logger.PfcpLog.Debugf(
+		"[PFCP][SessionModification] Processing UpdateFAR Count=%d",
+		len(smreq.UpdateFAR),
+	)
+
+	for i, uFAR := range smreq.UpdateFAR {
+		logger.PfcpLog.Debugf("[PFCP][UpdateFAR] Parsing UpdateFAR[%d]", i)
+
 		var (
 			f   far
 			err error
 		)
 
-		// Extract the FAR ID from the incoming update instruction.
 		farID, err := uFAR.FARID()
 		if err != nil {
-			// This indicates a malformed IE.
+			logger.PfcpLog.Errorf(
+				"[PFCP][UpdateFAR] Failed to read FARID Index=%d Error=%v",
+				i,
+				err,
+			)
 			return sendError(err, ie.CauseMandatoryIEIncorrect)
 		}
 
-		// Validate that the FAR ID exists before attempting to update it.
+		logger.PfcpLog.Infof(
+			"[PFCP][UpdateFAR] Received FARID=%d",
+			farID,
+		)
+
 		farExists := false
-		// Since session.fars is a slice, we must loop through it to check for the ID.
+
 		for _, existingFAR := range session.fars {
 			if existingFAR.farID == farID {
 				farExists = true
-				break // Found it, no need to loop further
+				break
 			}
 		}
 
-		// If the FAR ID was not found in the session, the request is invalid.
 		if !farExists {
-			logger.PfcpLog.Warnf("Attempted to update a non-existent FAR ID: %d for local SEID: %d", farID, localSEID)
-			// Reject with "Invalid Forwarding Policy".
-			return sendError(errors.New("invalid forwarding policy: FAR ID not found"), ie.CauseInvalidForwardingPolicy)
+			logger.PfcpLog.Warnf(
+				"[PFCP][UpdateFAR] FARID=%d not found for LocalSEID=%d",
+				farID,
+				localSEID,
+			)
+
+			return sendError(
+				errors.New("invalid forwarding policy: FAR ID not found"),
+				ie.CauseInvalidForwardingPolicy,
+			)
 		}
 
-		// Validation passed. Now, parse and apply the update.
 		if err = f.parseFAR(uFAR, localSEID, upf, update); err != nil {
+			logger.PfcpLog.Errorf(
+				"[PFCP][UpdateFAR] Parse Failed FARID=%d Error=%v",
+				farID,
+				err,
+			)
 			return sendError(err, ie.CauseRequestRejected)
 		}
 
@@ -334,21 +459,45 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 
 		err = session.UpdateFAR(&f, &endMarkerList)
 		if err != nil {
-			logger.PfcpLog.Errorf("session FAR update failed: %v", err)
+			logger.PfcpLog.Errorf(
+				"[PFCP][UpdateFAR] Session Update Failed FARID=%d Error=%v",
+				f.farID,
+				err,
+			)
 			return sendError(err, ie.CauseRequestRejected)
 		}
 
-		// Add the successfully updated FAR to be pushed to the datapath.
 		addFARs = append(addFARs, f)
+
+		logger.PfcpLog.Debugf(
+			"[PFCP][UpdateFAR] Success FARID=%d EndMarker=%v",
+			f.farID,
+			f.sendEndMarker,
+		)
 	}
 
-	for _, uQER := range smreq.UpdateQER {
+	// =========================
+	// Update QER
+	// =========================
+	logger.PfcpLog.Debugf(
+		"[PFCP][SessionModification] Processing UpdateQER Count=%d",
+		len(smreq.UpdateQER),
+	)
+
+	for i, uQER := range smreq.UpdateQER {
+		logger.PfcpLog.Debugf("[PFCP][UpdateQER] Parsing UpdateQER[%d]", i)
+
 		var (
 			q   qer
 			err error
 		)
 
 		if err = q.parseQER(uQER, localSEID); err != nil {
+			logger.PfcpLog.Errorf(
+				"[PFCP][UpdateQER] Parse Failed Index=%d Error=%v",
+				i,
+				err,
+			)
 			return sendError(err, ie.CauseRequestRejected)
 		}
 
@@ -356,17 +505,29 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 
 		err = session.UpdateQER(q)
 		if err != nil {
-			logger.PfcpLog.Errorln("session QER update failed", err)
+			logger.PfcpLog.Errorf(
+				"[PFCP][UpdateQER] Session Update Failed QERID=%d Error=%v",
+				q.qerID,
+				err,
+			)
 			continue
 		}
 
 		addQERs = append(addQERs, q)
+
+		logger.PfcpLog.Debugf(
+			"[PFCP][UpdateQER] Success QERID=%d",
+			q.qerID,
+		)
 	}
 
+	logger.PfcpLog.Debugf(
+		"[PFCP][SessionModification] Marking Session QERs TotalSessionQERs=%d AddedQERs=%d",
+		len(session.qers),
+		len(addQERs),
+	)
+
 	session.MarkSessionQer(session.qers)
-	// FIXME: since PacketForwardingRules doesn't store pointers,
-	//  we must also mark session QERs in addQERs.
-	//  We need a kind of refactoring to clean it up.
 	session.MarkSessionQer(addQERs)
 
 	updated := PacketForwardingRules{
@@ -375,12 +536,31 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 		qers: addQERs,
 	}
 
+	logger.PfcpLog.Debugf(
+		"[PFCP][SessionModification] Sending Rules To Datapath AddPDRs=%d AddFARs=%d AddQERs=%d",
+		len(addPDRs),
+		len(addFARs),
+		len(addQERs),
+	)
+
 	cause := upf.SendMsgToUPF(upfMsgTypeMod, session.PacketForwardingRules, updated)
+
+	logger.PfcpLog.Debugf(
+		"[PFCP][SessionModification] Datapath Response Cause=%d",
+		cause,
+	)
+
 	if cause == ie.CauseRequestRejected {
+		logger.PfcpLog.Errorf("[PFCP][SessionModification] Datapath rejected modification")
 		return sendError(ErrWriteToDatapath, cause)
 	}
 
 	if upf.enableEndMarker {
+		logger.PfcpLog.Debugf(
+			"[PFCP][SessionModification] Sending EndMarkers Count=%d",
+			len(endMarkerList),
+		)
+
 		err := upf.SendEndMarkers(&endMarkerList)
 		if err != nil {
 			logger.PfcpLog.Errorln("sending End Markers Failed:", err)
@@ -391,71 +571,209 @@ func (pConn *PFCPConn) handleSessionModificationRequest(msg message.Message) (me
 	delFARs := make([]far, 0, MaxItems)
 	delQERs := make([]qer, 0, MaxItems)
 
-	for _, rPDR := range smreq.RemovePDR {
+	// =========================
+	// Remove PDR
+	// =========================
+	logger.PfcpLog.Debugf(
+		"[PFCP][SessionModification] Processing RemovePDR Count=%d",
+		len(smreq.RemovePDR),
+	)
+
+	for i, rPDR := range smreq.RemovePDR {
+		logger.PfcpLog.Debugf("[PFCP][RemovePDR] Processing RemovePDR[%d]", i)
+
 		pdrID, err := rPDR.PDRID()
 		if err != nil {
+			logger.PfcpLog.Errorf(
+				"[PFCP][RemovePDR] Failed to read PDRID Index=%d Error=%v",
+				i,
+				err,
+			)
 			return sendError(err, ie.CauseRequestRejected)
 		}
 
+		logger.PfcpLog.Debugf(
+			"[PFCP][RemovePDR] Removing PDRID=%d",
+			pdrID,
+		)
+
 		p, err := session.RemovePDR(uint32(pdrID))
 		if err != nil {
+			logger.PfcpLog.Errorf(
+				"[PFCP][RemovePDR] Session Remove Failed PDRID=%d Error=%v",
+				pdrID,
+				err,
+			)
 			return sendError(err, ie.CauseRequestRejected)
 		}
 
 		delPDRs = append(delPDRs, *p)
+
+		logger.PfcpLog.Debugf(
+			"[PFCP][RemovePDR] Success PDRID=%d",
+			pdrID,
+		)
 	}
 
-	for _, dFAR := range smreq.RemoveFAR {
+	// =========================
+	// Remove FAR
+	// =========================
+	logger.PfcpLog.Debugf(
+		"[PFCP][SessionModification] Processing RemoveFAR Count=%d",
+		len(smreq.RemoveFAR),
+	)
+
+	for i, dFAR := range smreq.RemoveFAR {
+		logger.PfcpLog.Debugf("[PFCP][RemoveFAR] Processing RemoveFAR[%d]", i)
+
 		farID, err := dFAR.FARID()
 		if err != nil {
+			logger.PfcpLog.Errorf(
+				"[PFCP][RemoveFAR] Failed to read FARID Index=%d Error=%v",
+				i,
+				err,
+			)
 			return sendError(err, ie.CauseRequestRejected)
 		}
 
+		logger.PfcpLog.Debugf(
+			"[PFCP][RemoveFAR] Removing FARID=%d",
+			farID,
+		)
+
 		f, err := session.RemoveFAR(farID)
 		if err != nil {
+			logger.PfcpLog.Errorf(
+				"[PFCP][RemoveFAR] Session Remove Failed FARID=%d Error=%v",
+				farID,
+				err,
+			)
 			return sendError(err, ie.CauseRequestRejected)
 		}
 
 		delFARs = append(delFARs, *f)
+
+		logger.PfcpLog.Debugf(
+			"[PFCP][RemoveFAR] Success FARID=%d",
+			farID,
+		)
 	}
 
-	for _, dQER := range smreq.RemoveQER {
+	// =========================
+	// Remove QER
+	// =========================
+	logger.PfcpLog.Debugf(
+		"[PFCP][SessionModification] Processing RemoveQER Count=%d",
+		len(smreq.RemoveQER),
+	)
+
+	for i, dQER := range smreq.RemoveQER {
+		logger.PfcpLog.Debugf("[PFCP][RemoveQER] Processing RemoveQER[%d]", i)
+
 		qerID, err := dQER.QERID()
 		if err != nil {
+			logger.PfcpLog.Errorf(
+				"[PFCP][RemoveQER] Failed to read QERID Index=%d Error=%v",
+				i,
+				err,
+			)
 			return sendError(err, ie.CauseRequestRejected)
 		}
 
+		logger.PfcpLog.Debugf(
+			"[PFCP][RemoveQER] Removing QERID=%d",
+			qerID,
+		)
+
 		q, err := session.RemoveQER(qerID)
 		if err != nil {
+			logger.PfcpLog.Errorf(
+				"[PFCP][RemoveQER] Session Remove Failed QERID=%d Error=%v",
+				qerID,
+				err,
+			)
 			return sendError(err, ie.CauseRequestRejected)
 		}
 
 		delQERs = append(delQERs, *q)
+
+		logger.PfcpLog.Debugf(
+			"[PFCP][RemoveQER] Success QERID=%d",
+			qerID,
+		)
 	}
 
+	// =========================
+	// Send Delete Rules To Datapath
+	// =========================
 	deleted := PacketForwardingRules{
 		pdrs: delPDRs,
 		fars: delFARs,
 		qers: delQERs,
 	}
 
+	logger.PfcpLog.Debugf(
+		"[PFCP][SessionModification] Sending Delete Rules To Datapath DelPDRs=%d DelFARs=%d DelQERs=%d",
+		len(delPDRs),
+		len(delFARs),
+		len(delQERs),
+	)
+
 	cause = upf.SendMsgToUPF(upfMsgTypeDel, deleted, PacketForwardingRules{})
+
+	logger.PfcpLog.Debugf(
+		"[PFCP][SessionModification] Delete Datapath Response Cause=%d",
+		cause,
+	)
+
 	if cause == ie.CauseRequestRejected {
+		logger.PfcpLog.Errorf(
+			"[PFCP][SessionModification] Datapath rejected delete request",
+		)
 		return sendError(ErrWriteToDatapath, cause)
 	}
 
+	// =========================
+	// Store Session
+	// =========================
+	logger.PfcpLog.Debugf(
+		"[PFCP][SessionModification] Storing PFCP Session LocalSEID=%d",
+		localSEID,
+	)
+
 	err := pConn.store.PutSession(session)
 	if err != nil {
-		logger.PfcpLog.Errorf("failed to put PFCP session to store: %v", err)
+		logger.PfcpLog.Errorf(
+			"failed to put PFCP session to store: %v",
+			err,
+		)
+	} else {
+		logger.PfcpLog.Debugf(
+			"[PFCP][SessionModification] Successfully stored PFCP Session LocalSEID=%d",
+			localSEID,
+		)
 	}
 
-	// Build response message
-	smres := message.NewSessionModificationResponse(0, /* MO?? <-- what's this */
-		0,                                    /* FO <-- what's this? */
+	// =========================
+	// Build Session Modification Response
+	// =========================
+	logger.PfcpLog.Debugf(
+		"[PFCP][SessionModification] Building SessionModificationResponse RemoteSEID=%d Seq=%d",
+		remoteSEID,
+		smreq.SequenceNumber,
+	)
+
+	smres := message.NewSessionModificationResponse(
+		0,                                    /* MO */
+		0,                                    /* FO */
 		remoteSEID,                           /* seid */
 		smreq.SequenceNumber,                 /* seq # */
 		0,                                    /* priority */
-		ie.NewCause(ie.CauseRequestAccepted), /* accept it blindly for the time being */
+		ie.NewCause(ie.CauseRequestAccepted), /* accepted */
+	)
+
+	logger.PfcpLog.Debugf(
+		"[PFCP][SessionModification] SessionModificationResponse Created Successfully",
 	)
 
 	return smres, nil
