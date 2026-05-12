@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y \
 # BESS pre-reqs
 ARG GITHUB_USERNAME
 ARG GITHUB_TOKEN
+ARG CACHE_BUST=1
 WORKDIR /bess
 RUN git clone https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/5GC-DEV/bess-cdac.git . && \
     git checkout ${BESS_COMMIT} && \
