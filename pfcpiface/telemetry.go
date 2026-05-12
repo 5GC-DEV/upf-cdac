@@ -150,7 +150,7 @@ func NewPFCPNodeCollector(node *PFCPNode) *PfcpNodeCollector {
 			[]string{"fseid", "pdr", "ue_ip"}, nil,
 		),
 		ueTrafficBytes: prometheus.NewDesc(prometheus.BuildFQName("upf", "ue", "traffic_bytes"),
-			"Shows total bytes per UE and direction",
+			"Total bytes transferred per UE and direction",
 			[]string{"ue_ip", "direction"}, nil,
 		),
 		sessionDroppedPackets: prometheus.NewDesc(prometheus.BuildFQName("upf", "session", "dropped_packets"),
@@ -169,26 +169,13 @@ func (col PfcpNodeCollector) Describe(ch chan<- *prometheus.Desc) {
 }
 
 func (col PfcpNodeCollector) Collect(ch chan<- prometheus.Metric) {
-	logger.PfcpLog.Infoln("[DEBUG-METRICS] === Prometheus Scrape Started ===")
-
-	// 1. Safety check for initialization
-	if col.node == nil {
-		logger.PfcpLog.Warnln("[DEBUG-METRICS] PfcpNodeCollector skipped: col.node is nil")
-		return
+	if col.node.upf.enableFlowMeasure {
+		err := col.node.upf.SessionStats(&col, ch)
+		if err != nil {
+			logger.PfcpLog.Errorln(err)
+			return
+		}
 	}
-	if col.node.upf == nil {
-		logger.PfcpLog.Warnln("[DEBUG-METRICS] PfcpNodeCollector skipped: col.node.upf is nil")
-		return
-	}
-
-	// 2. Call our safe SessionStats function
-	logger.PfcpLog.Infoln("[DEBUG-METRICS] Calling SessionStats to report UE metrics...")
-	err := col.node.upf.SessionStats(&col, ch)
-	if err != nil {
-		logger.PfcpLog.Errorf("[DEBUG-METRICS] SessionStats returned error: %v", err)
-	}
-
-	logger.PfcpLog.Infoln("[DEBUG-METRICS] === Prometheus Scrape Finished ===")
 }
 
 func setupProm(mux *http.ServeMux, upf *upf, node *PFCPNode) (*upfCollector, *PfcpNodeCollector, error) {

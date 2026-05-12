@@ -71,8 +71,8 @@ func NewPrometheusService() (*Service, error) {
 	}
 
 	ueThroughput := prometheus.NewCounterVec(prometheus.CounterOpts{
-		Name: "upf_ue_traffic_bytes",
-		Help: "Total bytes per UE using stable PDR counters",
+		Name: "upf_ue_throughput_bytes",
+		Help: "Total bytes transferred per UE",
 	}, []string{"node_id", "ue_ip", "direction"})
 
 	if err := prometheus.Register(ueThroughput); err != nil {
