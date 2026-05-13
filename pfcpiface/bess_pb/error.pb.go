@@ -73,6 +73,7 @@ func (x *Error) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*Error) ProtoMessage() {}
 
 func (x *Error) ProtoReflect() protoreflect.Message {
