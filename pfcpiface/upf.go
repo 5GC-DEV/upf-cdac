@@ -145,7 +145,18 @@ func NewUPF(conf *Conf, fp datapath) *upf {
 		readTimeout:       time.Second * time.Duration(conf.ReadTimeout),
 		n4addr:            conf.N4Addr,
 	}
+	if !setupPeersAndInterfaces(u, conf) {
+		return nil
+	}
+	initTimersAndIPPool(u, conf)
 
+	u.SetUpfInfo(u, conf)
+
+	return u
+}
+
+func setupPeersAndInterfaces(u *upf, conf *Conf) bool {
+	var err error
 	if len(conf.CPIface.Peers) > 0 {
 		u.peers = make([]string, len(conf.CPIface.Peers))
 		nc := copy(u.peers, conf.CPIface.Peers)
@@ -159,16 +170,20 @@ func NewUPF(conf *Conf, fp datapath) *upf {
 		u.accessIP, err = GetUnicastAddressFromInterface(conf.AccessIface.IfName)
 		if err != nil {
 			logger.PfcpLog.Errorln(err)
-			return nil
+			return false
 		}
 
 		u.coreIP, err = GetUnicastAddressFromInterface(conf.CoreIface.IfName)
 		if err != nil {
 			logger.PfcpLog.Errorln(err)
-			return nil
+			return false
 		}
 	}
+	return true
+}
 
+func initTimersAndIPPool(u *upf, conf *Conf) {
+	var err error
 	u.respTimeout, err = time.ParseDuration(conf.RespTimeout)
 	if err != nil {
 		logger.PfcpLog.Fatalln("unable to parse resp_timeout")
@@ -189,8 +204,4 @@ func NewUPF(conf *Conf, fp datapath) *upf {
 			logger.PfcpLog.Fatalln("ip pool init failed", err)
 		}
 	}
-
-	u.SetUpfInfo(u, conf)
-
-	return u
 }

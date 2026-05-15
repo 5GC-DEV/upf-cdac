@@ -14,6 +14,11 @@ import (
 	"github.com/wmnsk/go-pfcp/ie"
 )
 
+const (
+	ipAddrPrimary   = "17.0.0.1"
+	ipAddrSecondary = "192.168.1.1"
+)
+
 type pdrTestCase struct {
 	input       *ie.IE
 	expected    *pdr
@@ -180,7 +185,8 @@ func TestCreatePortRangeCartesianProduct(t *testing.T) {
 		want    []portRangeTernaryCartesianProduct
 		wantErr bool
 	}{
-		{name: "exact ranges",
+		{
+			name: "exact ranges",
 			args: args{src: newExactMatchPortRange(5000), dst: newExactMatchPortRange(80)},
 			want: []portRangeTernaryCartesianProduct{{
 				srcPort: 5000,
@@ -188,8 +194,10 @@ func TestCreatePortRangeCartesianProduct(t *testing.T) {
 				dstPort: 80,
 				dstMask: math.MaxUint16,
 			}},
-			wantErr: false},
-		{name: "wildcard dst range",
+			wantErr: false,
+		},
+		{
+			name: "wildcard dst range",
 			args: args{src: newExactMatchPortRange(10), dst: newWildcardPortRange()},
 			want: []portRangeTernaryCartesianProduct{{
 				srcPort: 10,
@@ -197,8 +205,10 @@ func TestCreatePortRangeCartesianProduct(t *testing.T) {
 				dstPort: 0,
 				dstMask: 0,
 			}},
-			wantErr: false},
-		{name: "true range src range",
+			wantErr: false,
+		},
+		{
+			name: "true range src range",
 			args: args{src: newRangeMatchPortRange(1, 3), dst: newExactMatchPortRange(80)},
 			want: []portRangeTernaryCartesianProduct{
 				{
@@ -218,12 +228,16 @@ func TestCreatePortRangeCartesianProduct(t *testing.T) {
 					srcMask: 0xffff,
 					dstPort: 80,
 					dstMask: math.MaxUint16,
-				}},
-			wantErr: false},
-		{name: "invalid double range",
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:    "invalid double range",
 			args:    args{src: newRangeMatchPortRange(10, 20), dst: newRangeMatchPortRange(80, 85)},
 			want:    nil,
-			wantErr: true},
+			wantErr: true,
+		},
 	}
 
 	for _, tt := range tests {
@@ -369,7 +383,8 @@ func Test_portRange_asComplexTernaryMatches(t *testing.T) {
 		wantErr  bool
 		want     []portRangeTernaryRule
 	}{
-		{name: "Exact match port range",
+		{
+			name: "Exact match port range",
 			pr: portRange{
 				low:  8888,
 				high: 8888,
@@ -377,8 +392,10 @@ func Test_portRange_asComplexTernaryMatches(t *testing.T) {
 			want: []portRangeTernaryRule{
 				{port: 8888, mask: 0xffff},
 			},
-			wantErr: false},
-		{name: "wildcard port range",
+			wantErr: false,
+		},
+		{
+			name: "wildcard port range",
 			pr: portRange{
 				low:  0,
 				high: math.MaxUint16,
@@ -386,8 +403,10 @@ func Test_portRange_asComplexTernaryMatches(t *testing.T) {
 			want: []portRangeTernaryRule{
 				{port: 0, mask: 0},
 			},
-			wantErr: false},
-		{name: "Simplest port range",
+			wantErr: false,
+		},
+		{
+			name: "Simplest port range",
 			pr: portRange{
 				low:  0b0, // 0
 				high: 0b1, // 1
@@ -395,8 +414,10 @@ func Test_portRange_asComplexTernaryMatches(t *testing.T) {
 			//want: []portRangeTernaryRule{
 			//	{port: 0b0, mask: 0xfffe},
 			//},
-			wantErr: false},
-		{name: "Simplest port range2",
+			wantErr: false,
+		},
+		{
+			name: "Simplest port range2",
 			pr: portRange{
 				low:  0b01, // 1
 				high: 0b10, // 2
@@ -405,8 +426,10 @@ func Test_portRange_asComplexTernaryMatches(t *testing.T) {
 			//	{port: 0b01, mask: 0xffff},
 			//	{port: 0b10, mask: 0xffff},
 			//},
-			wantErr: false},
-		{name: "Trivial ternary port range",
+			wantErr: false,
+		},
+		{
+			name: "Trivial ternary port range",
 			pr: portRange{
 				low:  0x0100, // 256
 				high: 0x01ff, // 511
@@ -415,8 +438,10 @@ func Test_portRange_asComplexTernaryMatches(t *testing.T) {
 			//want: []portRangeTernaryRule{
 			//	{port: 0x0100, mask: 0xff00},
 			//},
-			wantErr: false},
-		{name: "one to three range",
+			wantErr: false,
+		},
+		{
+			name: "one to three range",
 			pr: portRange{
 				low:  0b01, // 1
 				high: 0b11, // 3
@@ -425,33 +450,42 @@ func Test_portRange_asComplexTernaryMatches(t *testing.T) {
 			//	{port: 0b01, mask: 0xffff},
 			//	{port: 0b10, mask: 0xfffe},
 			//},
-			wantErr: false},
-		{name: "True port range",
+			wantErr: false,
+		},
+		{
+			name: "True port range",
 			pr: portRange{
 				low:  0b00010, //  2
 				high: 0b11101, // 29
 			},
-			wantErr: false},
-		{name: "Worst case port range",
+			wantErr: false,
+		},
+		{
+			name: "Worst case port range",
 			pr: portRange{
 				low:  1,
 				high: 65534,
 			},
 			strategy: Ternary,
-			wantErr:  false},
-		{name: "low port filter",
+			wantErr:  false,
+		},
+		{
+			name: "low port filter",
 			pr: portRange{
 				low:  0,
 				high: 1023,
 			},
 			strategy: Ternary,
-			wantErr:  false},
-		{name: "some small app filter",
+			wantErr:  false,
+		},
+		{
+			name: "some small app filter",
 			pr: portRange{
 				low:  8080,
 				high: 8084,
 			},
-			wantErr: false},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(
@@ -464,19 +498,31 @@ func Test_portRange_asComplexTernaryMatches(t *testing.T) {
 				if tt.want != nil && !reflect.DeepEqual(got, tt.want) {
 					t.Errorf("asComplexTernaryMatches() got = %v, want %v", got, tt.want)
 				}
-				// Do exhaustive test over entire value range.
-				for port := 0; port <= math.MaxUint16; port++ {
-					expectMatch := port >= int(tt.pr.low) && port <= int(tt.pr.high)
-					if matchesTernary(uint16(port), got) != expectMatch {
-						mod := " "
-						if !expectMatch {
-							mod = " not "
-						}
-						t.Errorf("Expected port %v to%vmatch against rules %v from range %+v", port, mod, got, tt.pr)
-					}
-				}
+				verifyPortRangeMatch(t, tt.pr, got)
 			},
 		)
+	}
+}
+
+func verifyPortRangeMatch(
+	t *testing.T,
+	pr portRange,
+	got []portRangeTernaryRule,
+) {
+	// Do exhaustive test over entire value range.
+	for port := 0; port <= math.MaxUint16; port++ {
+		expectMatch := port >= int(pr.low) && port <= int(pr.high)
+
+		if matchesTernary(uint16(port), got) != expectMatch {
+			mod := " "
+			if !expectMatch {
+				mod = " not "
+			}
+			t.Errorf(
+				"Expected port %v to%vmatch against rules %v from range %+v",
+				port, mod, got, pr,
+			)
+		}
 	}
 }
 
@@ -546,7 +592,7 @@ func Test_portRange_Width(t *testing.T) {
 }
 
 func Test_pdr_parseSDFFilter(t *testing.T) {
-	ueAddress := "17.0.0.1"
+	ueAddress := ipAddrPrimary
 
 	newFilter := func(flowDesc string) *ie.IE {
 		return ie.NewSDFFilter(flowDesc, "", "", "", 1)
@@ -564,7 +610,7 @@ func Test_pdr_parseSDFFilter(t *testing.T) {
 			sdfIE:     newFilter("permit out udp from 192.168.1.1/32 to assigned 80-400"),
 			direction: core,
 			wantAppFilter: applicationFilter{
-				srcIP:        ip2int(net.ParseIP("192.168.1.1")),
+				srcIP:        ip2int(net.ParseIP(ipAddrSecondary)),
 				dstIP:        ip2int(net.ParseIP(ueAddress)),
 				srcPortRange: newRangeMatchPortRange(80, 400),
 				dstPortRange: newWildcardPortRange(),
@@ -581,7 +627,7 @@ func Test_pdr_parseSDFFilter(t *testing.T) {
 			direction: access,
 			wantAppFilter: applicationFilter{
 				srcIP:        ip2int(net.ParseIP(ueAddress)),
-				dstIP:        ip2int(net.ParseIP("192.168.1.1")),
+				dstIP:        ip2int(net.ParseIP(ipAddrSecondary)),
 				srcPortRange: newWildcardPortRange(),
 				dstPortRange: newRangeMatchPortRange(80, 400),
 				proto:        17,
@@ -596,7 +642,7 @@ func Test_pdr_parseSDFFilter(t *testing.T) {
 			sdfIE:     newFilter("permit out udp from 192.168.1.1/32 80-400 to assigned"),
 			direction: core,
 			wantAppFilter: applicationFilter{
-				srcIP:        ip2int(net.ParseIP("192.168.1.1")),
+				srcIP:        ip2int(net.ParseIP(ipAddrSecondary)),
 				dstIP:        ip2int(net.ParseIP(ueAddress)),
 				srcPortRange: newRangeMatchPortRange(80, 400),
 				dstPortRange: newWildcardPortRange(),
@@ -613,7 +659,7 @@ func Test_pdr_parseSDFFilter(t *testing.T) {
 			direction: access,
 			wantAppFilter: applicationFilter{
 				srcIP:        ip2int(net.ParseIP(ueAddress)),
-				dstIP:        ip2int(net.ParseIP("192.168.1.1")),
+				dstIP:        ip2int(net.ParseIP(ipAddrSecondary)),
 				srcPortRange: newWildcardPortRange(),
 				dstPortRange: newRangeMatchPortRange(80, 400),
 				proto:        17,
@@ -637,7 +683,7 @@ func Test_pdr_parseSDFFilter(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := &pdr{
-				ueAddress: ip2int(net.ParseIP("17.0.0.1")),
+				ueAddress: ip2int(net.ParseIP(ipAddrPrimary)),
 				srcIface:  tt.direction,
 			}
 			if err := p.parseSDFFilter(tt.sdfIE); (err != nil) != tt.wantErr {
@@ -652,7 +698,7 @@ func Test_pdr_parseSDFFilter(t *testing.T) {
 }
 
 func Test_pdr_parsePDI(t *testing.T) {
-	ueAddress := "17.0.0.1"
+	ueAddress := ipAddrPrimary
 
 	type args struct {
 		pdiIEs  []*ie.IE

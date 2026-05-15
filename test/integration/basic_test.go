@@ -17,6 +17,11 @@ import (
 	"github.com/wmnsk/go-pfcp/message"
 )
 
+const (
+	aclPermitHTTPUDP = "permit out udp from any 80-80 to assigned"
+	anyIPv4AddressZ  = "0.0.0.0"
+)
+
 func TestUPFBasedUeIPAllocation(t *testing.T) {
 	// TODO: verify if UEIP bit is set in the UP Function Features of PFCP Association Response
 	setup(t, ConfigUPFBasedIPAllocation)
@@ -27,7 +32,7 @@ func TestUPFBasedUeIPAllocation(t *testing.T) {
 			sliceID:      1,
 			nbAddress:    nodeBAddress,
 			upfN3Address: upfN3Address,
-			sdfFilter:    "permit out udp from any 80-80 to assigned",
+			sdfFilter:    aclPermitHTTPUDP,
 			ulTEID:       15,
 			dlTEID:       16,
 			QFI:          0x9,
@@ -37,7 +42,7 @@ func TestUPFBasedUeIPAllocation(t *testing.T) {
 			ueAddress: "10.250.0.1",
 			appFilter: appFilter{
 				proto:        0x11,
-				appIP:        net.ParseIP("0.0.0.0"),
+				appIP:        net.ParseIP(anyIPv4AddressZ),
 				appPrefixLen: 0,
 				appPort: portRange{
 					80, 80,
@@ -210,7 +215,7 @@ func TestSingleUEAttachAndDetach(t *testing.T) {
 				nbAddress:    nodeBAddress,
 				ueAddress:    ueAddress,
 				upfN3Address: upfN3Address,
-				sdfFilter:    "permit out udp from any 80-80 to assigned",
+				sdfFilter:    aclPermitHTTPUDP,
 				ulTEID:       15,
 				dlTEID:       16,
 				QFI:          0x9,
@@ -218,7 +223,7 @@ func TestSingleUEAttachAndDetach(t *testing.T) {
 			expected: p4RtValues{
 				appFilter: appFilter{
 					proto:        0x11,
-					appIP:        net.ParseIP("0.0.0.0"),
+					appIP:        net.ParseIP(anyIPv4AddressZ),
 					appPrefixLen: 0,
 					appPort: portRange{
 						80, 80,
@@ -291,7 +296,7 @@ func TestSingleUEAttachAndDetach(t *testing.T) {
 			expected: p4RtValues{
 				appFilter: appFilter{
 					proto:        0x11,
-					appIP:        net.ParseIP("0.0.0.0"),
+					appIP:        net.ParseIP(anyIPv4AddressZ),
 					appPrefixLen: 0,
 					appPort: portRange{
 						80, 80,
@@ -323,7 +328,7 @@ func TestSingleUEAttachAndDetach(t *testing.T) {
 			expected: p4RtValues{
 				appFilter: appFilter{
 					proto:        0x11,
-					appIP:        net.ParseIP("0.0.0.0"),
+					appIP:        net.ParseIP(anyIPv4AddressZ),
 					appPrefixLen: 0,
 					appPort: portRange{
 						80, 80,
@@ -355,7 +360,7 @@ func TestSingleUEAttachAndDetach(t *testing.T) {
 			expected: p4RtValues{
 				appFilter: appFilter{
 					proto:        0x11,
-					appIP:        net.ParseIP("0.0.0.0"),
+					appIP:        net.ParseIP(anyIPv4AddressZ),
 					appPrefixLen: 0,
 					appPort: portRange{
 						80, 80,
@@ -388,7 +393,7 @@ func TestSingleUEAttachAndDetach(t *testing.T) {
 			expected: p4RtValues{
 				appFilter: appFilter{
 					proto:        0x11,
-					appIP:        net.ParseIP("0.0.0.0"),
+					appIP:        net.ParseIP(anyIPv4AddressZ),
 					appPrefixLen: 0,
 					appPort: portRange{
 						80, 80,
@@ -421,7 +426,7 @@ func TestSingleUEAttachAndDetach(t *testing.T) {
 			expected: p4RtValues{
 				appFilter: appFilter{
 					proto:        0x11,
-					appIP:        net.ParseIP("0.0.0.0"),
+					appIP:        net.ParseIP(anyIPv4AddressZ),
 					appPrefixLen: 0,
 					appPort: portRange{
 						80, 80,
@@ -450,7 +455,7 @@ func TestUEBuffering(t *testing.T) {
 			nbAddress:    nodeBAddress,
 			ueAddress:    ueAddress,
 			upfN3Address: upfN3Address,
-			sdfFilter:    "permit out udp from any 80-80 to assigned",
+			sdfFilter:    aclPermitHTTPUDP,
 			ulTEID:       15,
 			dlTEID:       16,
 			QFI:          0x9,
@@ -458,7 +463,7 @@ func TestUEBuffering(t *testing.T) {
 		expected: p4RtValues{
 			appFilter: appFilter{
 				proto:        0x11,
-				appIP:        net.ParseIP("0.0.0.0"),
+				appIP:        net.ParseIP(anyIPv4AddressZ),
 				appPrefixLen: 0,
 				appPort: portRange{
 					80, 80,

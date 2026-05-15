@@ -122,7 +122,7 @@ func (node *PFCPNode) NewPFCPConn(lAddr, rAddr string, buf []byte) *PFCPConn {
 
 	rng := rand.New(rand.NewSource(time.Now().UnixNano())) // #nosec G404
 
-	var p = &PFCPConn{
+	p := &PFCPConn{
 		ctx:            node.ctx,
 		Conn:           conn,
 		ts:             ts,
@@ -213,7 +213,10 @@ func (pConn *PFCPConn) Serve() {
 	}(connTimeout)
 
 	// TODO: Sender goroutine
+	pConn.waitForShutdown(connTimeout)
+}
 
+func (pConn *PFCPConn) waitForShutdown(connTimeout chan struct{}) {
 	for {
 		select {
 		case <-connTimeout:

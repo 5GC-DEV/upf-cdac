@@ -179,7 +179,10 @@ class Parser:
                     "/tmp/notifycp"
                 )
             )
+        self._parse_post_unix_config()
 
+    def _parse_post_unix_config(self):
+        """Parses Unix socket paths, feature flags, table sizes, and monitoring config."""
         # UnixPort Paths
         try:
             self.endmarker_sockaddr = self.conf["endmarker_sockaddr"]

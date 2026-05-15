@@ -47,6 +47,12 @@ const (
 	DefaultApplicationID = 0
 )
 
+const (
+	fieldEntryTableID = "entry.TableId" // only if used as string
+	msgFindMatchField = "find match field"
+	msgFieldName      = "field name"
+)
+
 type tunnelParams struct {
 	tunnelIP4Src uint32
 	tunnelIP4Dst uint32
@@ -185,7 +191,7 @@ func (t *P4rtTranslator) getActionParamByName(action *p4ConfigV1.Action, paramNa
 // TODO: find a way to use *p4.TableEntry as receiver
 func (t *P4rtTranslator) withExactMatchField(entry *p4.TableEntry, name string, value interface{}) error {
 	if entry.TableId == 0 {
-		return ErrInvalidArgumentWithReason("entry.TableId", entry.TableId, "no table name for entry defined, set table name before adding match fields")
+		return ErrInvalidArgumentWithReason(fieldEntryTableID, entry.TableId, "no table name for entry defined, set table name before adding match fields")
 	}
 
 	p4Table, err := t.getTableByID(entry.TableId)
@@ -195,7 +201,7 @@ func (t *P4rtTranslator) withExactMatchField(entry *p4.TableEntry, name string, 
 
 	p4MatchField := t.getMatchFieldByName(p4Table, name)
 	if p4MatchField == nil {
-		return ErrOperationFailedWithParam("find match field", "name", name)
+		return ErrOperationFailedWithParam(msgFindMatchField, "name", name)
 	}
 
 	matchField := &p4.FieldMatch{
@@ -218,11 +224,11 @@ func (t *P4rtTranslator) withExactMatchField(entry *p4.TableEntry, name string, 
 }
 
 func (t *P4rtTranslator) withLPMField(entry *p4.TableEntry, name string, value uint32, prefixLen uint8) error {
-	lpmFieldLog := logger.P4Log.With("entry", entry.String(), "field name", name)
+	lpmFieldLog := logger.P4Log.With("entry", entry.String(), msgFieldName, name)
 	lpmFieldLog.Debugln("adding LPM match field to the entry")
 
 	if entry.TableId == 0 {
-		return ErrInvalidArgumentWithReason("entry.TableId", entry.TableId, "no table ID for entry defined, set table ID before adding match fields")
+		return ErrInvalidArgumentWithReason(fieldEntryTableID, entry.TableId, "no table ID for entry defined, set table ID before adding match fields")
 	}
 
 	p4Table, err := t.getTableByID(entry.TableId)
@@ -232,7 +238,7 @@ func (t *P4rtTranslator) withLPMField(entry *p4.TableEntry, name string, value u
 
 	p4MatchField := t.getMatchFieldByName(p4Table, name)
 	if p4MatchField == nil {
-		return ErrOperationFailedWithParam("find match field", "name", name)
+		return ErrOperationFailedWithParam(msgFindMatchField, "name", name)
 	}
 
 	byteVal, err := convertValueToBinary(value)
@@ -257,11 +263,11 @@ func (t *P4rtTranslator) withLPMField(entry *p4.TableEntry, name string, value u
 }
 
 func (t *P4rtTranslator) withRangeMatchField(entry *p4.TableEntry, name string, low interface{}, high interface{}) error {
-	rangeFieldLog := logger.P4Log.With("entry", entry.String(), "field name", name)
+	rangeFieldLog := logger.P4Log.With("entry", entry.String(), msgFieldName, name)
 	rangeFieldLog.Debugln("adding range match field to the entry")
 
 	if entry.TableId == 0 {
-		return ErrInvalidArgumentWithReason("entry.TableId", entry.TableId, "no table ID for entry defined, set table ID before adding match fields")
+		return ErrInvalidArgumentWithReason(fieldEntryTableID, entry.TableId, "no table ID for entry defined, set table ID before adding match fields")
 	}
 
 	lowByteVal, err := convertValueToBinary(low)
@@ -281,7 +287,7 @@ func (t *P4rtTranslator) withRangeMatchField(entry *p4.TableEntry, name string, 
 
 	p4MatchField := t.getMatchFieldByName(p4Table, name)
 	if p4MatchField == nil {
-		return ErrOperationFailedWithParam("find match field", "name", name)
+		return ErrOperationFailedWithParam(msgFindMatchField, "name", name)
 	}
 
 	matchField := &p4.FieldMatch{
@@ -301,11 +307,11 @@ func (t *P4rtTranslator) withRangeMatchField(entry *p4.TableEntry, name string, 
 }
 
 func (t *P4rtTranslator) withTernaryMatchField(entry *p4.TableEntry, name string, value interface{}, mask interface{}) error {
-	ternaryFieldLog := logger.P4Log.With("entry", entry.String(), "field name", name)
+	ternaryFieldLog := logger.P4Log.With("entry", entry.String(), msgFieldName, name)
 	ternaryFieldLog.Debugln("adding ternary match field to the entry")
 
 	if entry.TableId == 0 {
-		return ErrInvalidArgumentWithReason("entry.TableId", entry.TableId, "no table name for entry defined, set table name before adding match fields")
+		return ErrInvalidArgumentWithReason(fieldEntryTableID, entry.TableId, "no table name for entry defined, set table name before adding match fields")
 	}
 
 	byteVal, err := convertValueToBinary(value)
@@ -330,7 +336,7 @@ func (t *P4rtTranslator) withTernaryMatchField(entry *p4.TableEntry, name string
 
 	p4MatchField := t.getMatchFieldByName(p4Table, name)
 	if p4MatchField == nil {
-		return ErrOperationFailedWithParam("find match field", "name", name)
+		return ErrOperationFailedWithParam(msgFindMatchField, "name", name)
 	}
 
 	matchField := &p4.FieldMatch{
@@ -682,7 +688,8 @@ func (t *P4rtTranslator) buildUplinkTerminationsEntry(pdr pdr, appMeterIdx uint3
 }
 
 func (t *P4rtTranslator) buildDownlinkTerminationsEntry(pdr pdr, appMeterIdx uint32, relatedFAR far,
-	internalAppID uint8, qfi uint8, tc uint8, relatedQER qer) (*p4.TableEntry, error) {
+	internalAppID uint8, qfi uint8, tc uint8, relatedQER qer,
+) (*p4.TableEntry, error) {
 	builderLog := logger.P4Log.With("pdr", pdr, "appMeterIndex", appMeterIdx, "tc", tc, "related-far", relatedFAR)
 	builderLog.Debugln("building P4rt table entry for UP4 terminations_downlink table")
 
