@@ -557,7 +557,7 @@ func (b *bess) SessionStats(pc *PfcpNodeCollector, ch chan<- prometheus.Metric) 
 	}
 
 	// Prepare session stats.
-	createStats := func(preResp, postResp *pb.FlowMeasureReadResponse) {
+	createStats := func(preResp, postResp *pb.FlowMeasureReadResponse, direction string) {
 		for i := 0; i < len(postResp.Statistics); i++ {
 			var pre *pb.FlowMeasureReadResponse_Statistic
 
@@ -606,6 +606,13 @@ func (b *bess) SessionStats(pc *PfcpNodeCollector, ch chan<- prometheus.Metric) 
 				ueIpString,
 			)
 			ch <- prometheus.MustNewConstMetric(
+				pc.ueTrafficBytes,       // New descriptor
+				prometheus.CounterValue, // Counter type
+				float64(post.TotalBytes),
+				ueIpString, // Label: ue_ip
+				direction,  // Label: direction
+			)
+			ch <- prometheus.MustNewConstMetric(
 				pc.sessionRxPackets,
 				prometheus.GaugeValue,
 				float64(pre.TotalPackets),
@@ -650,8 +657,8 @@ func (b *bess) SessionStats(pc *PfcpNodeCollector, ch chan<- prometheus.Metric) 
 		}
 	}
 
-	createStats(&qosStatsInResp, &postUlQosStatsResp)
-	createStats(&qosStatsInResp, &postDlQosStatsResp)
+	createStats(&qosStatsInResp, &postUlQosStatsResp, "uplink")
+	createStats(&qosStatsInResp, &postDlQosStatsResp, "downlink")
 
 	return
 }

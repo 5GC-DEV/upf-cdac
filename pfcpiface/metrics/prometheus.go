@@ -15,6 +15,8 @@ type Service struct {
 
 	sessions        *prometheus.GaugeVec
 	sessionDuration *prometheus.HistogramVec
+
+	ueThroughput *prometheus.CounterVec
 }
 
 func NewPrometheusService() (*Service, error) {
@@ -68,12 +70,23 @@ func NewPrometheusService() (*Service, error) {
 		return nil, err
 	}
 
+	ueThroughput := prometheus.NewCounterVec(prometheus.CounterOpts{
+		Name: "upf_ue_throughput_bytes",
+		Help: "Total bytes transferred per UE",
+	}, []string{"node_id", "ue_ip", "direction"})
+
+	if err := prometheus.Register(ueThroughput); err != nil {
+		return nil, err
+	}
+
 	s := &Service{
 		msgCount:    msgCount,
 		msgDuration: msgDuration,
 
 		sessions:        sessions,
 		sessionDuration: sessionDuration,
+
+		ueThroughput: ueThroughput,
 	}
 
 	return s, nil
@@ -94,11 +107,16 @@ func (s *Service) SaveSessions(sess *Session) {
 	s.sessionDuration.WithLabelValues(sess.NodeID).Observe(sess.Duration)
 }
 
+func (s *Service) SaveUEThroughput(t *UETraffic) {
+	s.ueThroughput.WithLabelValues(t.NodeID, t.UEIP, t.Direction).Add(float64(t.Bytes))
+}
+
 func (s *Service) Stop() error {
 	prometheus.Unregister(s.msgCount)
 	prometheus.Unregister(s.msgDuration)
 	prometheus.Unregister(s.sessions)
 	prometheus.Unregister(s.sessionDuration)
+	prometheus.Unregister(s.ueThroughput)
 
 	return nil
 }
