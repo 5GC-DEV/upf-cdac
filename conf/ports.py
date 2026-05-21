@@ -150,9 +150,76 @@ class Port:
         self.num_q = num_q
         print("Setting up port {} on worker ids {}".format(name, self.workers))
 
-        conf_mode = self._setup_initial_mode(idx, name, num_q, conf_mode)
+        # Detect the mode of this interface - DPDK/AF_XDP/AF_PACKET
+        if conf_mode is None:
+            conf_mode = self.detect_mode()
 
-        self._setup_kernel_modes(idx, name, num_q, conf_mode)
+        if conf_mode not in ["af_xdp", "linux", "dpdk", "af_packet", "sim", "cndp"]:
+            raise Exception("Invalid mode: {} selected.".format(conf_mode))
+
+        if conf_mode in ["af_xdp", "linux"]:
+            try:
+                # Initialize kernel datapath.
+                # AF_XDP requires that num_rx_qs == num_tx_qs
+                kwargs = {
+                    "vdev": "net_af_xdp{},iface={},start_queue=0,queue_count={}".format(
+                        idx, name, num_q
+                    ),
+                    "num_out_q": num_q,
+                    "num_inc_q": num_q,
+                }
+                self.init_datapath(**kwargs)
+            except:
+                if conf_mode == "linux":
+                    print(
+                        "Failed to create AF_XDP socket for {}. Retrying with AF_PACKET socket...".format(
+                            name
+                        )
+                    )
+                    conf_mode = "af_packet"
+                else:
+                    print(
+                        "Failed to create AF_XDP socket for {}. Exiting...".format(name)
+                    )
+                    sys.exit()
+
+        if conf_mode == "cndp":
+            try:
+                # Initialize kernel fastpath.
+                self.init_datapath(cndp=True)
+            except:
+                print(
+                    "Failed to create CNDP/AF_XDP socket for {}. Exiting...".format(
+                        name
+                    )
+                )
+                sys.exit()
+
+        if conf_mode == "af_packet":
+            try:
+                # Initialize kernel datapath
+                kwargs = {
+                    "vdev": "net_af_packet{},iface={},qpairs={}".format(
+                        idx, name, num_q
+                    ),
+                    "num_out_q": num_q,
+                    "num_inc_q": num_q,
+                }
+                self.init_datapath(**kwargs)
+            except:
+                print(
+                    "Failed to create AF_PACKET socket for {}. Exiting...".format(name)
+                )
+                sys.exit()
+
+        if conf_mode == "sim":
+            self.fpi = Source(name="{}_source".format(name))
+            self.fpo = Sink(name="{}_out".format(name))
+            self.bpf = BPF(name="{}FastBPF".format(name))
+            self.bpf.clear()
+
+            # Attach datapath to worker's root TC
+            self.fpi.attach_task(wid=0)
 
         if conf_mode == "dpdk":
             kwargs = None
@@ -245,80 +312,6 @@ class Port:
 
         # Finall set conf mode
         self.mode = conf_mode
-    def _setup_initial_mode(self, idx, name, num_q, conf_mode):
-    """Detects mode and initializes AF_XDP/Linux datapath."""
-    # Detect the mode of this interface - DPDK/AF_XDP/AF_PACKET
-        if conf_mode is None:
-            conf_mode = self.detect_mode()
-
-        if conf_mode not in ["af_xdp", "linux", "dpdk", "af_packet", "sim", "cndp"]:
-            raise Exception("Invalid mode: {} selected.".format(conf_mode))
-
-        if conf_mode in ["af_xdp", "linux"]:
-            try:
-                # Initialize kernel datapath.
-                # AF_XDP requires that num_rx_qs == num_tx_qs
-                kwargs = {
-                    "vdev": "net_af_xdp{},iface={},start_queue=0,queue_count={}".format(
-                        idx, name, num_q
-                    ),
-                    "num_out_q": num_q,
-                    "num_inc_q": num_q,
-                }
-                self.init_datapath(**kwargs)
-            except:
-                if conf_mode == "linux":
-                    print(
-                        "Failed to create AF_XDP socket for {}. Retrying with AF_PACKET socket...".format(
-                            name
-                        )
-                    )
-                    conf_mode = "af_packet"
-                else:
-                    print(
-                        "Failed to create AF_XDP socket for {}. Exiting...".format(name)
-                    )
-                    sys.exit()
-    return conf_mode
-    def _setup_kernel_modes(self, idx, name, num_q, conf_mode):
-    """Handles CNDP, AF_PACKET and SIM modes."""
-     if conf_mode == "cndp":
-            try:
-                # Initialize kernel fastpath.
-                self.init_datapath(cndp=True)
-            except:
-                print(
-                    "Failed to create CNDP/AF_XDP socket for {}. Exiting...".format(
-                        name
-                    )
-                )
-                sys.exit()
-
-        if conf_mode == "af_packet":
-            try:
-                # Initialize kernel datapath
-                kwargs = {
-                    "vdev": "net_af_packet{},iface={},qpairs={}".format(
-                        idx, name, num_q
-                    ),
-                    "num_out_q": num_q,
-                    "num_inc_q": num_q,
-                }
-                self.init_datapath(**kwargs)
-            except:
-                print(
-                    "Failed to create AF_PACKET socket for {}. Exiting...".format(name)
-                )
-                sys.exit()
-
-        if conf_mode == "sim":
-            self.fpi = Source(name="{}_source".format(name))
-            self.fpo = Sink(name="{}_out".format(name))
-            self.bpf = BPF(name="{}FastBPF".format(name))
-            self.bpf.clear()
-
-            # Attach datapath to worker's root TC
-            self.fpi.attach_task(wid=0)
 
     def setup_port(
         self,
