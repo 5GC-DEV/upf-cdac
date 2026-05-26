@@ -268,30 +268,59 @@ def start_and_monitor_port_stats(
             f"{' *' if bad_sample else ''}"
         )
 
-        if bad_sample:
-            if elapsed > ramp_up_timeout:
-                client.stop(ports=[tx_port])
-                raise Exception(
-                    f"TX port ({tx_port}) did not reach or sustain "
-                    f"min sending rate ({to_readable(min_tx_bps)})"
-                )
-            else:
-                # Discard last sample
-                samples.tx_bps.pop()
-                samples.tx_pps.pop()
-                samples.rx_bps.pop()
-                samples.rx_pps.pop()
-
-        if len(samples.tx_bps) == num_samples:
-            # We have enough samples.
-            client.stop(ports=[tx_port])
-            client.wait_on_traffic(ports=[tx_port], timeout=2)
-            break
+        if _handle_sampling_state(
+                    client=client,
+                    samples=samples,
+                    tx_port=tx_port,
+                    min_tx_bps=min_tx_bps,
+                    tx_bps=tx_bps,
+                    elapsed=elapsed,
+                    ramp_up_timeout=ramp_up_timeout,
+                    num_samples=num_samples,
+                    ):
 
         time.sleep(interval - elapsed % interval)
 
     return samples
+def _handle_sampling_state(
+    client: STLClient,
+    samples: RateSamples,
+    tx_port: int,
+    min_tx_bps: int,
+    tx_bps: float,
+    elapsed: float,
+    ramp_up_timeout: int,
+    num_samples: int,
+) -> bool:
+    """
+    Handles bad sample logic and completion condition.
 
+    :return: True if sampling should stop, False otherwise
+    """
+
+    bad_sample = tx_bps < min_tx_bps
+
+    if bad_sample:
+        if elapsed > ramp_up_timeout:
+            client.stop(ports=[tx_port])
+            raise Exception(
+                f"TX port ({tx_port}) did not reach or sustain "
+                f"min sending rate ({to_readable(min_tx_bps)})"
+            )
+        else:
+            # Discard last sample
+            samples.tx_bps.pop()
+            samples.tx_pps.pop()
+            samples.rx_bps.pop()
+            samples.rx_pps.pop()
+        return False
+
+    if len(samples.tx_bps) == num_samples:
+        client.stop(ports=[tx_port])
+        client.wait_on_traffic(ports=[tx_port], timeout=2)
+        return True
+
+    return False
 
 def get_port_stats(port: int, stats) -> PortStats:
     port_stats = stats.get(port)

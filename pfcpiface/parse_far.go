@@ -67,90 +67,12 @@ func (f *far) Forwards() bool {
 
 func (f *far) parseFAR(farIE *ie.IE, fseid uint64, upf *upf, op operation) error {
 	logger.PfcpLog.Debugf("[parseFAR][Enter] F-SEID=%d Operation=%v", fseid, op)
+	f.fseID = (fseid)
 
-	f.fseID = fseid
-
-	farID, err := farIE.FARID()
+	fwdIEs, err := f.parseFARBasicFields(farIE, op)
 	if err != nil {
-		logger.PfcpLog.Errorf("[parseFAR] Failed to read FAR ID: %v", err)
 		return err
 	}
-
-	f.farID = farID
-	logger.PfcpLog.Debugf("[parseFAR] FAR ID=%d", farID)
-
-	action, err := farIE.ApplyAction()
-	if err != nil {
-		logger.PfcpLog.Errorf("[parseFAR] Failed to read ApplyAction: %v", err)
-		return err
-	}
-
-	logger.PfcpLog.Debugf("[parseFAR] ApplyAction Raw=%v", action)
-
-	if action[0] == 0 {
-		logger.PfcpLog.Errorf("[parseFAR] Invalid FAR Action=%v", action)
-		return ErrInvalidArgument("FAR Action", action)
-	}
-
-	f.applyAction = action[0]
-
-	logger.PfcpLog.Debugf(
-		"[parseFAR] FARID=%d ApplyAction=%02x",
-		f.farID,
-		f.applyAction,
-	)
-
-	var fwdIEs []*ie.IE
-
-	switch op {
-	case create:
-		logger.PfcpLog.Debugf(
-			"[parseFAR] Processing CREATE FAR FARID=%d",
-			f.farID,
-		)
-
-		if (f.applyAction & ActionForward) != 0 {
-			logger.PfcpLog.Debugf(
-				"[parseFAR] Fetching ForwardingParameters FARID=%d",
-				f.farID,
-			)
-
-			fwdIEs, err = farIE.ForwardingParameters()
-		}
-
-	case update:
-		logger.PfcpLog.Debugf(
-			"[parseFAR] Processing UPDATE FAR FARID=%d",
-			f.farID,
-		)
-
-		fwdIEs, err = farIE.UpdateForwardingParameters()
-
-	default:
-		logger.PfcpLog.Errorf(
-			"[parseFAR] Invalid operation=%v FARID=%d",
-			op,
-			f.farID,
-		)
-
-		return ErrInvalidOperation(op)
-	}
-
-	if err != nil {
-		logger.PfcpLog.Errorf(
-			"[parseFAR] Failed to parse forwarding parameters FARID=%d Error=%v",
-			f.farID,
-			err,
-		)
-
-		return err
-	}
-
-	logger.PfcpLog.Debugf(
-		"[parseFAR] FARID=%d Forwarding IE Count=%d",
-		f.farID,
-		len(fwdIEs),
-	)
 
 	f.sendEndMarker = false
 
@@ -167,12 +89,10 @@ func (f *far) parseFAR(farIE *ie.IE, fseid uint64, upf *upf, op operation) error
 		switch fwdIE.Type {
 		case ie.OuterHeaderCreation:
 			fields = Set(fields, FwdIEOuterHeaderCreation)
-
 			logger.PfcpLog.Debugf(
 				"[parseFAR] Parsing OuterHeaderCreation FARID=%d",
 				f.farID,
 			)
-
 			ohcFields, err = fwdIE.OuterHeaderCreation()
 			if err != nil {
 				logger.PfcpLog.Errorf(
@@ -180,7 +100,6 @@ func (f *far) parseFAR(farIE *ie.IE, fseid uint64, upf *upf, op operation) error
 					f.farID,
 					err,
 				)
-
 				continue
 			}
 
@@ -188,7 +107,6 @@ func (f *far) parseFAR(farIE *ie.IE, fseid uint64, upf *upf, op operation) error
 			f.tunnelIP4Dst = ip2int(ohcFields.IPv4Address)
 			f.tunnelType = uint8(1)
 			f.tunnelPort = tunnelGTPUPort
-
 			logger.PfcpLog.Debugf(
 				"[parseFAR] FARID=%d TEID=%d DstIP=%v TunnelPort=%d",
 				f.farID,
@@ -198,12 +116,10 @@ func (f *far) parseFAR(farIE *ie.IE, fseid uint64, upf *upf, op operation) error
 			)
 		case ie.DestinationInterface:
 			fields = Set(fields, FwdIEDestinationIntf)
-
 			logger.PfcpLog.Debugf(
 				"[parseFAR] Parsing DestinationInterface FARID=%d",
 				f.farID,
 			)
-
 			f.dstIntf, err = fwdIE.DestinationInterface()
 			if err != nil {
 				logger.PfcpLog.Errorf(
@@ -211,29 +127,24 @@ func (f *far) parseFAR(farIE *ie.IE, fseid uint64, upf *upf, op operation) error
 					f.farID,
 					err,
 				)
-
 				continue
 			}
 
 			switch f.dstIntf {
 			case ie.DstInterfaceAccess:
 				f.tunnelIP4Src = ip2int(upf.accessIP)
-
 				logger.PfcpLog.Debugf(
 					"[parseFAR] FARID=%d DestinationInterface=ACCESS SrcIP=%v",
 					f.farID,
 					upf.accessIP,
 				)
-
 			case ie.DstInterfaceCore:
 				f.tunnelIP4Src = ip2int(upf.coreIP)
-
 				logger.PfcpLog.Debugf(
 					"[parseFAR] FARID=%d DestinationInterface=CORE SrcIP=%v",
 					f.farID,
 					upf.coreIP,
 				)
-
 			default:
 				logger.PfcpLog.Warnf(
 					"[parseFAR] FARID=%d Unknown DestinationInterface=%d",
@@ -243,12 +154,10 @@ func (f *far) parseFAR(farIE *ie.IE, fseid uint64, upf *upf, op operation) error
 			}
 		case ie.PFCPSMReqFlags:
 			fields = Set(fields, FwdIEPfcpSMReqFlags)
-
 			logger.PfcpLog.Debugf(
 				"[parseFAR] Parsing PFCPSMReqFlags FARID=%d",
 				f.farID,
 			)
-
 			smReqFlags, err := fwdIE.PFCPSMReqFlags()
 			if err != nil {
 				logger.PfcpLog.Errorf(
@@ -256,10 +165,8 @@ func (f *far) parseFAR(farIE *ie.IE, fseid uint64, upf *upf, op operation) error
 					f.farID,
 					err,
 				)
-
 				continue
 			}
-
 			logger.PfcpLog.Debugf(
 				"[parseFAR] FARID=%d PFCPSMReqFlags=%08b",
 				f.farID,
@@ -268,7 +175,6 @@ func (f *far) parseFAR(farIE *ie.IE, fseid uint64, upf *upf, op operation) error
 
 			if has2ndBit(smReqFlags) {
 				f.sendEndMarker = true
-
 				logger.PfcpLog.Debugf(
 					"[parseFAR] FARID=%d EndMarker enabled",
 					f.farID,
@@ -282,7 +188,6 @@ func (f *far) parseFAR(farIE *ie.IE, fseid uint64, upf *upf, op operation) error
 			)
 		}
 	}
-
 	logger.PfcpLog.Debugf(
 		"[parseFAR][Exit] F-SEID=%d FARID=%d Action=%02x SrcIP=%d DstIP=%d TEID=%d EndMarker=%v",
 		f.fseID,
@@ -293,6 +198,77 @@ func (f *far) parseFAR(farIE *ie.IE, fseid uint64, upf *upf, op operation) error
 		f.tunnelTEID,
 		f.sendEndMarker,
 	)
-
 	return nil
+}
+
+func (f *far) parseFARBasicFields(farIE *ie.IE, op operation) ([]*ie.IE, error) {
+	farID, err := farIE.FARID()
+	if err != nil {
+		logger.PfcpLog.Errorf("[parseFAR] Failed to read FAR ID: %v", err)
+		return nil, err
+	}
+	f.farID = farID
+	logger.PfcpLog.Debugf("[parseFAR] FAR ID=%d", farID)
+
+	action, err := farIE.ApplyAction()
+	if err != nil {
+		logger.PfcpLog.Errorf("[parseFAR] Failed to read ApplyAction: %v", err)
+		return nil, err
+	}
+	logger.PfcpLog.Debugf("[parseFAR] ApplyAction Raw=%v", action)
+	if action[0] == 0 {
+		logger.PfcpLog.Errorf("[parseFAR] Invalid FAR Action=%v", action)
+		return nil, ErrInvalidArgument("FAR Action", action)
+	}
+	f.applyAction = action[0]
+	logger.PfcpLog.Debugf(
+		"[parseFAR] FARID=%d ApplyAction=%02x",
+		f.farID,
+		f.applyAction,
+	)
+
+	var fwdIEs []*ie.IE
+
+	switch op {
+	case create:
+		logger.PfcpLog.Debugf(
+			"[parseFAR] Processing CREATE FAR FARID=%d",
+			f.farID,
+		)
+		if (f.applyAction & ActionForward) != 0 {
+			logger.PfcpLog.Debugf(
+				"[parseFAR] Fetching ForwardingParameters FARID=%d",
+				f.farID,
+			)
+			fwdIEs, err = farIE.ForwardingParameters()
+		}
+	case update:
+		logger.PfcpLog.Debugf(
+			"[parseFAR] Processing UPDATE FAR FARID=%d",
+			f.farID,
+		)
+		fwdIEs, err = farIE.UpdateForwardingParameters()
+	default:
+		logger.PfcpLog.Errorf(
+			"[parseFAR] Invalid operation=%v FARID=%d",
+			op,
+			f.farID,
+		)
+		return nil, ErrInvalidOperation(op)
+	}
+
+	if err != nil {
+		logger.PfcpLog.Errorf(
+			"[parseFAR] Failed to parse forwarding parameters FARID=%d Error=%v",
+			f.farID,
+			err,
+		)
+		return nil, err
+	}
+	logger.PfcpLog.Debugf(
+		"[parseFAR] FARID=%d Forwarding IE Count=%d",
+		f.farID,
+		len(fwdIEs),
+	)
+	return fwdIEs, nil
 }

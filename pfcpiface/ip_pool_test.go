@@ -4,14 +4,16 @@
 package pfcpiface
 
 import (
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-
 	"math"
 	"net"
 	"sync"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
+
+const ipSubnetCIDR = "10.0.0.0/24"
 
 func TestNewIPPool(t *testing.T) {
 	tests := []struct {
@@ -19,7 +21,7 @@ func TestNewIPPool(t *testing.T) {
 		poolSubnet string
 		wantErr    bool
 	}{
-		{name: "normal pool", poolSubnet: "10.0.0.0/24", wantErr: false},
+		{name: "normal pool", poolSubnet: ipSubnetCIDR, wantErr: false},
 		{name: "smallest allowed pool", poolSubnet: "10.0.0.0/30", wantErr: false},
 		{name: "IPv6 pool", poolSubnet: "2001::/124", wantErr: false},
 		{name: "too small pool", poolSubnet: "10.0.0.0/32", wantErr: true},
@@ -53,7 +55,7 @@ func TestIPPool_LookupOrAllocIP(t *testing.T) {
 	})
 
 	t.Run("repeated SEID lookups return same IP", func(t *testing.T) {
-		const poolSubnet = "10.0.0.0/24"
+		const poolSubnet = ipSubnetCIDR
 		const seid = 1234
 		pool, err := NewIPPool(poolSubnet)
 		require.NoError(t, err)
@@ -66,7 +68,7 @@ func TestIPPool_LookupOrAllocIP(t *testing.T) {
 	})
 
 	t.Run("full subnet allocation", func(t *testing.T) {
-		const poolSubnet = "10.0.0.0/24"
+		const poolSubnet = ipSubnetCIDR
 		const usableAddresses = 256 - 2 // Account for network and broadcast addresses
 		const baseSeid = 1000
 		_, ipnet, err := net.ParseCIDR(poolSubnet)
@@ -118,7 +120,7 @@ func TestIPPool_LookupOrAllocIP(t *testing.T) {
 
 func TestIPPool_DeallocIP(t *testing.T) {
 	t.Run("plain alloc into dealloc", func(t *testing.T) {
-		const poolSubnet = "10.0.0.0/24"
+		const poolSubnet = ipSubnetCIDR
 		const seid = 1234
 		pool, err := NewIPPool(poolSubnet)
 		require.NoError(t, err)
@@ -129,7 +131,7 @@ func TestIPPool_DeallocIP(t *testing.T) {
 	})
 
 	t.Run("dealloc non-existent SEIDs fails", func(t *testing.T) {
-		pool, err := NewIPPool("10.0.0.0/24")
+		pool, err := NewIPPool(ipSubnetCIDR)
 		require.NoError(t, err)
 		err = pool.DeallocIP(1234)
 		assert.Error(t, err)
