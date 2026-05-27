@@ -78,6 +78,7 @@ func (x *Field) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*Field) ProtoMessage() {}
 
 func (x *Field) ProtoReflect() protoreflect.Message {
@@ -137,8 +138,10 @@ type Field_Offset struct {
 	Offset uint32 `protobuf:"varint,2,opt,name=offset,proto3,oneof"` /// The offset in bytes to store the data into
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*Field_AttrName) isField_Position() {}
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*Field_Offset) isField_Position() {}
 
 /// The FieldData message encodes a value to insert into a packet; the value can
@@ -167,6 +170,7 @@ func (x *FieldData) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*FieldData) ProtoMessage() {}
 
 func (x *FieldData) ProtoReflect() protoreflect.Message {
@@ -219,8 +223,10 @@ type FieldData_ValueInt struct {
 	ValueInt uint64 `protobuf:"varint,2,opt,name=value_int,json=valueInt,proto3,oneof"` /// The value in integer format
 }
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*FieldData_ValueBin) isFieldData_Encoding() {}
 
+// SONARQB: Empty protobuf generated method is safe to ignore
 func (*FieldData_ValueInt) isFieldData_Encoding() {}
 
 var File_util_msg_proto protoreflect.FileDescriptor
