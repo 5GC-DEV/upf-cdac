@@ -9,6 +9,7 @@ import (
 	"math/rand"
 	"net"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	reuse "github.com/libp2p/go-reuseport"
@@ -66,7 +67,9 @@ type PFCPConn struct {
 	hbReset     chan struct{}
 	hbCtxCancel context.CancelFunc
 
-	pendingReqs sync.Map
+	pendingReqs     sync.Map
+	heartbeatMissed int32 // 0 = healthy, 1 = at least one heartbeat missed; use atomic access
+
 }
 
 func (pConn *PFCPConn) startHeartBeatMonitor() {
@@ -178,11 +181,12 @@ func (pConn *PFCPConn) setLocalNodeID(id string) {
 	}
 }
 
-// Serve serves forever a single PFCP peer.
 func (pConn *PFCPConn) Serve() {
 	connTimeout := make(chan struct{}, 1)
+
 	go func(connTimeout chan struct{}) {
 		recvBuf := make([]byte, 65507) // Maximum UDP payload size
+		missedHeartbeats := 0
 
 		for {
 			err := pConn.SetReadDeadline(time.Now().Add(pConn.upf.readTimeout))
@@ -193,8 +197,18 @@ func (pConn *PFCPConn) Serve() {
 			n, err := pConn.Read(recvBuf)
 			if err != nil {
 				if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
-					logger.PfcpLog.Infof("read timeout for connection %v<->%v, is the SMF still alive?",
-						pConn.LocalAddr(), pConn.RemoteAddr())
+					missedHeartbeats++
+
+					if missedHeartbeats < int(pConn.upf.maxReqRetries) {
+						logger.PfcpLog.Warnf("read timeout %d/%d for connection %v<->%v, retrying",
+							missedHeartbeats, pConn.upf.maxReqRetries, pConn.LocalAddr(), pConn.RemoteAddr())
+						atomic.StoreInt32(&pConn.heartbeatMissed, 1)
+
+						continue // give the SMF more chances before giving up
+					}
+
+					logger.PfcpLog.Infof("read timeout for connection %v<->%v after %d attempts, is the SMF still alive?",
+						pConn.LocalAddr(), pConn.RemoteAddr(), missedHeartbeats)
 					connTimeout <- struct{}{}
 
 					return
@@ -206,6 +220,14 @@ func (pConn *PFCPConn) Serve() {
 
 				continue
 			}
+
+			// Any successful read means the SMF is alive; reset the miss counter and flag.
+			if missedHeartbeats > 0 {
+				logger.PfcpLog.Infof("connection %v<->%v recovered after %d missed heartbeat(s)",
+					pConn.LocalAddr(), pConn.RemoteAddr(), missedHeartbeats)
+			}
+			missedHeartbeats = 0
+			atomic.StoreInt32(&pConn.heartbeatMissed, 0)
 
 			buf := append([]byte{}, recvBuf[:n]...)
 			pConn.HandlePFCPMsg(buf)
@@ -227,6 +249,12 @@ func (pConn *PFCPConn) Serve() {
 			return
 		}
 	}
+}
+
+// IsHeartbeatMissed reports whether the last read timed out without having
+// reached the retry limit yet (i.e. the connection is in a degraded state).
+func (pConn *PFCPConn) IsHeartbeatMissed() bool {
+	return atomic.LoadInt32(&pConn.heartbeatMissed) == 1
 }
 
 // Shutdown stops connection backing PFCPConn.
