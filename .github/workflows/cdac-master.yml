@@ -1,8 +1,5 @@
-# SPDX-License-Identifier: Apache-2.0
-# Copyright 2023 Canonical Ltd.
-# Copyright 2024 Intel Corporation
 
-name: CDAC Master workflow
+name: CDAC Master
 
 on:
   pull_request:
@@ -13,219 +10,192 @@ on:
       - cdacmaster
   workflow_dispatch:
 
+env:
+  REGISTRY: docker.io
+  DOCKER_REGISTRY: docker.io/
+  DOCKER_REPOSITORY: cdac5gc/
+
 jobs:
-  #build:
-    #if: github.event_name == 'pull_request'
-    #runs-on: ubuntu-latest
-    #steps:
-      #- uses: actions/checkout@v4
-
-      #- uses: actions/setup-go@v5
-       # with:
-         # go-version-file: 'go.mod'
-
-     # - name: Generate protobuf
-       # run: make pb
-
-     # - name: Build the BESS-UPF Docker image
-     #   run: DOCKER_TARGETS=bess make docker-build
-
-     #- name: Build the PFCP Agent Docker image
-      #  run: DOCKER_TARGETS=pfcpiface make docker-build
-
   build-ptf:
-    if: github.event_name == 'pull_request' && github.repository_owner == '5GC-DEV'
+    name: Build PTF
     runs-on: ubuntu-latest
-    env:
-      REGISTRY: docker.io
-      GITHUB_USERNAME: ${{ secrets.DCKRUSER }}
-      GITHUB_TOKEN: ${{ secrets.DCKRPASS }}
-    defaults:
-      run:
-        working-directory: ./ptf
     steps:
-      - uses: actions/checkout@v5
-    
-      - uses: docker/login-action@v3.2.0
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
           username: ${{ secrets.DCKRUSER }}
           password: ${{ secrets.DCKRPASS }}
 
-      - name: Build PTF image
-        run: make build -f Makefile_CDAC 
+      - name: Build PTF
+        run: make ptf -f Makefile_CDAC
 
   lint:
-    name: lint
+    name: Go Lint
     runs-on: ubuntu-latest
-    if: github.repository_owner == '5GC-DEV'
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-go@v6
+      - name: Set up Go
+        uses: actions/setup-go@v5
         with:
-          go-version-file: 'go.mod'
+          go-version-file: go.mod
+          cache: true
 
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v8.0.0
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v7
         with:
-          version: v2.2.2
-          args: -v --config ./.golangci.yml --timeout=10m
+          version: v2.13.2
 
   hadolint:
-    name: hadolint
+    name: Hadolint
     runs-on: ubuntu-latest
-    if: github.repository_owner == '5GC-DEV'
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Dockerfile linter
+      - name: Run Hadolint
         uses: hadolint/hadolint-action@v3.2.0
-        # For now, ignoring:
-        # DL3007 warning: Pin the version explicitily to a release tag (no latest);
-        # DL3008 warning: Pin versions in apt get install (e.g., apt-get install <package>=<version>); and
-        # DL3018 warning: Pin versions in apk add (e.g., apk add <package>=<version>)
         with:
-          dockerfile: Dockerfile
-          ignore: DL3007,DL3008,DL3018
+          dockerfile: Dockerfile_CDAC
 
   check-spelling:
-    name: Markdown spellcheck
+    name: Check Spelling
     runs-on: ubuntu-latest
-    if: github.repository_owner == '5GC-DEV'
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Check Spelling
-        uses: rojopolis/spellcheck-github-actions@0.52.0
-        with:
-          config_path: .spellcheck.yml
-          task_name: Markdown
+      - name: Check spelling
+        uses: codespell-project/actions-codespell@v2
 
   route-control-tests:
+    name: Route Control Tests
     runs-on: ubuntu-latest
-    if: github.repository_owner == '5GC-DEV'
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v6
-      with:
-        python-version: '3.11'
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
 
-    - name: Create virtual environment
-      run: python -m venv venv
-
-    - name: Install dependencies
-      run: |
-        source ./venv/bin/activate
-        pip install -r requirements.txt
-
-    - name: Run tests
-      run: |
-        source ./venv/bin/activate
-        python -m unittest ./conf/test_route_control.py
-
-    - name: Clean up virtual environment
-      run: rm -rf venv
+      - name: Run route control tests
+        run: |
+          go test ./routectl/...
 
   unit-tests-pfcp:
+    name: PFCP Unit Tests
     runs-on: ubuntu-latest
-    if: github.repository_owner == '5GC-DEV'
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-go@v6
+      - name: Set up Go
+        uses: actions/setup-go@v5
         with:
-          go-version-file: 'go.mod'
+          go-version-file: go.mod
+          cache: true
 
-      - name: Run unit tests for PFCP Agent
-        run: make test
+      - name: Run PFCP unit tests
+        run: |
+          go test ./pfcpiface/...
 
   integration-tests-up4:
+    name: UP4 Integration Tests
     runs-on: ubuntu-latest
-    if: github.repository_owner == '5GC-DEV'
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-go@v6
+      - name: Set up Go
+        uses: actions/setup-go@v5
         with:
-          go-version-file: 'go.mod'
+          go-version-file: go.mod
+          cache: true
 
-      - name: Run integration tests for PFCP Agent & UP4
-        run: make test-up4-integration-docker || (docker logs pfcpiface; exit 1)
+      - name: Run UP4 integration tests
+        run: |
+          make test-up4-integration-docker -f Makefile_CDAC
 
   integration-tests-bess:
+    name: BESS Integration Tests
     runs-on: ubuntu-latest
-    if: github.repository_owner == '5GC-DEV'
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-go@v6
-        with:
-          go-version-file: 'go.mod'
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Run integration tests for PFCP Agent & UP4
-        run: make test-bess-integration-native
+      - name: Run BESS integration tests
+        run: |
+          make test-bess-integration-native -f Makefile_CDAC
 
   license-check:
+    name: License Check
     runs-on: ubuntu-latest
-    if: github.repository_owner == '5GC-DEV'
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: reuse lint
+      - name: Run license check
         uses: fsfe/reuse-action@v5
 
   fossa-check:
+    name: FOSSA Scan
     runs-on: ubuntu-latest
-    if: github.repository_owner == '5GC-DEV'
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: FOSSA scan
-        uses: fossa-contrib/fossa-action@v3
+      - name: Run FOSSA analysis
+        uses: fossas/fossa-action@v1
         with:
-          fossa-api-key: 0c3bbcdf20e157bbd487dae173751b28
-          
+          api-key: ${{ secrets.FOSSA_API_KEY }}
+
   docker-build-push-images:
+    name: Build and Push UPF Images
     runs-on: ubuntu-latest
     if: github.repository_owner == '5GC-DEV'
-    needs: [route-control-tests, unit-tests-pfcp, integration-tests-up4, integration-tests-bess]
-    
-    env:
-      REGISTRY: docker.io
-      DOCKER_REGISTRY: docker.io/
-      DOCKER_REPOSITORY: cdac5gc/
-      GITHUB_USERNAME: ${{ secrets.DCKRUSER }}
-      GITHUB_TOKEN: ${{ secrets.DCKRPASS }}
+    strategy:
+      fail-fast: false
+      matrix:
+        cpu:
+          - haswell
+          - ivybridge
+
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-go@v6
-        with:
-          go-version-file: 'go.mod'
-      
-      - run: echo GIT_SHA_SHORT=$(git rev-parse --short HEAD) >> $GITHUB_ENV
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - uses: docker/login-action@v3.3.0
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
           username: ${{ secrets.DCKRUSER }}
           password: ${{ secrets.DCKRPASS }}
 
-      - name: Build and push Docker image for Haswell CPU
-        env:
-          DOCKER_TAG: master-haswell-${{ env.GIT_SHA_SHORT }}
-          CPU: haswell
-        run: |
-          CPU=$CPU make docker-build -f Makefile_CDAC
-          make docker-push -f Makefile_CDAC
+      - name: Set short Git SHA
+        id: vars
+        run: echo "GIT_SHA_SHORT=$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
 
-      - name: Build and push Docker image for Ivybridge CPU
+      - name: Build and push BESS and PFCP images
         env:
-          DOCKER_TAG: master-ivybridge-${{ env.GIT_SHA_SHORT }}
-          CPU: ivybridge
+          CPU: ${{ matrix.cpu }}
+          DOCKER_TAG: master-${{ matrix.cpu }}-${{ github.sha }}
+          DOCKER_REGISTRY: docker.io/
+          DOCKER_REPOSITORY: cdac5gc/
         run: |
-          CPU=$CPU make docker-build -f Makefile_CDAC
+          make docker-build -f Makefile_CDAC
           make docker-push -f Makefile_CDAC
