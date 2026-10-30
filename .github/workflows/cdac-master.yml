@@ -1,4 +1,3 @@
-
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Canonical Ltd.
 # Copyright 2024 Intel Corporation
@@ -32,7 +31,7 @@ jobs:
      #   run: DOCKER_TARGETS=bess make docker-build
 
      #- name: Build the PFCP Agent Docker image
-      #  run: DOCKER_TARGETS=pfcp make docker-build
+      #  run: DOCKER_TARGETS=pfcpiface make docker-build
 
   build-ptf:
     if: github.event_name == 'pull_request' && github.repository_owner == '5GC-DEV'
@@ -46,7 +45,7 @@ jobs:
         working-directory: ./ptf
     steps:
       - uses: actions/checkout@v5
-
+    
       - uses: docker/login-action@v3.2.0
         with:
           registry: ${{ env.REGISTRY }}
@@ -54,7 +53,7 @@ jobs:
           password: ${{ secrets.DCKRPASS }}
 
       - name: Build PTF image
-        run: make build -f Makefile_CDAC
+        run: make build -f Makefile_CDAC 
 
   lint:
     name: lint
@@ -87,7 +86,7 @@ jobs:
         # DL3008 warning: Pin versions in apt get install (e.g., apt-get install <package>=<version>); and
         # DL3018 warning: Pin versions in apk add (e.g., apk add <package>=<version>)
         with:
-          dockerfile: Dockerfile_CDAC
+          dockerfile: Dockerfile
           ignore: DL3007,DL3008,DL3018
 
   check-spelling:
@@ -187,24 +186,26 @@ jobs:
       - name: FOSSA scan
         uses: fossa-contrib/fossa-action@v3
         with:
-          fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
-
+          fossa-api-key: 0c3bbcdf20e157bbd487dae173751b28
+          
   docker-build-push-images:
     runs-on: ubuntu-latest
     if: github.repository_owner == '5GC-DEV'
     needs: [route-control-tests, unit-tests-pfcp, integration-tests-up4, integration-tests-bess]
-
+    
     env:
       REGISTRY: docker.io
       DOCKER_REGISTRY: docker.io/
       DOCKER_REPOSITORY: cdac5gc/
+      GITHUB_USERNAME: ${{ secrets.DCKRUSER }}
+      GITHUB_TOKEN: ${{ secrets.DCKRPASS }}
     steps:
       - uses: actions/checkout@v5
 
       - uses: actions/setup-go@v6
         with:
           go-version-file: 'go.mod'
-
+      
       - run: echo GIT_SHA_SHORT=$(git rev-parse --short HEAD) >> $GITHUB_ENV
 
       - uses: docker/login-action@v3.3.0
