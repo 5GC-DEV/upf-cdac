@@ -1,148 +1,96 @@
-# SPDX-License-Identifier: Apache-2.0
-# Copyright 2020-present Open Networking Foundation
+PROJECT_NAME := upf-epc
+VERSION ?= $(shell cat ./VERSION 2>/dev/null || echo dev)
 
-PROJECT_NAME             := upf-epc
-VERSION                  ?= $(shell cat ./VERSION)
-OSTYPE                   := $(shell uname -s)
-ifeq ($(OSTYPE),Linux)
-NPROCS                   := $(shell nproc)
-else ifeq ($(OSTYPE),Darwin) # Assume Mac OS X
-NPROCS                   := $(shell sysctl -n hw.physicalcpu)
-else
-NPROCS                   := 1
-endif
+# Build configuration
+NPROCS := $(shell nproc)
+CPU ?= native
 
-# Note that we set the target platform of Docker images to native
-# For a more portable image set CPU=haswell
-CPU                      ?= native
+# Docker configuration
+DOCKER_REGISTRY ?=
+DOCKER_REPOSITORY ?=
+DOCKER_TAG ?= $(VERSION)
+DOCKERFILE ?= Dockerfile
 
-# Enable Network Token Function support (see https://networktokens.org for more
-# information)
-ENABLE_NTF               ?= 0
+DOCKER_TARGETS ?= bess pfcp
+DOCKER_PULL ?= --pull
 
-## Docker related
-DOCKER_REGISTRY          ?=
-DOCKER_REPOSITORY        ?=
-DOCKER_TAG               ?= ${VERSION}
-DOCKER_IMAGENAME         := ${DOCKER_REGISTRY}${DOCKER_REPOSITORY}${PROJECT_NAME}:${DOCKER_TAG}
-DOCKER_BUILDKIT          ?= 1
-DOCKER_BUILD_ARGS        ?= --build-arg MAKEFLAGS=-j${NPROCS} --build-arg CPU
-DOCKER_BUILD_ARGS        += --build-arg ENABLE_NTF=$(ENABLE_NTF)
-DOCKER_PULL              ?= --pull
+# Preserve the existing IOSMCN image naming convention:
+# <registry><repository>/upf-epc-bess:<tag>
+# <registry><repository>/upf-epc-pfcp:<tag>
 
-## Docker labels. Only set ref and commit date if committed
-DOCKER_LABEL_VCS_URL     ?= $(shell git remote get-url $(shell git remote))
-DOCKER_LABEL_VCS_REF     ?= $(shell git diff-index --quiet HEAD -- && git rev-parse HEAD || echo "unknown")
-DOCKER_LABEL_COMMIT_DATE ?= $(shell git diff-index --quiet HEAD -- && git show -s --format=%cd --date=iso-strict HEAD || echo "unknown" )
-DOCKER_LABEL_BUILD_DATE  ?= $(shell date -u "+%Y-%m-%dT%H:%M:%SZ")
+DOCKER_BUILD_ARGS ?= \
+	--build-arg MAKEFLAGS=-j$(NPROCS) \
+	--build-arg CPU=$(CPU)
 
-DOCKER_TARGETS           ?= bess pfcpiface
+# IOSMCN source repository
+VCS_URL := https://github.com/ios-mcn-core/upf
+VCS_REF ?= $(shell git rev-parse HEAD 2>/dev/null || echo unknown)
+BUILD_DATE ?= $(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
 
-# Golang grpc/protobuf generation
-BESS_PB_DIR ?= pfcpiface
-PTF_PB_DIR ?= ptf/lib
+DOCKER_METADATA_ARGS = \
+	--build-arg VERSION=$(VERSION) \
+	--build-arg VCS_URL=$(VCS_URL) \
+	--build-arg VCS_REF=$(VCS_REF) \
+	--build-arg BUILD_DATE=$(BUILD_DATE)
 
-# https://docs.docker.com/engine/reference/commandline/build/#specifying-target-build-stage---target
+DOCKER_IMAGE_PREFIX = $(DOCKER_REGISTRY)$(DOCKER_REPOSITORY)$(PROJECT_NAME)
+
+.PHONY: all docker-build docker-push docker-clean output pb py-pb
+
+all: docker-build
+
+# Build the requested Docker targets
 docker-build:
+	@set -e; \
 	for target in $(DOCKER_TARGETS); do \
-		DOCKER_CACHE_ARG=""; \
-		if [ $(DOCKER_BUILDKIT) = 1 ]; then \
-			DOCKER_CACHE_ARG="--cache-from ${DOCKER_REGISTRY}${DOCKER_REPOSITORY}upf-epc-$$target:${DOCKER_TAG}"; \
-		fi; \
-		DOCKER_BUILDKIT=$(DOCKER_BUILDKIT) docker build -f Dockerfile_IOSMCN $(DOCKER_PULL) $(DOCKER_BUILD_ARGS) \
-			--build-arg GITHUB_USERNAME=${GITHUB_USERNAME} \
-        	--build-arg GITHUB_TOKEN=${GITHUB_TOKEN} \
+		image="$(DOCKER_IMAGE_PREFIX)-$$target:$(DOCKER_TAG)"; \
+		echo "Building IOSMCN image: $$image"; \
+		docker build $(DOCKER_PULL) \
+			$(DOCKER_BUILD_ARGS) \
+			$(DOCKER_METADATA_ARGS) \
+			-f $(DOCKERFILE) \
 			--target $$target \
-			$$DOCKER_CACHE_ARG \
-			--tag ${DOCKER_REGISTRY}${DOCKER_REPOSITORY}upf-epc-$$target:${DOCKER_TAG} \
-			--label org.opencontainers.image.source="https://github.com/ios-mcn-core/upf" \
-			--label org.label.schema.version="${VERSION}" \
-			--label org.label.schema.vcs.url="${DOCKER_LABEL_VCS_URL}" \
-			--label org.label.schema.vcs.ref="${DOCKER_LABEL_VCS_REF}" \
-			--label org.label.schema.build.date="${DOCKER_LABEL_BUILD_DATE}" \
-			--label org.opencord.vcs.commit.date="${DOCKER_LABEL_COMMIT_DATE}" \
-			. \
-			|| exit 1; \
+			-t $$image .; \
 	done
 
+# Push the requested Docker targets
 docker-push:
+	@set -e; \
 	for target in $(DOCKER_TARGETS); do \
-		docker push ${DOCKER_REGISTRY}${DOCKER_REPOSITORY}upf-epc-$$target:${DOCKER_TAG}; \
+		image="$(DOCKER_IMAGE_PREFIX)-$$target:$(DOCKER_TAG)"; \
+		echo "Pushing IOSMCN image: $$image"; \
+		docker push $$image; \
 	done
 
-# Change target to bess-build/pfcpiface to exctract src/obj/bins for performance analysis
+# Remove locally built images
+docker-clean:
+	@set -e; \
+	for target in $(DOCKER_TARGETS); do \
+		image="$(DOCKER_IMAGE_PREFIX)-$$target:$(DOCKER_TAG)"; \
+		docker image rm -f $$image 2>/dev/null || true; \
+	done
+
+# Export build artifacts
 output:
-	DOCKER_BUILDKIT=$(DOCKER_BUILDKIT) docker build -f Dockerfile_IOSMCN $(DOCKER_PULL) $(DOCKER_BUILD_ARGS) \
-		--build-arg GITHUB_USERNAME=${GITHUB_USERNAME} \
-        --build-arg GITHUB_TOKEN=${GITHUB_TOKEN} \
+	docker build $(DOCKER_PULL) \
+		$(DOCKER_BUILD_ARGS) \
+		$(DOCKER_METADATA_ARGS) \
+		-f $(DOCKERFILE) \
 		--target artifacts \
-		--output type=tar,dest=output.tar \
-		.;
-	rm -rf output && mkdir output && tar -xf output.tar -C output && rm -f output.tar
+		--output type=local,dest=./output .
 
-test-up4-integration-docker: DOCKER_TARGETS=pfcpiface
-test-up4-integration-docker: DOCKER_TAG=integration
-test-up4-integration-docker: docker-build
-	docker rm -f mock-up4 pfcpiface
-	docker network prune -f
-	MODE=docker DATAPATH=up4 go test -v -count=1 -failfast -timeout 15m ./test/integration/...
-
-test-bess-integration-native:
-	MODE=native DATAPATH=bess go test \
-       -v \
-       -race \
-       -count=1 \
-       -failfast \
-       ./test/integration/...
-
+# Export Go protobuf files
 pb:
-	DOCKER_BUILDKIT=$(DOCKER_BUILDKIT) docker build -f Dockerfile_IOSMCN $(DOCKER_PULL) $(DOCKER_BUILD_ARGS) \
-		--build-arg GITHUB_USERNAME=${GITHUB_USERNAME} \
-        --build-arg GITHUB_TOKEN=${GITHUB_TOKEN} \
+	docker build $(DOCKER_PULL) \
+		$(DOCKER_BUILD_ARGS) \
+		-f $(DOCKERFILE) \
 		--target pb \
-		--output output \
-		.;
-	cp -a output/bess_pb ${BESS_PB_DIR}
+		--output type=local,dest=./pb .
 
-# Python grpc/protobuf generation
+# Export Python protobuf files
 py-pb:
-	DOCKER_BUILDKIT=$(DOCKER_BUILDKIT) docker build -f Dockerfile_IOSMCN $(DOCKER_PULL) $(DOCKER_BUILD_ARGS) \
-		--build-arg GITHUB_USERNAME=${GITHUB_USERNAME} \
-        --build-arg GITHUB_TOKEN=${GITHUB_TOKEN} \
+	docker build $(DOCKER_PULL) \
+		$(DOCKER_BUILD_ARGS) \
+		-f $(DOCKERFILE) \
 		--target ptf-pb \
-		--output output \
-		.;
-	cp -a output/bess_pb/. ${PTF_PB_DIR}
-
-.coverage:
-	rm -rf $(CURDIR)/.coverage
-	mkdir -p $(CURDIR)/.coverage
-
-test: .coverage
-	docker run --rm -v $(CURDIR):/upf-epc -w /upf-epc golang:latest \
-		go test \
-			-race \
-			-failfast \
-			-coverprofile=.coverage/coverage-unit.txt \
-			-covermode=atomic \
-			-v \
-			./pfcpiface ./cmd/...
-
-p4-constants:
-	$(info *** Generating go constants...)
-	@docker run --rm -v $(CURDIR):/app -w /app \
-		golang:latest go run ./cmd/p4info_code_gen/p4info_code_gen.go \
-		-output internal/p4constants/p4constants.go -p4info conf/p4/bin/p4info.txt
-	@docker run --rm -v $(CURDIR):/app -w /app \
-		golang:latest gofmt -w internal/p4constants/p4constants.go
-
-fmt:
-	@go fmt ./...
-
-golint:
-	@docker run --rm -v $(CURDIR):/app -w /app/pfcpiface golangci/golangci-lint:latest golangci-lint run -v --config /app/.golangci.yml
-
-check-reuse:
-	@docker run --rm -v $(CURDIR):/upf-epc -w /upf-epc omecproject/reuse-verify:latest reuse lint
-
-.PHONY: docker-build docker-push output pb fmt golint check-reuse test-up4-integration .coverage test
+		--output type=local,dest=./py-pb .
