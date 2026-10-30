@@ -5,14 +5,10 @@ package integration
 
 import (
 	"net"
-	"os"
 	"testing"
 	"time"
 
 	"github.com/omec-project/pfcpsim/pkg/pfcpsim/session"
-	"github.com/omec-project/upf-epc/internal/p4constants"
-	"github.com/omec-project/upf-epc/pfcpiface"
-	"github.com/stretchr/testify/require"
 	"github.com/wmnsk/go-pfcp/ie"
 	"github.com/wmnsk/go-pfcp/message"
 )
@@ -32,7 +28,7 @@ func TestUPFBasedUeIPAllocation(t *testing.T) {
 			dlTEID:       16,
 			QFI:          0x9,
 		},
-		expected: p4RtValues{
+		expected: ueSessionConfig{
 			// first IP address from pool configured in ue_ip_alloc.json
 			ueAddress: "10.250.0.1",
 			appFilter: appFilter{
@@ -84,107 +80,60 @@ func TestUPFBasedUeIPAllocation(t *testing.T) {
 	}
 
 	err := pfcpClient.SendSessionEstablishmentRequest(pdrs, fars, nil, nil)
-	require.NoError(t, err)
+	if err != nil {
+		t.Fatalf("SendSessionEstablishmentRequest failed: %v", err)
+	}
 
 	resp, err := pfcpClient.PeekNextResponse()
-	require.NoError(t, err)
+	if err != nil {
+		t.Fatalf("PeekNextResponse failed: %v", err)
+	}
 
 	estResp, ok := resp.(*message.SessionEstablishmentResponse)
-	require.True(t, ok)
+	if !ok {
+		t.Fatalf("Expected SessionEstablishmentResponse, got %T", resp)
+	}
 
 	testcase.expected.pdrs = pdrs
 	testcase.expected.fars = fars
 
 	remoteSEID, err := estResp.UPFSEID.FSEID()
-	require.NoError(t, err)
+	if err != nil {
+		t.Fatalf("Failed to get FSEID: %v", err)
+	}
 
 	// the PFCP response should contain exactly 1 Create PDR IE
-	require.Len(t, estResp.CreatedPDR, 1)
+	if len(estResp.CreatedPDR) != 1 {
+		t.Fatalf("Expected 1 CreatedPDR, got %d", len(estResp.CreatedPDR))
+	}
 
 	// verify if UE Address IE is provided and contains expected IP address
 	ueIPs, err := estResp.CreatedPDR[0].UEIPAddress()
-	require.NoError(t, err)
+	if err != nil {
+		t.Fatalf("Failed to get UE IP Address: %v", err)
+	}
 
-	require.Equal(t, net.ParseIP(testcase.expected.ueAddress).To4(), ueIPs.IPv4Address.To4())
+	expectedIP := net.ParseIP(testcase.expected.ueAddress).To4()
+	actualIP := ueIPs.IPv4Address.To4()
+	if !expectedIP.Equal(actualIP) {
+		t.Fatalf("Expected UE IP %v, got %v", expectedIP, actualIP)
+	}
 
-	verifyEntries(t, testcase.input, testcase.expected, UEStateAttaching)
+	verifyEntries(t, testcase.expected)
 
 	// no need to send modification request, we can delete PFCP session
 
 	err = pfcpClient.SendSessionDeletionRequest(0, remoteSEID.SEID)
-	require.NoError(t, err)
+	if err != nil {
+		t.Fatalf("SendSessionDeletionRequest failed: %v", err)
+	}
 
 	_, err = pfcpClient.PeekNextResponse()
-	require.NoError(t, err)
+	if err != nil {
+		t.Fatalf("PeekNextResponse after deletion failed: %v", err)
+	}
 
 	verifyNoEntries(t)
-}
-
-func TestDetectUP4Restart(t *testing.T) {
-	if !isDatapathUP4() {
-		t.Skipf("Skipping UP4-specific test for datapath: %s", os.Getenv(EnvDatapath))
-	}
-
-	run := func() {
-		// restart UP4, it will close P4Runtime channel between pfcpiface and mock-up4
-		MustStopMockUP4()
-		MustStartMockUP4()
-
-		// establish session, it forces pfcpiface to re-connect to UP4.
-		// Otherwise, we would need to wait about 2 minutes for pfcpiface to re-connect.
-		pfcpClient.EstablishSession([]*ie.IE{
-			session.NewPDRBuilder().MarkAsUplink().
-				WithMethod(session.Create).
-				WithID(1).
-				WithTEID(15).
-				WithN3Address(upfN3Address).
-				WithFARID(1).
-				AddQERID(1).BuildPDR(),
-			session.NewPDRBuilder().MarkAsDownlink().
-				WithMethod(session.Create).
-				WithID(2).
-				WithUEAddress(ueAddress).
-				WithFARID(2).
-				AddQERID(1).BuildPDR(),
-		}, []*ie.IE{
-			session.NewFARBuilder().
-				WithMethod(session.Create).WithID(1).WithDstInterface(ie.DstInterfaceCore).
-				WithAction(ActionForward).BuildFAR(),
-			session.NewFARBuilder().
-				WithMethod(session.Create).WithID(2).
-				WithDstInterface(ie.DstInterfaceAccess).
-				WithAction(ActionDrop).WithTEID(16).
-				WithDownlinkIP(nodeBAddress).BuildFAR(),
-		}, []*ie.IE{
-			session.NewQERBuilder().WithMethod(session.Create).WithID(1).
-				WithUplinkMBR(500000).
-				WithDownlinkMBR(500000).
-				WithUplinkGBR(0).
-				WithDownlinkGBR(0).Build(),
-		}, []*ie.IE{
-			session.NewURRBuilder().WithMethod(session.Create).WithID(1).
-				WithMeasurementMethod(1, 1, 1).WithReportingTrigger(session.ReportingTrigger{Flags: 1}).Build(),
-		})
-	}
-
-	t.Run("Do not clear on UP4 restart", func(t *testing.T) {
-		setup(t, ConfigDefault)
-		defer teardown(t)
-
-		run()
-		// do not clear state on UP4 restart means that interfaces will not be re-installed.
-		// The assumption is that the ONOS cluster preserves them, but BMv2 doesn't.
-		verifyNumberOfEntries(t, p4constants.TablePreQosPipeInterfaces, 0)
-	})
-
-	t.Run("Clear on UP4 restart", func(t *testing.T) {
-		setup(t, ConfigWipeOutOnUP4Restart)
-		defer teardown(t)
-
-		run()
-		// clear state on UP4 restart means that interfaces entries will be re-installed.
-		verifyNumberOfEntries(t, p4constants.TablePreQosPipeInterfaces, 2)
-	})
 }
 
 func TestPFCPHeartbeats(t *testing.T) {
@@ -195,7 +144,9 @@ func TestPFCPHeartbeats(t *testing.T) {
 
 	// Heartbeats interval is 5 seconds by default.
 	// If the association is alive after 10 seconds it means that PFCP Agent handles heartbeats properly.
-	require.True(t, pfcpClient.IsAssociationAlive())
+	if !pfcpClient.IsAssociationAlive() {
+		t.Fatal("Expected PFCP association to be alive after 10 seconds")
+	}
 }
 
 func TestSingleUEAttachAndDetach(t *testing.T) {
@@ -215,7 +166,7 @@ func TestSingleUEAttachAndDetach(t *testing.T) {
 				dlTEID:       16,
 				QFI:          0x9,
 			},
-			expected: p4RtValues{
+			expected: ueSessionConfig{
 				appFilter: appFilter{
 					proto:        0x11,
 					appIP:        net.ParseIP("0.0.0.0"),
@@ -239,7 +190,7 @@ func TestSingleUEAttachAndDetach(t *testing.T) {
 				dlTEID:       16,
 				QFI:          0x9,
 			},
-			expected: p4RtValues{
+			expected: ueSessionConfig{
 				appFilter: appFilter{
 					proto:        0x11,
 					appIP:        net.ParseIP("192.168.1.1"),
@@ -263,7 +214,7 @@ func TestSingleUEAttachAndDetach(t *testing.T) {
 				dlTEID:       16,
 				QFI:          0x9,
 			},
-			expected: p4RtValues{
+			expected: ueSessionConfig{
 				// no application filtering rule expected
 				tc: 3,
 			},
@@ -288,7 +239,7 @@ func TestSingleUEAttachAndDetach(t *testing.T) {
 				appGBR:           30000,
 				appMBR:           50000,
 			},
-			expected: p4RtValues{
+			expected: ueSessionConfig{
 				appFilter: appFilter{
 					proto:        0x11,
 					appIP:        net.ParseIP("0.0.0.0"),
@@ -320,7 +271,7 @@ func TestSingleUEAttachAndDetach(t *testing.T) {
 				sessGBR:   300000,
 				sessMBR:   500000,
 			},
-			expected: p4RtValues{
+			expected: ueSessionConfig{
 				appFilter: appFilter{
 					proto:        0x11,
 					appIP:        net.ParseIP("0.0.0.0"),
@@ -352,7 +303,7 @@ func TestSingleUEAttachAndDetach(t *testing.T) {
 				appGBR:           30000,
 				appMBR:           50000,
 			},
-			expected: p4RtValues{
+			expected: ueSessionConfig{
 				appFilter: appFilter{
 					proto:        0x11,
 					appIP:        net.ParseIP("0.0.0.0"),
@@ -385,7 +336,7 @@ func TestSingleUEAttachAndDetach(t *testing.T) {
 				appMBR:           50000,
 				ulGateClosed:     true,
 			},
-			expected: p4RtValues{
+			expected: ueSessionConfig{
 				appFilter: appFilter{
 					proto:        0x11,
 					appIP:        net.ParseIP("0.0.0.0"),
@@ -418,7 +369,7 @@ func TestSingleUEAttachAndDetach(t *testing.T) {
 				appMBR:           50000,
 				dlGateClosed:     true,
 			},
-			expected: p4RtValues{
+			expected: ueSessionConfig{
 				appFilter: appFilter{
 					proto:        0x11,
 					appIP:        net.ParseIP("0.0.0.0"),
@@ -455,7 +406,7 @@ func TestUEBuffering(t *testing.T) {
 			dlTEID:       16,
 			QFI:          0x9,
 		},
-		expected: p4RtValues{
+		expected: ueSessionConfig{
 			appFilter: appFilter{
 				proto:        0x11,
 				appIP:        net.ParseIP("0.0.0.0"),
@@ -471,66 +422,6 @@ func TestUEBuffering(t *testing.T) {
 	testUEAttach(t, fillExpected(&tc))
 	testUEBuffer(t, fillExpected(&tc))
 	testUEDetach(t, fillExpected(&tc))
-}
-
-func TestSliceMeter(t *testing.T) {
-	setup(t, ConfigDefault)
-	defer teardown(t)
-
-	testCases := []testCase{
-		{
-			sliceConfig: &pfcpiface.NetworkSlice{
-				SliceName: "P4-UPF-1",
-				SliceQos: pfcpiface.SliceQos{
-					UplinkMbr:    20000,
-					UlBurstBytes: 10000,
-					DownlinkMbr:  10000,
-					DlBurstBytes: 10000,
-					BitrateUnit:  "Kbps",
-				},
-			},
-			expected: p4RtValues{
-				sliceMeter: &sliceMeter{
-					sliceID: 1,
-					TC:      3,
-					rate:    20000000,
-					burst:   10000,
-				},
-			},
-			desc: "Uplink rate higher",
-		},
-		{
-			sliceConfig: &pfcpiface.NetworkSlice{
-				SliceName: "P4-UPF-1",
-				SliceQos: pfcpiface.SliceQos{
-					UplinkMbr:    5000,
-					UlBurstBytes: 10000,
-					DownlinkMbr:  10000,
-					DlBurstBytes: 10000,
-					BitrateUnit:  "Kbps",
-				},
-			},
-			expected: p4RtValues{
-				sliceMeter: &sliceMeter{
-					sliceID: 1,
-					TC:      3,
-					rate:    10000000,
-					burst:   10000,
-				},
-			},
-			desc: "Downlink rate higher",
-		},
-	}
-
-	t.Run("No Slice Meters", func(t *testing.T) {
-		verifySliceMeter(t, p4RtValues{})
-	})
-
-	for _, tc := range testCases {
-		t.Run(tc.desc, func(t *testing.T) {
-			testSliceMeter(t, &tc)
-		})
-	}
 }
 
 func fillExpected(tc *testCase) *testCase {
@@ -621,19 +512,24 @@ func testUEAttach(t *testing.T, testcase *testCase) {
 	testcase.expected.pdrs = pdrs
 	testcase.expected.fars = fars
 	testcase.expected.qers = qers
-	require.NoErrorf(t, err, "failed to establish PFCP session")
+	if err != nil {
+		t.Fatalf("failed to establish PFCP session: %v", err)
+	}
 	testcase.session = sess
 
-	verifyEntries(t, testcase.input, testcase.expected, UEStateAttaching)
+	verifyEntries(t, testcase.expected)
 
-	pfcpClient.ModifySession(sess, nil, []*ie.IE{
+	err = pfcpClient.ModifySession(sess, nil, []*ie.IE{
 		session.NewFARBuilder().
 			WithMethod(session.Update).WithID(2).
 			WithAction(ActionForward).WithDstInterface(ie.DstInterfaceAccess).
 			WithTEID(testcase.input.dlTEID).WithDownlinkIP(testcase.input.nbAddress).BuildFAR(),
 	}, nil, nil)
+	if err != nil {
+		t.Fatalf("failed to modify PFCP session: %v", err)
+	}
 
-	verifyEntries(t, testcase.input, testcase.expected, UEStateAttached)
+	verifyEntries(t, testcase.expected)
 }
 
 func testUEBuffer(t *testing.T, testcase *testCase) {
@@ -647,9 +543,11 @@ func testUEBuffer(t *testing.T, testcase *testCase) {
 	}
 
 	err := pfcpClient.ModifySession(testcase.session, nil, fars, nil, nil)
-	require.NoError(t, err)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 
-	verifyEntries(t, testcase.input, testcase.expected, UEStateBuffering)
+	verifyEntries(t, testcase.expected)
 
 	// stop buffering
 	fars = []*ie.IE{
@@ -661,14 +559,18 @@ func testUEBuffer(t *testing.T, testcase *testCase) {
 	}
 
 	err = pfcpClient.ModifySession(testcase.session, nil, fars, nil, nil)
-	require.NoError(t, err)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 
-	verifyEntries(t, testcase.input, testcase.expected, UEStateAttached)
+	verifyEntries(t, testcase.expected)
 }
 
 func testUEDetach(t *testing.T, testcase *testCase) {
 	err := pfcpClient.DeleteSession(testcase.session)
-	require.NoErrorf(t, err, "failed to delete PFCP session")
+	if err != nil {
+		t.Fatalf("failed to delete PFCP session: %v", err)
+	}
 
 	verifyNoEntries(t)
 }
@@ -676,22 +578,4 @@ func testUEDetach(t *testing.T, testcase *testCase) {
 func testUEAttachDetach(t *testing.T, testcase *testCase) {
 	testUEAttach(t, testcase)
 	testUEDetach(t, testcase)
-
-	if isDatapathUP4() {
-		// re-initialize counters so that we can verify if pfcp-agent clears them properly
-		mustInitCountersWithDummyValue()
-	}
-}
-
-func testSliceMeter(t *testing.T, testcase *testCase) {
-	if isDatapathUP4() {
-		err := PushSliceMeterConfig(*testcase.sliceConfig)
-		if err != nil {
-			t.Error("Error when pushing slice meter config via REST APIs", err)
-		}
-
-		verifySliceMeter(t, testcase.expected)
-	} else {
-		t.Skip("TODO: implement slice meter test for BESS")
-	}
 }

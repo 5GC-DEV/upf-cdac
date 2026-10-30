@@ -2,126 +2,171 @@
 # Copyright 2020-present Open Networking Foundation
 # Copyright 2019-present Intel Corporation
 
-# Stage bess-build: fetch BESS dependencies & pre-reqs
-FROM registry.aetherproject.org/sdcore/bess_build:250619 AS bess-build
-ARG CPU=native
-ARG BESS_COMMIT=main
-ENV PLUGINS_DIR=plugins
-ARG MAKEFLAGS
-ENV PKG_CONFIG_PATH=/usr/lib64/pkgconfig
-
-RUN apt-get update && apt-get install -y \
-    --no-install-recommends \
-    git \
-    ca-certificates \
-    libbpf0 \
-    libelf-dev && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# BESS pre-reqs
-WORKDIR /bess
-RUN git clone https://github.com/omec-project/bess.git . && \
-    git checkout ${BESS_COMMIT} && \
-    cp -a protobuf /protobuf
-
-# Build DPDK
-RUN ./build.py dpdk
-
-# Plugins: SequentialUpdate
-RUN mkdir -p plugins && \
-    mv sample_plugin plugins
-
-## Network Token
-ARG ENABLE_NTF
-ARG NTF_COMMIT=master
-COPY scripts/install_ntf.sh .
-RUN ./install_ntf.sh
-
-# Build and copy artifacts
-RUN PLUGINS=$(find "$PLUGINS_DIR" -mindepth 1 -maxdepth 1 -type d) && \
-    CMD="./build.py bess" && \
-    for PLUGIN in $PLUGINS; do \
-        CMD="$CMD --plugin \"$PLUGIN\""; \
-    done && \
-    eval "$CMD" && \
-    cp bin/bessd /bin && \
-    mkdir -p /bin/modules && \
-    cp core/modules/*.so /bin/modules && \
-    mkdir -p /opt/bess && \
-    cp -r bessctl pybess /opt/bess && \
-    cp -r core/pb /pb
+# Stage bess-build: pre-built BESS image (built from bess/env/Dockerfile)
+FROM ghcr.io/omec-project/bess_build:260724@sha256:17b4e6473e94a8ef8fe66946459ddfb60d363f2c6e2526a9cf81109e31676eb1 AS bess-build
 
 # Stage bess: creates the runtime image of BESS
-FROM ubuntu:22.04 AS bess
+FROM ubuntu:26.04@sha256:f3d28607ddd78734bb7f71f117f3c6706c666b8b76cbff7c9ff6e5718d46ff64 AS bess
+
+ENV DEBIAN_FRONTEND=noninteractive
+
 WORKDIR /
 COPY requirements.txt .
 RUN apt-get update && apt-get install -y \
     --no-install-recommends \
     python3-pip \
     libgraph-easy-perl \
-    libgrpc++1 \
     iproute2 \
     iptables \
     iputils-ping \
     tcpdump && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir --break-system-packages --ignore-installed --require-hashes -r requirements.txt
 COPY --from=bess-build /opt/bess /opt/bess
 COPY --from=bess-build /bin/bessd /bin/bessd
 COPY --from=bess-build /bin/modules /bin/modules
 COPY conf /opt/bess/bessctl/conf
 RUN ln -s /opt/bess/bessctl/bessctl /bin
 
-# CNDP: Install dependencies
-ENV DEBIAN_FRONTEND=noninteractive
+# Runtime dependencies
 RUN apt-get update && apt-get install -y \
     --no-install-recommends \
     build-essential \
     ethtool \
+    libbpf1 \
     libbsd0 \
+    libc-ares2 \
     libelf1 \
+    libfdt1 \
     libgflags2.2 \
-    libjson-c[45] \
+    libgoogle-glog0v6 \
+    libgrpc++1.51t64 \
+    libjson-c5 \
     libnl-3-200 \
     libnl-cli-3-200 \
     libnuma1 \
     libpcap0.8 \
+    libprotobuf32t64 \
+    libssl3 \
+    libxdp1 \
     pkg-config && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-COPY --from=bess-build /usr/bin/cndpfwd /usr/bin/
-COPY --from=bess-build /usr/local/lib/x86_64-linux-gnu/*.so /usr/local/lib/x86_64-linux-gnu/
-COPY --from=bess-build /usr/local/lib/x86_64-linux-gnu/*.a /usr/local/lib/x86_64-linux-gnu/
-COPY --from=bess-build /usr/lib/libxdp* /usr/lib/
-COPY --from=bess-build /usr/lib/x86_64-linux-gnu/libjson-c.so* /lib/x86_64-linux-gnu/
-COPY --from=bess-build /usr/lib/x86_64-linux-gnu/libbpf.so* /usr/lib/x86_64-linux-gnu/
+# NOTE: Copy the entire directory rather than individual library files because:
+# - BESS and DPDK install their runtime libraries into /usr/local/lib/x86_64-linux-gnu/
+# - The exact set of required shared objects may change between DPDK/BESS releases
+# - Maintaining a fragile, version-specific list of libraries is error-prone
+# - Image size impact has been evaluated and is acceptable for this component
+COPY --from=bess-build /usr/local/lib/x86_64-linux-gnu/ /usr/local/lib/x86_64-linux-gnu/
+# Create DPDK plugin directory so that EAL can dlopen bus/mempool/net drivers
+# at runtime.  bessd passes "-d /opt/bess/lib/dpdk-pmds" to rte_eal_init()
+# when this directory exists.
+# Needed plugins:
+#   librte_bus_vdev      – vdev bus (required to create AF_PACKET/AF_XDP ports)
+#   librte_bus_pci       – PCI bus (required for DPDK-bound NICs)
+#   librte_mempool_ring  – default "ring_mp_mc" mempool ops
+#   Selected librte_net_* PMDs for the datapaths we support here.
+#
+# Do not symlink every net PMD into the plugin directory. Some vendor drivers
+# (for example mlx5) require extra shared libraries that are not part of this
+# image, and EAL aborts plugin initialization when one of those dlopen() calls
+# fails. Keep the PMD set intentionally narrow.
+RUN set -e; \
+    mkdir -p /opt/bess/lib/dpdk-pmds; \
+    missing_pats=""; \
+    for pat in librte_mempool_ring librte_bus_vdev librte_bus_pci; do \
+      found=0; \
+      for f in /usr/local/lib/x86_64-linux-gnu/"${pat}".so*; do \
+        if [ -f "$f" ]; then \
+          ln -sf "$f" /opt/bess/lib/dpdk-pmds/; \
+          found=1; \
+        fi; \
+      done; \
+      if [ "$found" -eq 0 ]; then \
+        echo "Required DPDK plugin not found: ${pat}" >&2; \
+        missing_pats="yes"; \
+      fi; \
+    done; \
+    for pat in librte_net_af_packet librte_net_af_xdp; do \
+      found=0; \
+      for f in /usr/local/lib/x86_64-linux-gnu/"${pat}".so*; do \
+        if [ -f "$f" ]; then \
+          ln -sf "$f" /opt/bess/lib/dpdk-pmds/; \
+          found=1; \
+        fi; \
+      done; \
+      if [ "$found" -eq 0 ]; then \
+        echo "Required DPDK net PMD not found: ${pat}" >&2; \
+        missing_pats="yes"; \
+      fi; \
+    done; \
+    for pat in librte_net_bond librte_net_e1000 librte_net_i40e \
+               librte_net_iavf librte_net_ice librte_net_igc \
+               librte_net_ixgbe librte_net_idpf librte_net_cpfl; do \
+      for f in /usr/local/lib/x86_64-linux-gnu/"${pat}".so*; do \
+        if [ -f "$f" ]; then \
+          ln -sf "$f" /opt/bess/lib/dpdk-pmds/; \
+        fi; \
+      done; \
+    done; \
+    if [ -n "$missing_pats" ]; then \
+      echo "One or more required DPDK plugins are missing; failing build." >&2; \
+      exit 1; \
+    fi; \
+    echo "DPDK PMD directory contents:"; \
+    ls -la /opt/bess/lib/dpdk-pmds/; \
+    ldconfig
+
+# Build arguments for dynamic labels
+ARG VERSION=dev
+ARG VCS_URL=unknown
+ARG VCS_REF=unknown
+ARG BUILD_DATE=unknown
+
+LABEL org.opencontainers.image.source="${VCS_URL}" \
+    org.opencontainers.image.version="${VERSION}" \
+    org.opencontainers.image.created="${BUILD_DATE}" \
+    org.opencontainers.image.revision="${VCS_REF}" \
+    org.opencontainers.image.url="${VCS_URL}" \
+    org.opencontainers.image.title="upf-bess" \
+    org.opencontainers.image.description="Aether 5G Core UPF-BESS Network Function" \
+    org.opencontainers.image.authors="Aether SD-Core <dev@lists.aetherproject.org>" \
+    org.opencontainers.image.vendor="Aether Project" \
+    org.opencontainers.image.licenses="Apache-2.0" \
+    org.opencontainers.image.documentation="https://docs.sd-core.aetherproject.org/"
 
 ENV PYTHONPATH="/opt/bess"
 WORKDIR /opt/bess/bessctl
 ENTRYPOINT ["bessd", "-f"]
 
 # Stage build bess golang pb
-FROM golang:1.25.0-bookworm AS protoc-gen
-RUN go install github.com/golang/protobuf/protoc-gen-go@latest
+FROM golang:1.26.5-bookworm@sha256:1ecb7edf62a0408027bd5729dfd6b1b8766e578e8df93995b225dfd0944eb651 AS protoc-gen
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.10 && \
+    go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.5.1
 
 FROM bess-build AS go-pb
 COPY --from=protoc-gen /go/bin/protoc-gen-go /bin
+COPY --from=protoc-gen /go/bin/protoc-gen-go-grpc /bin
+
 RUN mkdir /bess_pb && \
     protoc -I /usr/include -I /protobuf/ \
     /protobuf/*.proto /protobuf/ports/*.proto \
-    --go_opt=paths=source_relative --go_out=plugins=grpc:/bess_pb
+    --go_opt=paths=source_relative --go_out=/bess_pb \
+    --go-grpc_opt=paths=source_relative --go-grpc_out=/bess_pb
 
 FROM bess-build AS py-pb
-RUN pip install --no-cache-dir grpcio-tools==1.26
+WORKDIR /
+COPY requirements_pb.txt .
+RUN apt-get update && apt-get install -y --no-install-recommends python3-dev && rm -rf /var/lib/apt/lists/*
+RUN pip install --no-cache-dir --break-system-packages --ignore-installed --require-hashes -r requirements_pb.txt
 RUN mkdir /bess_pb && \
     python3 -m grpc_tools.protoc -I /usr/include -I /protobuf/ \
     /protobuf/*.proto /protobuf/ports/*.proto \
-    --python_out=plugins=grpc:/bess_pb \
+    --python_out=/bess_pb \
     --grpc_python_out=/bess_pb
 
-FROM golang:1.25.0-bookworm AS pfcpiface-build
+FROM golang:1.26.5-bookworm@sha256:1ecb7edf62a0408027bd5729dfd6b1b8766e578e8df93995b225dfd0944eb651 AS pfcp-build
 ARG GOFLAGS
 WORKDIR /pfcpiface
 
@@ -132,12 +177,33 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN if echo "$GOFLAGS" | grep -Eq "-mod=vendor"; then go mod download; fi
 
 COPY . /pfcpiface
-RUN CGO_ENABLED=0 go build $GOFLAGS -o /bin/pfcpiface ./cmd/pfcpiface
+RUN go mod tidy && \
+    CGO_ENABLED=0 go build $GOFLAGS -o /bin/pfcpiface ./cmd/pfcpiface
 
-# Stage pfcpiface: runtime image of pfcpiface toward SMF/SPGW-C
-FROM alpine:3.22 AS pfcpiface
+# Stage pfcp: runtime image of pfcp agent towards SMF
+FROM alpine:3.24@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b AS pfcp
+
 COPY conf /opt/bess/bessctl/conf
-COPY --from=pfcpiface-build /bin/pfcpiface /bin
+COPY --from=pfcp-build /bin/pfcpiface /bin
+
+# Build arguments for dynamic labels
+ARG VERSION=dev
+ARG VCS_URL=unknown
+ARG VCS_REF=unknown
+ARG BUILD_DATE=unknown
+
+LABEL org.opencontainers.image.source="${VCS_URL}" \
+    org.opencontainers.image.version="${VERSION}" \
+    org.opencontainers.image.created="${BUILD_DATE}" \
+    org.opencontainers.image.revision="${VCS_REF}" \
+    org.opencontainers.image.url="${VCS_URL}" \
+    org.opencontainers.image.title="pfcp" \
+    org.opencontainers.image.description="Aether 5G Core PFCP Agent for User Plane Function" \
+    org.opencontainers.image.authors="Aether SD-Core <dev@lists.aetherproject.org>" \
+    org.opencontainers.image.vendor="Aether Project" \
+    org.opencontainers.image.licenses="Apache-2.0" \
+    org.opencontainers.image.documentation="https://docs.sd-core.aetherproject.org/"
+
 ENTRYPOINT [ "/bin/pfcpiface" ]
 
 # Stage pb: dummy stage for collecting protobufs
@@ -153,5 +219,6 @@ COPY --from=py-pb /bess_pb /bess_pb
 # Stage binaries: dummy stage for collecting artifacts
 FROM scratch AS artifacts
 COPY --from=bess /bin/bessd /
-COPY --from=pfcpiface /bin/pfcpiface /
-COPY --from=bess-build /bess /bess
+COPY --from=pfcp /bin/pfcpiface /
+COPY --from=bess-build /bess/protobuf /bess/protobuf
+COPY --from=bess-build /pb /bess/pb

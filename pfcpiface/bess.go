@@ -7,20 +7,19 @@ import (
 	"context"
 	"encoding/binary"
 	"flag"
+	"fmt"
 	"math"
 	"net"
 	"strconv"
 	"time"
-
-	"google.golang.org/grpc/connectivity"
-
-	"google.golang.org/grpc/credentials/insecure"
 
 	"github.com/omec-project/upf-epc/logger"
 	pb "github.com/omec-project/upf-epc/pfcpiface/bess_pb"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/wmnsk/go-pfcp/ie"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/connectivity"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/anypb"
 )
 
@@ -124,7 +123,8 @@ func (b *bess) AddSliceInfo(sliceInfo *SliceInfo) error {
 }
 
 func (b *bess) SendMsgToUPF(
-	method upfMsgType, rules PacketForwardingRules, updated PacketForwardingRules) uint8 {
+	method upfMsgType, rules PacketForwardingRules, updated PacketForwardingRules,
+) uint8 {
 	// create context
 	cause := ie.CauseRequestAccepted
 
@@ -386,13 +386,13 @@ func (b *bess) SummaryGtpuLatency(uc *upfCollector, ch chan<- prometheus.Metric)
 	}
 }
 
-func (b *bess) flipFlowMeasurementBufferFlag(ctx context.Context, module string) (flip pb.FlowMeasureFlipResponse, err error) {
+func (b *bess) flipFlowMeasurementBufferFlag(ctx context.Context, module string) (*pb.FlowMeasureFlipResponse, error) {
 	req := &pb.FlowMeasureCommandFlipArg{}
 
 	arg, err := anypb.New(req)
 	if err != nil {
 		logger.BessLog.Errorln("error marshalling request", req, err)
-		return
+		return nil, err
 	}
 
 	resp, err := b.client.ModuleCommand(
@@ -402,28 +402,29 @@ func (b *bess) flipFlowMeasurementBufferFlag(ctx context.Context, module string)
 			Arg:  arg,
 		},
 	)
-
 	if err != nil {
 		logger.BessLog.Errorln(module, "read failed:", err)
-		return
+		return nil, err
 	}
 
 	if resp.GetError() != nil {
 		logger.BessLog.Errorln(module, "error reading flow stats:", resp.GetError().Errmsg)
-		return
+		return nil, fmt.Errorf("%s: %s", module, resp.GetError().Errmsg)
 	}
 
-	if err = resp.Data.UnmarshalTo(&flip); err != nil {
+	flip := &pb.FlowMeasureFlipResponse{}
+
+	if err = resp.Data.UnmarshalTo(flip); err != nil {
 		logger.BessLog.Errorln(err)
-		return
+		return nil, err
 	}
 
-	return
+	return flip, nil
 }
 
 func (b *bess) readFlowMeasurement(
 	ctx context.Context, module string, flagToRead uint64, isClear bool, q []float64,
-) (stats pb.FlowMeasureReadResponse, err error) {
+) (*pb.FlowMeasureReadResponse, error) {
 	req := &pb.FlowMeasureCommandReadArg{
 		Clear:              isClear,
 		LatencyPercentiles: q,
@@ -434,7 +435,7 @@ func (b *bess) readFlowMeasurement(
 	arg, err := anypb.New(req)
 	if err != nil {
 		logger.BessLog.Errorln("error marshalling request", req, err)
-		return
+		return nil, err
 	}
 
 	resp, err := b.client.ModuleCommand(
@@ -444,27 +445,29 @@ func (b *bess) readFlowMeasurement(
 			Arg:  arg,
 		},
 	)
-
 	if err != nil {
 		logger.BessLog.Errorln(module, "read failed:", err)
-		return
+		return nil, err
 	}
 
 	if resp.GetError() != nil {
 		logger.BessLog.Errorln(module, "error reading flow stats:", resp.GetError().Errmsg)
-		return
+		return nil, fmt.Errorf("%s: %s", module, resp.GetError().Errmsg)
 	}
 
-	if err = resp.Data.UnmarshalTo(&stats); err != nil {
+	stats := &pb.FlowMeasureReadResponse{}
+
+	if err = resp.Data.UnmarshalTo(stats); err != nil {
 		logger.BessLog.Errorln(err, resp)
-		return
+		return nil, err
 	}
 
-	return
+	return stats, nil
 }
 
 func (b *bess) readGtpuPathMonitoringStats(
-	module string, isClear bool) *pb.GtpuPathMonitoringCommandReadResponse {
+	module string, isClear bool,
+) *pb.GtpuPathMonitoringCommandReadResponse {
 	req := &pb.GtpuPathMonitoringCommandReadArg{
 		Clear: isClear,
 	}
@@ -484,7 +487,6 @@ func (b *bess) readGtpuPathMonitoringStats(
 			Arg:  arg,
 		},
 	)
-
 	if err != nil {
 		logger.BessLog.Errorln(module, "read failed:", err)
 		return nil
@@ -497,7 +499,6 @@ func (b *bess) readGtpuPathMonitoringStats(
 
 	var res pb.GtpuPathMonitoringCommandReadResponse
 	err = resp.Data.UnmarshalTo(&res)
-
 	if err != nil {
 		logger.BessLog.Errorln(err, resp)
 		return nil
@@ -515,7 +516,7 @@ func (b *bess) SessionStats(pc *PfcpNodeCollector, ch chan<- prometheus.Metric) 
 	flip, err := b.flipFlowMeasurementBufferFlag(ctx, PreQosFlowMeasure)
 	if err != nil {
 		logger.BessLog.Errorln(PreQosFlowMeasure, "read failed:", err)
-		return
+		return err
 	}
 
 	q := []float64{50, 90, 99}
@@ -524,19 +525,19 @@ func (b *bess) SessionStats(pc *PfcpNodeCollector, ch chan<- prometheus.Metric) 
 	qosStatsInResp, err := b.readFlowMeasurement(ctx, PreQosFlowMeasure, flip.OldFlag, true, q)
 	if err != nil {
 		logger.BessLog.Errorln(PreQosFlowMeasure, "read failed:", err)
-		return
+		return err
 	}
 
 	postDlQosStatsResp, err := b.readFlowMeasurement(ctx, PostDlQosFlowMeasure, flip.OldFlag, true, q)
 	if err != nil {
 		logger.BessLog.Errorln(PostDlQosFlowMeasure, "read failed:", err)
-		return
+		return err
 	}
 
 	postUlQosStatsResp, err := b.readFlowMeasurement(ctx, PostUlQosFlowMeasure, flip.OldFlag, true, q)
 	if err != nil {
 		logger.BessLog.Errorln(PostUlQosFlowMeasure, "read failed:", err)
-		return
+		return err
 	}
 
 	// TODO: pick first connection for now
@@ -577,7 +578,7 @@ func (b *bess) SessionStats(pc *PfcpNodeCollector, ch chan<- prometheus.Metric) 
 
 			fseidString := strconv.FormatUint(pre.Fseid, 10)
 			pdrString := strconv.FormatUint(pre.Pdr, 10)
-			ueIpString := "unknown"
+			ueIpString := UnknownString
 
 			if con != nil {
 				session, ok := con.store.GetSession(pre.Fseid)
@@ -657,10 +658,10 @@ func (b *bess) SessionStats(pc *PfcpNodeCollector, ch chan<- prometheus.Metric) 
 		}
 	}
 
-	createStats(&qosStatsInResp, &postUlQosStatsResp, "uplink")
-	createStats(&qosStatsInResp, &postDlQosStatsResp, "downlink")
+	createStats(qosStatsInResp, postUlQosStatsResp, "uplink")
+	createStats(qosStatsInResp, postDlQosStatsResp, "downlink")
 
-	return
+	return err
 }
 
 func (b *bess) endMarkerSendLoop(endMarkerChan chan []byte) {
@@ -794,7 +795,11 @@ func (b *bess) SetUpfInfo(u *upf, conf *Conf) {
 
 	b.client = pb.NewBESSControlClient(b.conn)
 
-	b.clearState()
+	// Skip clearing state when in `simulate delete` mode, so previously
+	// created rules remain in BESS and can be individually deleted.
+	if !simulate.delete() {
+		b.clearState()
+	}
 
 	if conf.EnableNotifyBess {
 		notifySockAddr := conf.NotifySockAddr
@@ -802,7 +807,8 @@ func (b *bess) SetUpfInfo(u *upf, conf *Conf) {
 			notifySockAddr = SockAddr
 		}
 
-		b.notifyBessSocket, err = net.Dial("unixpacket", notifySockAddr)
+		var d net.Dialer
+		b.notifyBessSocket, err = d.DialContext(context.Background(), "unixpacket", notifySockAddr)
 		if err != nil {
 			logger.BessLog.Errorln("dial error:", err)
 			return
@@ -817,7 +823,8 @@ func (b *bess) SetUpfInfo(u *upf, conf *Conf) {
 			pfcpCommAddr = PfcpAddr
 		}
 
-		b.endMarkerSocket, err = net.Dial("unixpacket", pfcpCommAddr)
+		var d net.Dialer
+		b.endMarkerSocket, err = d.DialContext(context.Background(), "unixpacket", pfcpCommAddr)
 		if err != nil {
 			logger.BessLog.Errorln("dial error:", err)
 			return
@@ -1068,7 +1075,8 @@ func (b *bess) addQER(ctx context.Context, done chan<- bool, qer qer) {
 
 func (b *bess) addApplicationQER(ctx context.Context, gate uint64, srcIface uint8,
 	cir uint64, pir uint64, cbs uint64, pbs uint64,
-	ebs uint64, qer qer) {
+	ebs uint64, qer qer,
+) {
 	var (
 		arg *anypb.Any
 		err error
@@ -1134,7 +1142,8 @@ func (b *bess) delQER(ctx context.Context, done chan<- bool, qer qer) {
 }
 
 func (b *bess) delApplicationQER(
-	ctx context.Context, srcIface uint8, qer qer) {
+	ctx context.Context, srcIface uint8, qer qer,
+) {
 	var (
 		arg *anypb.Any
 		err error
@@ -1456,7 +1465,8 @@ func (b *bess) processQER(ctx context.Context, arg *anypb.Any, method upfMsgType
 
 func (b *bess) addSessionQER(ctx context.Context, gate uint64, srcIface uint8,
 	cir uint64, pir uint64, cbs uint64,
-	pbs uint64, ebs uint64, qer qer) {
+	pbs uint64, ebs uint64, qer qer,
+) {
 	var (
 		arg *anypb.Any
 		err error

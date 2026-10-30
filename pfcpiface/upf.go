@@ -4,10 +4,12 @@
 package pfcpiface
 
 import (
+	"context"
 	"net"
+	"os"
+	"strings"
 	"time"
 
-	"github.com/Showmax/go-fqdn"
 	"github.com/omec-project/upf-epc/logger"
 )
 
@@ -91,6 +93,40 @@ func (u *upf) addSliceInfo(sliceInfo *SliceInfo) error {
 	return u.AddSliceInfo(sliceInfo)
 }
 
+func fqdnHostname() (string, error) {
+	hostname, err := os.Hostname()
+	if err != nil {
+		return "", err
+	}
+
+	// if hostname is already FQDN, return it
+	if strings.Contains(hostname, ".") {
+		return hostname, nil
+	}
+
+	// try to get FQDN via reverse DNS lookup
+	addrs, err := net.DefaultResolver.LookupIPAddr(context.Background(), hostname)
+	if err != nil {
+		logger.PfcpLog.Warnf("failed to get fqdn for %s: %+v", hostname, err)
+		return hostname, nil // fallback to short hostname
+	}
+
+	for _, addr := range addrs {
+		names, err := net.DefaultResolver.LookupAddr(context.Background(), addr.String())
+		if err != nil || len(names) == 0 {
+			continue
+		}
+
+		// return the first FQDN found
+		fqdn := strings.TrimSuffix(names[0], ".")
+		if strings.Contains(fqdn, ".") {
+			return fqdn, nil
+		}
+	}
+
+	return hostname, nil // fallback to short hostname
+}
+
 func NewUPF(conf *Conf, fp datapath) *upf {
 	var (
 		err    error
@@ -100,7 +136,7 @@ func NewUPF(conf *Conf, fp datapath) *upf {
 
 	nodeID = conf.CPIface.NodeID
 	if conf.CPIface.UseFQDN && nodeID == "" {
-		nodeID, err = fqdn.FqdnHostname()
+		nodeID, err = fqdnHostname()
 		if err != nil {
 			logger.PfcpLog.Fatalln("unable to get hostname", err)
 		}
@@ -108,7 +144,7 @@ func NewUPF(conf *Conf, fp datapath) *upf {
 
 	// TODO: Delete this once CI config is fixed
 	if nodeID != "" {
-		hosts, err = net.LookupHost(nodeID)
+		hosts, err = net.DefaultResolver.LookupHost(context.Background(), nodeID)
 		if err != nil {
 			logger.PfcpLog.Fatalln("unable to resolve hostname", nodeID, err)
 		}
@@ -155,18 +191,16 @@ func NewUPF(conf *Conf, fp datapath) *upf {
 		}
 	}
 
-	if !conf.EnableP4rt {
-		u.accessIP, err = GetUnicastAddressFromInterface(conf.AccessIface.IfName)
-		if err != nil {
-			logger.PfcpLog.Errorln(err)
-			return nil
-		}
+	u.accessIP, err = GetUnicastAddressFromInterface(conf.AccessIface.IfName)
+	if err != nil {
+		logger.PfcpLog.Errorln(err)
+		return nil
+	}
 
-		u.coreIP, err = GetUnicastAddressFromInterface(conf.CoreIface.IfName)
-		if err != nil {
-			logger.PfcpLog.Errorln(err)
-			return nil
-		}
+	u.coreIP, err = GetUnicastAddressFromInterface(conf.CoreIface.IfName)
+	if err != nil {
+		logger.PfcpLog.Errorln(err)
+		return nil
 	}
 
 	u.respTimeout, err = time.ParseDuration(conf.RespTimeout)

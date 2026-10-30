@@ -5,11 +5,10 @@ package pfcpiface
 
 import (
 	"net"
+	"reflect"
 	"testing"
 
 	pfcpsimLib "github.com/omec-project/pfcpsim/pkg/pfcpsim/session"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/wmnsk/go-pfcp/ie"
 )
 
@@ -19,10 +18,6 @@ type farTestCase struct {
 	expected    *far
 	description string
 }
-
-const (
-	defaultGTPProtocolPort = 2152
-)
 
 func TestParseFAR(t *testing.T) {
 	createOp, updateOp := create, update
@@ -67,9 +62,37 @@ func TestParseFAR(t *testing.T) {
 				tunnelType:   access,
 				tunnelIP4Src: ip2int(coreIP),
 				tunnelIP4Dst: ip2int(UEAddressForDownlink),
-				tunnelPort:   uint16(defaultGTPProtocolPort),
+				tunnelPort:   tunnelGTPUPort,
 			},
 			description: "Valid Downlink FAR input with update operation",
+		},
+		{
+			// Regression: update FAR with ActionDrop must not require UpdateForwardingParameters.
+			op: updateOp,
+			input: ie.NewUpdateFAR(
+				ie.NewFARID(2),
+				ie.NewApplyAction(ActionDrop),
+			),
+			expected: &far{
+				farID:       2,
+				fseID:       FSEID,
+				applyAction: ActionDrop,
+			},
+			description: "Valid FAR update with ActionDrop, no forwarding parameters required",
+		},
+		{
+			// Regression: update FAR with ActionBuffer must not require UpdateForwardingParameters.
+			op: updateOp,
+			input: ie.NewUpdateFAR(
+				ie.NewFARID(3),
+				ie.NewApplyAction(ActionBuffer|ActionNotify),
+			),
+			expected: &far{
+				farID:       3,
+				fseID:       FSEID,
+				applyAction: ActionBuffer | ActionNotify,
+			},
+			description: "Valid FAR update with ActionBuffer, no forwarding parameters required",
 		},
 	} {
 		t.Run(scenario.description, func(t *testing.T) {
@@ -80,9 +103,13 @@ func TestParseFAR(t *testing.T) {
 			}
 
 			err := mockFar.parseFAR(scenario.input, FSEID, mockUpf, scenario.op)
-			require.NoError(t, err)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
 
-			assert.Equal(t, scenario.expected, mockFar)
+			if !reflect.DeepEqual(scenario.expected, mockFar) {
+				t.Errorf("expected %+v, got %+v", scenario.expected, mockFar)
+			}
 		})
 	}
 }
@@ -147,9 +174,13 @@ func TestParseFARShouldError(t *testing.T) {
 			}
 
 			err := mockFar.parseFAR(scenario.input, 101, mockUpf, scenario.op)
-			require.Error(t, err)
+			if err == nil {
+				t.Fatal("expected an error, but got nil")
+			}
 
-			assert.Equal(t, scenario.expected, mockFar)
+			if !reflect.DeepEqual(scenario.expected, mockFar) {
+				t.Errorf("expected %+v, got %+v", scenario.expected, mockFar)
+			}
 		})
 	}
 }
