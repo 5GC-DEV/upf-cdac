@@ -861,7 +861,7 @@ func (b *bess) processPDR(ctx context.Context, arg *anypb.Any, method upfMsgType
 		return
 	}
 
-	methods := [...]string{"add", "add", "delete", "clear"}
+	methods := [...]string{datapathCommandAdd, datapathCommandAdd, stringDelete, datapathCommandClear}
 
 	resp, err := b.client.ModuleCommand(ctx, &pb.CommandRequest{
 		Name: "pdrLookup",
@@ -1177,7 +1177,7 @@ func (b *bess) processFAR(ctx context.Context, arg *anypb.Any, method upfMsgType
 		return
 	}
 
-	methods := [...]string{"add", "add", "delete", "clear"}
+	methods := [...]string{datapathCommandAdd, datapathCommandAdd, stringDelete, datapathCommandClear}
 
 	resp, err := b.client.ModuleCommand(ctx, &pb.CommandRequest{
 		Name: "farLookup",
@@ -1198,7 +1198,7 @@ func (b *bess) processGtpuPathMonitoring(ctx context.Context, arg *anypb.Any, me
 		return
 	}
 
-	methods := [...]string{"add", "add", "delete", "clear"}
+	methods := [...]string{datapathCommandAdd, datapathCommandAdd, stringDelete, datapathCommandClear}
 
 	resp, err := b.client.ModuleCommand(ctx, &pb.CommandRequest{
 		Name: "gtpuPathMonitoring",
@@ -1329,7 +1329,7 @@ func (b *bess) processSliceMeter(ctx context.Context, arg *anypb.Any, method upf
 		return
 	}
 
-	methods := [...]string{"add", "add", "delete", "clear"}
+	methods := [...]string{datapathCommandAdd, datapathCommandAdd, stringDelete, datapathCommandClear}
 
 	_, err := b.client.ModuleCommand(
 		ctx, &pb.CommandRequest{
@@ -1445,7 +1445,7 @@ func (b *bess) processQER(ctx context.Context, arg *anypb.Any, method upfMsgType
 		return ErrInvalidArgument("method name", method)
 	}
 
-	methods := [...]string{"add", "add", "delete", "clear"}
+	methods := [...]string{datapathCommandAdd, datapathCommandAdd, stringDelete, datapathCommandClear}
 
 	resp, err := b.client.ModuleCommand(ctx, &pb.CommandRequest{
 		Name: qosTableName,

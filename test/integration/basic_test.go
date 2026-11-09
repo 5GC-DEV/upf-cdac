@@ -13,6 +13,10 @@ import (
 	"github.com/wmnsk/go-pfcp/message"
 )
 
+const (
+	udpPort80SDFFilter = "permit out udp from any 80-80 to assigned"
+)
+
 func TestUPFBasedUeIPAllocation(t *testing.T) {
 	// TODO: verify if UEIP bit is set in the UP Function Features of PFCP Association Response
 	setup(t, ConfigUPFBasedIPAllocation)
@@ -23,7 +27,7 @@ func TestUPFBasedUeIPAllocation(t *testing.T) {
 			sliceID:      1,
 			nbAddress:    nodeBAddress,
 			upfN3Address: upfN3Address,
-			sdfFilter:    "permit out udp from any 80-80 to assigned",
+			sdfFilter:    udpPort80SDFFilter,
 			ulTEID:       15,
 			dlTEID:       16,
 			QFI:          0x9,
@@ -161,7 +165,7 @@ func TestSingleUEAttachAndDetach(t *testing.T) {
 				nbAddress:    nodeBAddress,
 				ueAddress:    ueAddress,
 				upfN3Address: upfN3Address,
-				sdfFilter:    "permit out udp from any 80-80 to assigned",
+				sdfFilter:    udpPort80SDFFilter,
 				ulTEID:       15,
 				dlTEID:       16,
 				QFI:          0x9,
@@ -401,7 +405,7 @@ func TestUEBuffering(t *testing.T) {
 			nbAddress:    nodeBAddress,
 			ueAddress:    ueAddress,
 			upfN3Address: upfN3Address,
-			sdfFilter:    "permit out udp from any 80-80 to assigned",
+			sdfFilter:    udpPort80SDFFilter,
 			ulTEID:       15,
 			dlTEID:       16,
 			QFI:          0x9,

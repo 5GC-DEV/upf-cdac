@@ -11,6 +11,11 @@ import (
 	"github.com/omec-project/upf-epc/logger"
 )
 
+const (
+	permitAction = "permit"
+	outDirection = "out"
+)
+
 func mustParseCIDRNet(s string) *net.IPNet {
 	_, ipNet, err := net.ParseCIDR(s)
 	if err != nil {
@@ -224,7 +229,7 @@ func Test_parseAction(t *testing.T) {
 		args    string
 		wantErr bool
 	}{
-		{name: "permit action", args: "permit", wantErr: false},
+		{name: "permit action", args: permitAction, wantErr: false},
 		{name: "deny action", args: "deny", wantErr: false},
 		{name: "empty action", args: "", wantErr: true},
 		{name: "invalid action", args: "allow", wantErr: true},
@@ -248,7 +253,7 @@ func Test_parseDirection(t *testing.T) {
 		wantErr bool
 	}{
 		{name: "in direction", args: "in", wantErr: false},
-		{name: "out direction", args: "out", wantErr: false},
+		{name: "out direction", args: outDirection, wantErr: false},
 		{name: "empty direction", args: "", wantErr: true},
 		{name: "invalid direction", args: "both", wantErr: true},
 	}
@@ -297,8 +302,8 @@ func Test_parseFlowDesc(t *testing.T) {
 				ueIP:     ueIpString,
 			},
 			want: &ipFilterRule{
-				action:    "permit",
-				direction: "out",
+				action:    permitAction,
+				direction: outDirection,
 				proto:     reservedProto,
 				src: endpoint{
 					IPNet: newIpv4WildcardNet(),
@@ -317,8 +322,8 @@ func Test_parseFlowDesc(t *testing.T) {
 				ueIP:     ueIpString,
 			},
 			want: &ipFilterRule{
-				action:    "permit",
-				direction: "out",
+				action:    permitAction,
+				direction: outDirection,
 				proto:     tcpProto,
 				src: endpoint{
 					IPNet: mustParseCIDRNet("60.60.0.102/32"),
@@ -337,8 +342,8 @@ func Test_parseFlowDesc(t *testing.T) {
 				ueIP:     ueIpString,
 			},
 			want: &ipFilterRule{
-				action:    "permit",
-				direction: "out",
+				action:    permitAction,
+				direction: outDirection,
 				proto:     udpProto,
 				src: endpoint{
 					IPNet: newIpv4WildcardNet(),
@@ -357,8 +362,8 @@ func Test_parseFlowDesc(t *testing.T) {
 				ueIP:     ueIpString,
 			},
 			want: &ipFilterRule{
-				action:    "permit",
-				direction: "out",
+				action:    permitAction,
+				direction: outDirection,
 				proto:     reservedProto,
 				src: endpoint{
 					IPNet: mustParseCIDRNet("60.60.0.1/26"),
@@ -377,8 +382,8 @@ func Test_parseFlowDesc(t *testing.T) {
 				ueIP:     ueIpString,
 			},
 			want: &ipFilterRule{
-				action:    "permit",
-				direction: "out",
+				action:    permitAction,
+				direction: outDirection,
 				proto:     reservedProto,
 				src: endpoint{
 					IPNet: newIpv4AddrAsNet("60.60.0.1"),
@@ -397,8 +402,8 @@ func Test_parseFlowDesc(t *testing.T) {
 				ueIP:     ueIpString,
 			},
 			want: &ipFilterRule{
-				action:    "permit",
-				direction: "out",
+				action:    permitAction,
+				direction: outDirection,
 				proto:     reservedProto,
 				src: endpoint{
 					IPNet: newIpv4AddrAsNet("60.60.0.1"),
@@ -417,8 +422,8 @@ func Test_parseFlowDesc(t *testing.T) {
 				ueIP:     ueIpString,
 			},
 			want: &ipFilterRule{
-				action:    "permit",
-				direction: "out",
+				action:    permitAction,
+				direction: outDirection,
 				proto:     reservedProto,
 				src: endpoint{
 					IPNet: newIpv4AddrAsNet("60.60.0.1"),
@@ -437,8 +442,8 @@ func Test_parseFlowDesc(t *testing.T) {
 				ueIP:     ueIpString,
 			},
 			want: &ipFilterRule{
-				action:    "permit",
-				direction: "out",
+				action:    permitAction,
+				direction: outDirection,
 				proto:     reservedProto,
 				src: endpoint{
 					IPNet: newIpv4AddrAsNet("60.60.0.1"),
@@ -457,8 +462,8 @@ func Test_parseFlowDesc(t *testing.T) {
 				ueIP:     ueIpString,
 			},
 			want: &ipFilterRule{
-				action:    "permit",
-				direction: "out",
+				action:    permitAction,
+				direction: outDirection,
 				proto:     reservedProto,
 				src: endpoint{
 					IPNet: newIpv4AddrAsNet("60.60.0.1"),
@@ -477,8 +482,8 @@ func Test_parseFlowDesc(t *testing.T) {
 				ueIP:     "0.0.0.0",
 			},
 			want: &ipFilterRule{
-				action:    "permit",
-				direction: "out",
+				action:    permitAction,
+				direction: outDirection,
 				proto:     udpProto,
 				src: endpoint{
 					IPNet: mustParseCIDRNet("60.60.0.1/32"),

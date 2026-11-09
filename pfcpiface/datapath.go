@@ -9,6 +9,11 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
+const (
+	datapathCommandAdd   = "add"
+	datapathCommandClear = "clear"
+)
+
 type upfMsgType int
 
 const (
@@ -21,13 +26,13 @@ const (
 func (u upfMsgType) String() string {
 	switch u {
 	case upfMsgTypeAdd:
-		return "add"
+		return datapathCommandAdd
 	case upfMsgTypeMod:
 		return "modify"
 	case upfMsgTypeDel:
-		return "delete" //nolint
+		return stringDelete //nolint
 	case upfMsgTypeClear:
-		return "clear"
+		return datapathCommandClear
 	default:
 		return UnknownString
 	}
