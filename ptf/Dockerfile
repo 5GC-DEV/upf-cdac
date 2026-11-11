@@ -4,45 +4,38 @@
 # Docker image to run PTF-based tests
 
 ARG SCAPY_VER=2.4.5
-ARG PTF_VER=c5299ea2e27386653209af458757b3b15e5dec5d
 ARG TREX_VER=2.92-scapy-2.4.5
 ARG TREX_EXT_LIBS=/external_libs
 ARG TREX_LIBS=/trex_python
-ARG UNITTEST_XML_REPORTING_VER=3.0.4
-ARG PROTOBUF_VER=3.20
 # Install dependencies for general PTF test definitions
-FROM ubuntu:22.04 AS ptf-deps
+FROM ubuntu:26.04@sha256:3131b4cc82a783df6c9df078f86e01819a13594b865c2cad47bd1bca2b7063bb AS ptf-deps
 
 ARG SCAPY_VER
-ARG PTF_VER
-ARG UNITTEST_XML_REPORTING_VER
-ARG PROTOBUF_VER
-ARG GRPC_VER
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+    build-essential \
     python3 \
+    python3-dev \
     python3-pip \
     python3-setuptools \
     git && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install --no-cache-dir --root /python_output \
-    git+https://github.com/p4lang/ptf@$PTF_VER \
-    protobuf==$PROTOBUF_VER \
-    grpcio \
-    unittest-xml-reporting==$UNITTEST_XML_REPORTING_VER
+COPY requirements-ptf.txt /tmp/requirements-ptf.txt
+
+RUN pip3 install --no-cache-dir --break-system-packages --ignore-installed --require-hashes --root /python_output -r /tmp/requirements-ptf.txt
 
 # Install TRex traffic gen and library for TRex API
-FROM alpine:3.22 AS trex-builder
+FROM alpine:3.24@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b AS trex-builder
 ARG TREX_VER
 ARG TREX_EXT_LIBS
 ARG TREX_LIBS
 
 ENV TREX_SCRIPT_DIR=/trex-core-${TREX_VER}/scripts
 
-RUN apk update && apk add --no-cache -U wget && \
+RUN apk add --no-cache wget unzip && \
     wget https://github.com/stratum/trex-core/archive/v${TREX_VER}.zip && \
     unzip -qq v${TREX_VER}.zip && \
     mkdir -p /output/${TREX_EXT_LIBS} && \
@@ -52,7 +45,7 @@ RUN apk update && apk add --no-cache -U wget && \
     cp -r ${TREX_SCRIPT_DIR}/automation/trex_control_plane/stf/trex_stf_lib /output/${TREX_LIBS}
 
 # Synthesize all dependencies for runtime
-FROM ubuntu:22.04
+FROM ubuntu:26.04@sha256:3131b4cc82a783df6c9df078f86e01819a13594b865c2cad47bd1bca2b7063bb
 
 ARG TREX_EXT_LIBS
 ARG TREX_LIBS
@@ -74,11 +67,10 @@ RUN apt-get update && \
     netbase && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-RUN pip3 install --no-cache-dir \
-    scipy \
-    numpy \
-    matplotlib \
-    pyyaml
+
+COPY requirements-trex.txt /tmp/requirements-trex.txt
+
+RUN pip3 install --no-cache-dir --break-system-packages --ignore-installed --require-hashes -r /tmp/requirements-trex.txt
 
 ENV TREX_EXT_LIBS=${TREX_EXT_LIBS}
 ENV PYTHONPATH=${TREX_EXT_LIBS}:${TREX_LIBS}
@@ -89,7 +81,9 @@ COPY --from=ptf-deps /python_output /
 # Install custom scapy version from TRex so PTF tests can access certain scapy features
 # TODO: Move to a newer Scapy version compatible with latest Ubuntu versions
 WORKDIR ${TREX_EXT_LIBS}/scapy-${SCAPY_VER}
-RUN python3 setup.py install \
-    && ldconfig
+RUN printf '%s\n' "${SCAPY_VER}" > scapy/VERSION && \
+    python3 -m pip wheel --no-cache-dir --no-build-isolation --no-deps --wheel-dir /tmp/wheels . && \
+    python3 -m pip install --no-cache-dir --break-system-packages /tmp/wheels/scapy-*.whl && \
+    ldconfig
 
 ENTRYPOINT []

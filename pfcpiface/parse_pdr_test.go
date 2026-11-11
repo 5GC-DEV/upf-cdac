@@ -9,8 +9,6 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/wmnsk/go-pfcp/ie"
 )
 
@@ -119,12 +117,19 @@ func Test_parsePDR(t *testing.T) {
 				flowDescs: nil,
 			}
 			mockPDR := &pdr{}
-			mockIPPool, _ := NewIPPool("10.0.0.0")
+			mockIPPool, err := NewIPPool("10.0.0.0/24")
+			if err != nil {
+				t.Fatalf("failed to create IP pool: %v", err)
+			}
 
-			err := mockPDR.parsePDR(scenario.input, FSEID, mockMapPFD, mockIPPool)
-			require.NoError(t, err)
+			err = mockPDR.parsePDR(scenario.input, FSEID, mockMapPFD, mockIPPool)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
 
-			assert.Equal(t, mockPDR, scenario.expected)
+			if !reflect.DeepEqual(mockPDR, scenario.expected) {
+				t.Errorf("expected %+v, got %+v", scenario.expected, mockPDR)
+			}
 		})
 	}
 }
@@ -158,12 +163,19 @@ func TestParsePDRShouldError(t *testing.T) {
 				flowDescs: nil,
 			}
 			mockPDR := &pdr{}
-			mockIPPool, _ := NewIPPool("10.0.0.0")
+			mockIPPool, err := NewIPPool("10.0.0.0/24")
+			if err != nil {
+				t.Fatalf("failed to create IP pool: %v", err)
+			}
 
-			err := mockPDR.parsePDR(scenario.input, FSEID, mockMapPFD, mockIPPool)
-			require.Error(t, err)
+			err = mockPDR.parsePDR(scenario.input, FSEID, mockMapPFD, mockIPPool)
+			if err == nil {
+				t.Fatal("expected an error, but got nil")
+			}
 
-			assert.Equal(t, scenario.expected, mockPDR)
+			if !reflect.DeepEqual(mockPDR, scenario.expected) {
+				t.Errorf("expected %+v, got %+v", scenario.expected, mockPDR)
+			}
 		})
 	}
 }
@@ -180,7 +192,8 @@ func TestCreatePortRangeCartesianProduct(t *testing.T) {
 		want    []portRangeTernaryCartesianProduct
 		wantErr bool
 	}{
-		{name: "exact ranges",
+		{
+			name: "exact ranges",
 			args: args{src: newExactMatchPortRange(5000), dst: newExactMatchPortRange(80)},
 			want: []portRangeTernaryCartesianProduct{{
 				srcPort: 5000,
@@ -188,8 +201,10 @@ func TestCreatePortRangeCartesianProduct(t *testing.T) {
 				dstPort: 80,
 				dstMask: math.MaxUint16,
 			}},
-			wantErr: false},
-		{name: "wildcard dst range",
+			wantErr: false,
+		},
+		{
+			name: "wildcard dst range",
 			args: args{src: newExactMatchPortRange(10), dst: newWildcardPortRange()},
 			want: []portRangeTernaryCartesianProduct{{
 				srcPort: 10,
@@ -197,8 +212,10 @@ func TestCreatePortRangeCartesianProduct(t *testing.T) {
 				dstPort: 0,
 				dstMask: 0,
 			}},
-			wantErr: false},
-		{name: "true range src range",
+			wantErr: false,
+		},
+		{
+			name: "true range src range",
 			args: args{src: newRangeMatchPortRange(1, 3), dst: newExactMatchPortRange(80)},
 			want: []portRangeTernaryCartesianProduct{
 				{
@@ -218,12 +235,16 @@ func TestCreatePortRangeCartesianProduct(t *testing.T) {
 					srcMask: 0xffff,
 					dstPort: 80,
 					dstMask: math.MaxUint16,
-				}},
-			wantErr: false},
-		{name: "invalid double range",
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name:    "invalid double range",
 			args:    args{src: newRangeMatchPortRange(10, 20), dst: newRangeMatchPortRange(80, 85)},
 			want:    nil,
-			wantErr: true},
+			wantErr: true,
+		},
 	}
 
 	for _, tt := range tests {
@@ -244,7 +265,9 @@ func TestCreatePortRangeCartesianProduct(t *testing.T) {
 
 func Test_defaultPortRange(t *testing.T) {
 	t.Run("default constructed is wildcard", func(t *testing.T) {
-		assert.True(t, portRange{}.isWildcardMatch(), "default portRange is wildcard")
+		if !(portRange{}.isWildcardMatch()) {
+			t.Error("default portRange is wildcard")
+		}
 	})
 }
 
@@ -369,7 +392,8 @@ func Test_portRange_asComplexTernaryMatches(t *testing.T) {
 		wantErr  bool
 		want     []portRangeTernaryRule
 	}{
-		{name: "Exact match port range",
+		{
+			name: "Exact match port range",
 			pr: portRange{
 				low:  8888,
 				high: 8888,
@@ -377,8 +401,10 @@ func Test_portRange_asComplexTernaryMatches(t *testing.T) {
 			want: []portRangeTernaryRule{
 				{port: 8888, mask: 0xffff},
 			},
-			wantErr: false},
-		{name: "wildcard port range",
+			wantErr: false,
+		},
+		{
+			name: "wildcard port range",
 			pr: portRange{
 				low:  0,
 				high: math.MaxUint16,
@@ -386,8 +412,10 @@ func Test_portRange_asComplexTernaryMatches(t *testing.T) {
 			want: []portRangeTernaryRule{
 				{port: 0, mask: 0},
 			},
-			wantErr: false},
-		{name: "Simplest port range",
+			wantErr: false,
+		},
+		{
+			name: "Simplest port range",
 			pr: portRange{
 				low:  0b0, // 0
 				high: 0b1, // 1
@@ -395,8 +423,10 @@ func Test_portRange_asComplexTernaryMatches(t *testing.T) {
 			//want: []portRangeTernaryRule{
 			//	{port: 0b0, mask: 0xfffe},
 			//},
-			wantErr: false},
-		{name: "Simplest port range2",
+			wantErr: false,
+		},
+		{
+			name: "Simplest port range2",
 			pr: portRange{
 				low:  0b01, // 1
 				high: 0b10, // 2
@@ -405,8 +435,10 @@ func Test_portRange_asComplexTernaryMatches(t *testing.T) {
 			//	{port: 0b01, mask: 0xffff},
 			//	{port: 0b10, mask: 0xffff},
 			//},
-			wantErr: false},
-		{name: "Trivial ternary port range",
+			wantErr: false,
+		},
+		{
+			name: "Trivial ternary port range",
 			pr: portRange{
 				low:  0x0100, // 256
 				high: 0x01ff, // 511
@@ -415,8 +447,10 @@ func Test_portRange_asComplexTernaryMatches(t *testing.T) {
 			//want: []portRangeTernaryRule{
 			//	{port: 0x0100, mask: 0xff00},
 			//},
-			wantErr: false},
-		{name: "one to three range",
+			wantErr: false,
+		},
+		{
+			name: "one to three range",
 			pr: portRange{
 				low:  0b01, // 1
 				high: 0b11, // 3
@@ -425,33 +459,42 @@ func Test_portRange_asComplexTernaryMatches(t *testing.T) {
 			//	{port: 0b01, mask: 0xffff},
 			//	{port: 0b10, mask: 0xfffe},
 			//},
-			wantErr: false},
-		{name: "True port range",
+			wantErr: false,
+		},
+		{
+			name: "True port range",
 			pr: portRange{
 				low:  0b00010, //  2
 				high: 0b11101, // 29
 			},
-			wantErr: false},
-		{name: "Worst case port range",
+			wantErr: false,
+		},
+		{
+			name: "Worst case port range",
 			pr: portRange{
 				low:  1,
 				high: 65534,
 			},
 			strategy: Ternary,
-			wantErr:  false},
-		{name: "low port filter",
+			wantErr:  false,
+		},
+		{
+			name: "low port filter",
 			pr: portRange{
 				low:  0,
 				high: 1023,
 			},
 			strategy: Ternary,
-			wantErr:  false},
-		{name: "some small app filter",
+			wantErr:  false,
+		},
+		{
+			name: "some small app filter",
 			pr: portRange{
 				low:  8080,
 				high: 8084,
 			},
-			wantErr: false},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(
@@ -633,6 +676,11 @@ func Test_pdr_parseSDFFilter(t *testing.T) {
 			sdfIE:   newFilter(""),
 			wantErr: true,
 		},
+		{
+			name:    "truncated flow description",
+			sdfIE:   ie.New(ie.SDFFilter, []byte{0x01, 0x00, 0x00, 0x24, 'a'}),
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -645,7 +693,9 @@ func Test_pdr_parseSDFFilter(t *testing.T) {
 			}
 
 			if !tt.wantErr {
-				require.Equal(t, tt.wantAppFilter, p.appFilter)
+				if !reflect.DeepEqual(tt.wantAppFilter, p.appFilter) {
+					t.Fatalf("expected %+v, got %+v", tt.wantAppFilter, p.appFilter)
+				}
 			}
 		})
 	}
@@ -715,7 +765,9 @@ func Test_pdr_parsePDI(t *testing.T) {
 			}
 
 			if !tt.wantErr {
-				require.Equal(t, tt.wantPDR, p)
+				if !reflect.DeepEqual(tt.wantPDR, p) {
+					t.Fatalf("expected %+v, got %+v", tt.wantPDR, p)
+				}
 			}
 		})
 	}

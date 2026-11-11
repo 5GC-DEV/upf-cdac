@@ -17,9 +17,7 @@ import (
 	"github.com/omec-project/upf-epc/logger"
 )
 
-var (
-	simulate = simModeDisable
-)
+var simulate = simModeDisable
 
 func init() {
 	flag.Var(&simulate, "simulate", "create|delete|create_continue simulated sessions")
@@ -46,11 +44,7 @@ func NewPFCPIface(conf Conf) *PFCPIface {
 		conf: conf,
 	}
 
-	if conf.EnableP4rt {
-		pfcpIface.fp = &UP4{}
-	} else {
-		pfcpIface.fp = &bess{}
-	}
+	pfcpIface.fp = &bess{}
 
 	httpPort := "8080"
 	if conf.CPIface.HTTPPort != "" {
@@ -76,7 +70,6 @@ func (p *PFCPIface) mustInit() {
 	var err error
 
 	p.uc, p.nc, err = setupProm(httpMux, p.upf, p.node)
-
 	if err != nil {
 		logger.PfcpLog.Fatalln("setupProm failed", err)
 	}

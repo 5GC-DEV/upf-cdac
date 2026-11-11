@@ -119,13 +119,9 @@ func (f *far) parseFAR(farIE *ie.IE, fseid uint64, upf *upf, op operation) error
 		}
 
 	case update:
-		logger.PfcpLog.Debugf(
-			"[parseFAR] Processing UPDATE FAR FARID=%d",
-			f.farID,
-		)
-
-		fwdIEs, err = farIE.UpdateForwardingParameters()
-
+		if (f.applyAction & ActionForward) != 0 {
+			fwdIEs, err = farIE.UpdateForwardingParameters()
+		}
 	default:
 		logger.PfcpLog.Errorf(
 			"[parseFAR] Invalid operation=%v FARID=%d",
@@ -186,7 +182,7 @@ func (f *far) parseFAR(farIE *ie.IE, fseid uint64, upf *upf, op operation) error
 
 			f.tunnelTEID = ohcFields.TEID
 			f.tunnelIP4Dst = ip2int(ohcFields.IPv4Address)
-			f.tunnelType = uint8(1)
+			f.tunnelType = uint8(1) // Preserve the existing tunnel type encoding for GTP-U forwarding.
 			f.tunnelPort = tunnelGTPUPort
 
 			logger.PfcpLog.Debugf(

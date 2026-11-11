@@ -1,7 +1,9 @@
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2020-Present Intel Corporation
+# Copyright 2020-present Intel Corporation
 # Copyright 2025 Canonical Ltd.
 
+# Timeline for each ecosystem is intentionally staggered to spread
+# Dependabot PRs over the week.
 version: 2
 updates:
 
@@ -22,17 +24,37 @@ updates:
       timezone: "America/Los_Angeles"
 
   - package-ecosystem: "gomod"
-    directory: "/pfcpiface"
+    directory: "/"
     schedule:
       interval: "weekly"
-      day: "sunday"
+      day: "thursday"
       time: "21:00"
       timezone: "America/Los_Angeles"
+    groups:
+      omec-project:
+        patterns:
+          - "github.com/omec-project/*"
 
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "sunday"
+      day: "thursday"
       time: "21:00"
       timezone: "America/Los_Angeles"
+    groups:
+      python-deps:
+        patterns:
+          - "*"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "21:00"
+      timezone: "America/Los_Angeles"
+    groups:
+      actions-deps:
+        patterns:
+          - "*"

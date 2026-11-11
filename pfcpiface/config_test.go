@@ -4,18 +4,14 @@
 package pfcpiface
 
 import (
-	"io/fs"
 	"os"
 	"testing"
 
 	"go.uber.org/zap"
-
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func mustWriteStringToDisk(s string, path string) {
-	err := os.WriteFile(path, []byte(s), fs.ModePerm)
+	err := os.WriteFile(path, []byte(s), 0o600)
 	if err != nil {
 		panic(err)
 	}
@@ -66,7 +62,9 @@ func TestLoadConfigFile(t *testing.T) {
 		mustWriteStringToDisk(s, confPath)
 
 		_, err := LoadConfigFile(confPath)
-		require.NoError(t, err)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
 	})
 
 	t.Run("empty config has log level info", func(t *testing.T) {
@@ -77,8 +75,12 @@ func TestLoadConfigFile(t *testing.T) {
 		mustWriteStringToDisk(s, confPath)
 
 		conf, err := LoadConfigFile(confPath)
-		require.NoError(t, err)
-		require.Equal(t, conf.LogLevel, zap.InfoLevel)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if conf.LogLevel != zap.InfoLevel {
+			t.Fatalf("expected log level %v, got %v", zap.InfoLevel, conf.LogLevel)
+		}
 	})
 
 	t.Run("all sample configs must be valid", func(t *testing.T) {
@@ -89,7 +91,9 @@ func TestLoadConfigFile(t *testing.T) {
 
 		for _, path := range paths {
 			_, err := LoadConfigFile(path)
-			assert.NoError(t, err, "config %v is not valid", path)
+			if err != nil {
+				t.Errorf("config %v is not valid: %v", path, err)
+			}
 		}
 	})
 }

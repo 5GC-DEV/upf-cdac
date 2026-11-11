@@ -31,7 +31,12 @@ def scan_dpdk_ports():
     idx = 0
     while True:
         try:
-            intf = PMDPort(name="Port {}".format(idx), port_id=idx)
+            intf = PMDPort(
+                name="Port {}".format(idx),
+                port_id=idx,
+                num_inc_q=1,
+                num_out_q=1,
+            )
             if intf:
                 # Need to declare mac so that we don't lose key during destroy_port
                 mac = intf.mac_addr
@@ -65,8 +70,6 @@ class Port:
         self.ext_addrs = ext_addrs
         self.mode = None
         self.hwcksum = hwcksum
-        self.cndp_jsonc_file = ""
-        self.cndp_lport_start_index = 0
 
     def bpf_gate(self):
         if self.bpfgate < MAX_GATES - 2:
@@ -93,42 +96,24 @@ class Port:
         if iface == "core":
             self.flow_profiles = [6, 9]
 
-    def configure_cndp(self, jsonc_file, iface, num_workers):
-        self.cndp_jsonc_file = jsonc_file
-        if iface == "access":
-            self.cndp_lport_start_index = 0
-        elif iface == "core":
-            self.cndp_lport_start_index = num_workers
-        else:
-            raise Exception("Unknown interface {}: ".format(iface))
-
-    def init_datapath(self, cndp=False, **kwargs):
+    def init_datapath(self, **kwargs):
         # Initialize PMDPort and RX/TX modules
         name = self.name
-        if not cndp:
-            fast = PMDPort(name="{}Fast".format(name), **kwargs)
+        fast = PMDPort(name="{}Fast".format(name), **kwargs)
 
         self.fpi = Merge(name="{}PortMerge".format(name))
         self.fpo = WorkerSplit(name="{}QSplit".format(name))
 
         for qid in range(self.num_q):
-            qid_val = qid
-            if cndp:
-                lport_index = self.cndp_lport_start_index + qid
-                fast = CndpPort(
-                    jsonc_file=self.cndp_jsonc_file, lport_index=lport_index
-                )
-                qid_val = 0
-
             fpi = QueueInc(
-                name="{}Q{}FastPI".format(name, qid), port=fast.name, qid=qid_val
+                name="{}Q{}FastPI".format(name, qid), port=fast.name, qid=qid
             )
             fpi.connect(next_mod=self.fpi)
             # Attach datapath to worker's root TC
             fpi.attach_task(wid=qid)
 
             fpo = QueueOut(
-                name="{}Q{}FastPO".format(name, qid), port=fast.name, qid=qid_val
+                name="{}Q{}FastPO".format(name, qid), port=fast.name, qid=qid
             )
             self.fpo.connect(next_mod=fpo, ogate=qid)
 
@@ -154,7 +139,7 @@ class Port:
         if conf_mode is None:
             conf_mode = self.detect_mode()
 
-        if conf_mode not in ["af_xdp", "linux", "dpdk", "af_packet", "sim", "cndp"]:
+        if conf_mode not in ["af_xdp", "linux", "dpdk", "af_packet", "sim"]:
             raise Exception("Invalid mode: {} selected.".format(conf_mode))
 
         if conf_mode in ["af_xdp", "linux"]:
@@ -182,18 +167,6 @@ class Port:
                         "Failed to create AF_XDP socket for {}. Exiting...".format(name)
                     )
                     sys.exit()
-
-        if conf_mode == "cndp":
-            try:
-                # Initialize kernel fastpath.
-                self.init_datapath(cndp=True)
-            except:
-                print(
-                    "Failed to create CNDP/AF_XDP socket for {}. Exiting...".format(
-                        name
-                    )
-                )
-                sys.exit()
 
         if conf_mode == "af_packet":
             try:
@@ -234,14 +207,31 @@ class Port:
                 }
                 try:
                     self.init_datapath(**kwargs)
-                except Exception:
+                except Exception as err:
                     kwargs = None
                     print(
-                        "Unable to initialize {} datapath using alias {},\
-                        falling back to scan".format(
-                            name, pci
+                        "Unable to initialize {} datapath using alias {}: {}. \
+                        Falling back to port_id/scan".format(
+                            name, pci, err
                         )
                     )
+            if kwargs is None:
+                try:
+                    kwargs = {
+                        "port_id": idx,
+                        "num_out_q": num_q,
+                        "num_inc_q": num_q,
+                        "hwcksum": self.hwcksum,
+                        "flow_profiles": self.flow_profiles,
+                    }
+                    self.init_datapath(**kwargs)
+                except Exception as err:
+                    kwargs = None
+                    print(
+                        "Unable to initialize {} datapath using port_id {}: {}. \
+                        Falling back to scan".format(name, idx, err)
+                    )
+
             if kwargs is None:
                 # Fallback to scanning ports
                 # if port list is empty, scan for dpdk_ports first

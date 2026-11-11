@@ -12,12 +12,10 @@ Copyright 2019 Intel Corporation
     * [AF_PACKET mode](#configuration-af_packet-mode)
     * [AF_XDP mode](#configuration-af_xdp-mode)
     * [DPDK mode](#configuration-dpdk-mode)
-    * [CNDP mode](#configuration-cndp-mode)
   * [Installation](#installation)
   * [General Execution Commands](#general-execution-commands)
   * [Testing (Microbenchmarks)](#testing-microbenchmarks)
   * [Troubleshooting](#troubleshooting)
-  * [Network Token Functions](#network-token-functions)
 
 ## Prerequisites
 
@@ -59,13 +57,12 @@ required:
 
     ```patch
     diff --git a/conf/upf.jsonc b/conf/upf.jsonc
-    index f8f4e4e..c82748a 100644
+    index fb34142..3bb68ec 100644
     --- a/conf/upf.jsonc
     +++ b/conf/upf.jsonc
-    @@ -9,7 +9,7 @@
+    @@ -7,6 +7,6 @@
          // "dpdk" to enable DPDK mode,
-         // "cndp" to enable CNDP mode,
-         // "" when running with UP4"
+         // "sim" to generate synthetic traffic from BESS's Source module,
     -    "mode": "dpdk",
     +    "mode": "sim",
 
@@ -103,29 +100,26 @@ To configure/install the UPF in AF_PACKET mode, the following changes are requir
 
     ```patch
     diff --git a/conf/upf.jsonc b/conf/upf.jsonc
-    index f332689..6787173 100644
+    index fb34142..b9d65a4 100644
     --- a/conf/upf.jsonc
     +++ b/conf/upf.jsonc
-    @@ -9,7 +9,7 @@
+    @@ -7,6 +7,6 @@
          // "dpdk" to enable DPDK mode,
          // "sim" to generate synthetic traffic from BESS's Source module,
-         // "" when running with UP4
     -    "mode": "dpdk",
     +    "mode": "af_packet",
 
          "table_sizes": {
              // Example sizes based on sim mode and 50K sessions. Customize as per your control plane
-    @@ -74,7 +74,7 @@
+    @@ -74,6 +74,6 @@
          // N3 interface
          "access": {
-             // "cndp_jsonc_file": "conf/cndp_upf_1worker.jsonc",
     -        "ifname": "ens803f2"
     +        "ifname": "ens801f0"
          },
 
          // N6 or N9 interface (depending on the UPF's deployment [PSA-UPF or I-UPF])
-    @@ -82,7 +82,7 @@
-             // "cndp_jsonc_file": "conf/cndp_upf_1worker.jsonc",
+    @@ -81,6 +81,6 @@
              // Uncomment line below to enable UE IP natting. It could be a single IP or multiple IPs
              // "ip_masquerade": "18.0.0.1 or 18.0.0.2 or 18.0.0.3",
     -        "ifname": "ens803f3"
@@ -142,13 +136,11 @@ To configure/install the UPF in AF_PACKET mode, the following changes are requir
     index e3ad773..7f1d71a 100755
     --- a/scripts/docker_setup.sh
     +++ b/scripts/docker_setup.sh
-    @@ -15,36 +15,36 @@ metrics_port=8080
+    @@ -15,34 +15,34 @@ metrics_port=8080
      # "af_packet" uses AF_PACKET sockets via DPDK's vdev for pkt I/O.
      # "sim" uses Source() modules to simulate traffic generation
-     # "cndp" uses kernel AF-XDP. It supports ZC and XDP offload if driver and NIC supports it. It's tested on Intel 800 series n/w adapter.
     -mode="dpdk"
     +#mode="dpdk"
-     #mode="cndp"
      #mode="af_xdp"
     -#mode="af_packet"
     +mode="af_packet"
@@ -196,29 +188,26 @@ To configure/install the UPF in AF_XDP mode, the following changes are required:
 
     ```patch
     diff --git a/conf/upf.jsonc b/conf/upf.jsonc
-    index f332689..65d3932 100644
+    index fb34142..e4b6e78 100644
     --- a/conf/upf.jsonc
     +++ b/conf/upf.jsonc
-    @@ -9,7 +9,7 @@
+    @@ -7,6 +7,6 @@
          // "dpdk" to enable DPDK mode,
          // "sim" to generate synthetic traffic from BESS's Source module,
-         // "" when running with UP4
     -    "mode": "dpdk",
     +    "mode": "af_xdp",
 
          "table_sizes": {
              // Example sizes based on sim mode and 50K sessions. Customize as per your control plane
-    @@ -74,7 +74,7 @@
+    @@ -74,6 +74,6 @@
          // N3 interface
          "access": {
-             // "cndp_jsonc_file": "conf/cndp_upf_1worker.jsonc",
     -        "ifname": "ens803f2"
     +        "ifname": "enp134s0"
          },
 
          // N6 or N9 interface (depending on the UPF's deployment [PSA-UPF or I-UPF])
-    @@ -82,7 +82,7 @@
-             // "cndp_jsonc_file": "conf/cndp_upf_1worker.jsonc",
+    @@ -81,6 +81,6 @@
              // Uncomment line below to enable UE IP natting. It could be a single IP or multiple IPs
              // "ip_masquerade": "18.0.0.1 or 18.0.0.2 or 18.0.0.3",
     -        "ifname": "ens803f3"
@@ -235,13 +224,11 @@ To configure/install the UPF in AF_XDP mode, the following changes are required:
     index e6bb65c..f589991 100755
     --- a/scripts/docker_setup.sh
     +++ b/scripts/docker_setup.sh
-    @@ -15,16 +15,16 @@ metrics_port=8080
+    @@ -15,14 +15,14 @@ metrics_port=8080
      # "af_packet" uses AF_PACKET sockets via DPDK's vdev for pkt I/O.
      # "sim" uses Source() modules to simulate traffic generation
-     # "cndp" uses kernel AF-XDP. It supports ZC and XDP offload if driver and NIC supports it. It's tested on Intel 800 series n/w adapter.
     -mode="dpdk"
     +#mode="dpdk"
-     #mode="cndp"
     -#mode="af_xdp"
     +mode="af_xdp"
      #mode="af_packet"
@@ -337,12 +324,6 @@ To configure/install the UPF in DPDK mode, the following changes are required:
            $PRIVS \
    ```
 
-## Configuration: CNDP mode
-
-To configure/install the UPF in CNDP mode, please refer [CNDP_README.md](./CNDP_README.md)
-
-
-
 ## Installation
 
 1. Start installation from UPF's root directory
@@ -361,7 +342,7 @@ To configure/install the UPF in CNDP mode, please refer [CNDP_README.md](./CNDP_
     (works only for BESS)
 
     ```bash
-    docker exec bess-pfcpiface pfcpiface -config conf/upf.jsonc -simulate create
+    docker exec bess-pfcp pfcpiface -config conf/upf.jsonc -simulate create
     ```
 
     OR
@@ -440,7 +421,7 @@ This can be done either using a single machine or two machines.
             --cpuset-cpus=2-5 --ulimit memlock=-1 --cap-add IPC_LOCK \
             -v /dev/hugepages:/dev/hugepages -v "$PWD/conf":/opt/bess/bessctl/conf \
             --device=/dev/vfio/vfio --device=/dev/vfio/176 \
-            upf-epc-bess:"$(<VERSION)" -grpc-url=0.0.0.0:10514
+            upf-bess:"$(<VERSION)" -grpc-url=0.0.0.0:10514
     ```
 
 2. Customize [conf/pktgen.bess](../conf/pktgen.bess) to match [conf/upf](../conf/upf.jsonc)
@@ -477,34 +458,4 @@ reading from file /tmp/tmpUBTGau, link-type EN10MB (Ethernet)
 00:03:08.130884 IP 0.0.0.0.bootpc > 255.255.255.255.bootps: BOOTP/DHCP, Request from 68:05:ca:37:e1:38 (oui Unknown), length 300
 00:03:08.294573 STP 802.1s, Rapid STP, CIST Flags [Learn, Forward], length 102
 00:03:10.247193 STP 802.1s, Rapid STP, CIST Flags [Learn, Forward], length 102
-```
-
-## Network Token Functions
-
-OMEC includes a Network Token Function (NTF) which provides preliminary support
-for Network Tokens, a new protocol to expose datapath services to end users and
-application providers. More details are available at [networktokens.org](https://networktokens.org)
-
-In order to compile NTF support, update [`conf/upf.jsonc`](conf/upf.jsonc) as follows:
-
-```patch
-diff --git a/conf/upf.jsonc b/conf/upf.jsonc
-index f8f4e4e..c052755 100644
---- a/conf/upf.jsonc
-+++ b/conf/upf.jsonc
-@@ -86,7 +86,7 @@
-     "resp_timeout": "2s",
-
-     // Whether to enable Network Token Functions
--    "enable_ntf": false,
-+    "enable_ntf": true,
-
-     // [Optional] Whether to enable End Marker Support
-     // "enable_end_marker": false,
-```
-
-And run the [scripts/docker_setup.sh](scripts/docker_setup.sh) as follows:
-
-```bash
-ENABLE_NTF=1 ./scripts/docker_setup.sh
 ```

@@ -18,6 +18,9 @@ var (
 	ErrWriteToDatapath = errors.New("write to datapath failed")
 	ErrAssocNotFound   = errors.New("no association found for NodeID")
 	ErrAllocateSession = errors.New("unable to allocate new PFCP session")
+	ErrNodeIDMissing   = errors.New("mandatory Node ID IE missing")
+	ErrCPFSEIDMissing  = errors.New("mandatory CPF-SEID IE missing")
+	ErrCauseMissing    = errors.New("mandatory Cause IE missing")
 )
 
 func (pConn *PFCPConn) handleSessionEstablishmentRequest(msg message.Message) (message.Message, error) {
@@ -42,12 +45,38 @@ func (pConn *PFCPConn) handleSessionEstablishmentRequest(msg message.Message) (m
 		return pfdres, errUnmarshal(err)
 	}
 
+	if sereq.NodeID == nil {
+		logger.PfcpLog.Warnln("Session Establishment Request missing mandatory NodeID IE")
+		pfdres := message.NewSessionEstablishmentResponse(0,
+			0,
+			0,
+			sereq.SequenceNumber,
+			0,
+			ie.NewCause(ie.CauseMandatoryIEMissing),
+			ie.NewOffendingIE(ie.NodeID),
+		)
+		return pfdres, errUnmarshal(ErrNodeIDMissing)
+	}
+
 	nodeID, err := sereq.NodeID.NodeID()
 	if err != nil {
 		return errUnmarshalReply(err, sereq.NodeID)
 	}
 
 	/* Read fseid from the IE */
+	if sereq.CPFSEID == nil {
+		logger.PfcpLog.Warnln("Session Establishment Request without CPF-SEID from nodeID:", nodeID)
+		pfdres := message.NewSessionEstablishmentResponse(0,
+			0,
+			0,
+			sereq.SequenceNumber,
+			0,
+			ie.NewCause(ie.CauseMandatoryIEMissing),
+			ie.NewOffendingIE(ie.FSEID),
+		)
+		return pfdres, errUnmarshal(ErrCPFSEIDMissing)
+	}
+
 	fseid, err := sereq.CPFSEID.FSEID()
 	if err != nil {
 		return errUnmarshalReply(err, sereq.CPFSEID)
@@ -893,7 +922,18 @@ func (pConn *PFCPConn) handleSessionReportResponse(msg message.Message) error {
 		return errUnmarshal(errMsgUnexpectedType)
 	}
 
-	cause := srres.Cause.Payload[0]
+	if srres.Cause == nil {
+		// Reject responses that omit the mandatory Cause to avoid nil deref on malformed PFCP messages.
+		addr := pConn.RemoteAddr().String()
+		logger.PfcpLog.Warnln("session Report Response without Cause from", addr)
+		return errUnmarshal(ErrCauseMissing)
+	}
+
+	cause, err := srres.Cause.Cause()
+	if err != nil {
+		return errUnmarshal(err)
+	}
+
 	if cause == ie.CauseRequestAccepted {
 		return nil
 	}

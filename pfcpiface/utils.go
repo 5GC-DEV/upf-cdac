@@ -9,9 +9,6 @@ import (
 	"net"
 	"strconv"
 	"strings"
-
-	"github.com/omec-project/upf-epc/internal/p4constants"
-	"github.com/omec-project/upf-epc/logger"
 )
 
 // Bits type.
@@ -19,6 +16,11 @@ type Bits uint8
 
 // Set Bits.
 func Set(b, flag Bits) Bits { return b | flag }
+
+// UnknownString is the canonical string used to represent unknown values in
+// the pfcpiface package. Using a single constant avoids repeated string
+// literals and satisfies goconst lint checks.
+const UnknownString = "unknown"
 
 // func Clear(b, flag Bits) Bits  { return b &^ flag }
 // func Toggle(b, flag Bits) Bits { return b ^ flag }
@@ -61,10 +63,13 @@ func inc(ip net.IP) {
 }
 
 func ip2int(ip net.IP) uint32 {
+	// Guard against IP with insufficient length (need at least 4 bytes for uint32)
+	if len(ip) < 4 {
+		return 0
+	}
 	if len(ip) == 16 {
 		return binary.BigEndian.Uint32(ip[12:16])
 	}
-
 	return binary.BigEndian.Uint32(ip)
 }
 
@@ -81,7 +86,10 @@ func hex2int(hexStr string) uint32 {
 	cleaned := strings.ReplaceAll(hexStr, "0x", "")
 
 	// base 16 for hexadecimal
-	result, _ := strconv.ParseUint(cleaned, 16, 32)
+	result, err := strconv.ParseUint(cleaned, 16, 32)
+	if err != nil {
+		return 0
+	}
 
 	return uint32(result)
 }
@@ -106,18 +114,6 @@ func calcBurstSizeFromRate(kbps uint64, ms uint64) uint64 {
 	return uint64((float64(kbps) * 1000 / 8) * (float64(ms) / 1000))
 }
 
-// MustParseStrIP : parse IP address from config and fail on error.
-func MustParseStrIP(address string) *net.IPNet {
-	ip, ipNet, err := net.ParseCIDR(address)
-	if err != nil {
-		logger.PfcpLog.Fatalf("unable to parse IP %v that we should parse", address)
-	}
-
-	logger.PfcpLog.Infoln("parsed IP:", ip)
-
-	return ipNet
-}
-
 // GetUnicastAddressFromInterface returns a unicast IP address configured on the interface.
 func GetUnicastAddressFromInterface(interfaceName string) (net.IP, error) {
 	iface, err := net.InterfaceByName(interfaceName)
@@ -136,16 +132,4 @@ func GetUnicastAddressFromInterface(interfaceName string) (net.IP, error) {
 	}
 
 	return ip, nil
-}
-
-func GetSliceTCMeterIndex(sliceID uint8, TC uint8) (int64, error) {
-	if sliceID >= (1 << p4constants.BitwidthMfSliceId) {
-		return 0, ErrInvalidArgumentWithReason("SliceID", sliceID, "Slice ID higher than max supported slice ID")
-	}
-
-	if TC >= (1 << p4constants.BitwidthApTc) {
-		return 0, ErrInvalidArgumentWithReason("TC", TC, "TC higher than max supported Traffic Class")
-	}
-
-	return int64((sliceID << 2) + (TC & 0b11)), nil
 }
